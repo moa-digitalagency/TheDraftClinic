@@ -1,0 +1,138 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Admin - Dashboard{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-900">
+    <nav class="bg-slate-800 border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
+                        <span class="text-white font-bold">T</span>
+                    </div>
+                    <span class="text-xl font-serif font-bold text-white">Admin Panel</span>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <a href="{{ url_for('admin.dashboard') }}" class="text-white font-medium">Dashboard</a>
+                    <a href="{{ url_for('admin.requests_list') }}" class="text-gray-400 hover:text-white">Demandes</a>
+                    <a href="{{ url_for('admin.users_list') }}" class="text-gray-400 hover:text-white">Utilisateurs</a>
+                    <a href="{{ url_for('auth.logout') }}" class="text-gray-400 hover:text-red-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-xl alert-dismissible transition-all duration-300 
+                        {% if category == 'error' %}bg-red-900/50 text-red-300 border border-red-700
+                        {% elif category == 'success' %}bg-green-900/50 text-green-300 border border-green-700
+                        {% else %}bg-blue-900/50 text-blue-300 border border-blue-700{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="mb-8">
+            <h1 class="text-2xl font-serif font-bold text-white">Tableau de bord</h1>
+            <p class="text-gray-400 mt-1">Vue d'ensemble de la plateforme</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                <div class="text-3xl font-bold text-white">{{ stats.total_requests }}</div>
+                <div class="text-gray-400 text-sm mt-1">Total demandes</div>
+            </div>
+            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                <div class="text-3xl font-bold text-amber-400">{{ stats.pending_requests }}</div>
+                <div class="text-gray-400 text-sm mt-1">En attente</div>
+            </div>
+            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                <div class="text-3xl font-bold text-blue-400">{{ stats.in_progress }}</div>
+                <div class="text-gray-400 text-sm mt-1">En cours</div>
+            </div>
+            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                <div class="text-3xl font-bold text-red-400">{{ stats.pending_payments }}</div>
+                <div class="text-gray-400 text-sm mt-1">Paiements en attente</div>
+            </div>
+            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                <div class="text-3xl font-bold text-green-400">{{ stats.total_users }}</div>
+                <div class="text-gray-400 text-sm mt-1">Utilisateurs</div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-700 flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-white">Demandes récentes</h2>
+                    <a href="{{ url_for('admin.requests_list') }}" class="text-primary-400 text-sm hover:text-primary-300">Voir tout</a>
+                </div>
+                
+                {% if recent_requests %}
+                <div class="divide-y divide-slate-700">
+                    {% for request in recent_requests %}
+                    <a href="{{ url_for('admin.view_request', request_id=request.id) }}" class="block p-4 hover:bg-slate-700/50 transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="px-2 py-0.5 rounded text-xs font-medium status-{{ request.status }}">
+                                        {{ request.get_status_display() }}
+                                    </span>
+                                    <span class="text-gray-500 text-xs">#{{ request.id }}</span>
+                                </div>
+                                <p class="text-white font-medium truncate">{{ request.title }}</p>
+                                <p class="text-gray-400 text-sm">{{ request.user.full_name }}</p>
+                            </div>
+                            <div class="text-gray-500 text-sm">{{ request.created_at.strftime('%d/%m') }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="p-8 text-center text-gray-500">
+                    Aucune demande récente
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-700">
+                    <h2 class="text-lg font-semibold text-white">Paiements à vérifier</h2>
+                </div>
+                
+                {% if pending_payments %}
+                <div class="divide-y divide-slate-700">
+                    {% for payment in pending_payments %}
+                    <a href="{{ url_for('admin.view_request', request_id=payment.request_id) }}" class="block p-4 hover:bg-slate-700/50 transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-medium">{{ "%.2f"|format(payment.amount) }} €</p>
+                                <p class="text-gray-400 text-sm">{{ payment.request.user.full_name }}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-1 bg-amber-900/50 text-amber-300 rounded text-xs">En attente</span>
+                                <p class="text-gray-500 text-xs mt-1">{{ payment.created_at.strftime('%d/%m/%Y') }}</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="p-8 text-center text-gray-500">
+                    Aucun paiement en attente
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

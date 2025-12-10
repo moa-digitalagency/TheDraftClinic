@@ -1,0 +1,174 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Nouvelle demande{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50">
+    <nav class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('client.dashboard') }}" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
+                            <span class="text-white font-bold">T</span>
+                        </div>
+                        <span class="text-xl font-serif font-bold text-slate-900">Nouvelle demande</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                {{ form.hidden_tag() }}
+                
+                <div>
+                    <h2 class="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">1</span>
+                        Type de service
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        {% for code, label in service_types %}
+                        <label class="relative">
+                            <input type="radio" name="service_type" value="{{ code }}" class="peer sr-only" required>
+                            <div class="p-4 rounded-xl border-2 border-gray-200 cursor-pointer transition-all peer-checked:border-primary-500 peer-checked:bg-primary-50 hover:border-gray-300">
+                                <div class="font-medium text-slate-900">{{ label }}</div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-8">
+                    <h2 class="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">2</span>
+                        Détails du travail
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Titre du travail *</label>
+                            <input type="text" name="title" id="title" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="Ex: Analyse des impacts environnementaux...">
+                        </div>
+                        
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description détaillée</label>
+                            <textarea name="description" id="description" rows="5"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="Décrivez votre projet en détail: objectifs, méthodologie, attentes..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="additional_info" class="block text-sm font-medium text-gray-700 mb-2">Informations supplémentaires</label>
+                            <textarea name="additional_info" id="additional_info" rows="3"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="Consignes spécifiques, style de citation préféré, références à utiliser..."></textarea>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="word_count" class="block text-sm font-medium text-gray-700 mb-2">Nombre de mots (estimé)</label>
+                                <input type="number" name="word_count" id="word_count" min="0"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                    placeholder="Ex: 10000">
+                            </div>
+                            <div>
+                                <label for="pages_count" class="block text-sm font-medium text-gray-700 mb-2">Nombre de pages</label>
+                                <input type="number" name="pages_count" id="pages_count" min="0"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                    placeholder="Ex: 50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-8">
+                    <h2 class="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">3</span>
+                        Délais et urgence
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="deadline" class="block text-sm font-medium text-gray-700 mb-2">Date limite souhaitée</label>
+                            <input type="datetime-local" name="deadline" id="deadline"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        </div>
+                        <div>
+                            <label for="urgency_level" class="block text-sm font-medium text-gray-700 mb-2">Niveau d'urgence</label>
+                            <select name="urgency_level" id="urgency_level"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                                <option value="standard">Standard (48h+)</option>
+                                <option value="express_24h">Express 24h (+25%)</option>
+                                <option value="express_5h">Express 5h (+75%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-8">
+                    <h2 class="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-bold">4</span>
+                        Documents à joindre
+                    </h2>
+                    
+                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-primary-400 transition">
+                        <input type="file" name="documents" id="documents" multiple accept=".pdf,.doc,.docx,.txt,.rtf,.odt" class="hidden">
+                        <label for="documents" class="cursor-pointer">
+                            <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
+                            </div>
+                            <p class="text-gray-600 mb-2">Cliquez pour sélectionner des fichiers</p>
+                            <p class="text-gray-400 text-sm">PDF, DOC, DOCX, TXT, RTF (max. 50MB)</p>
+                        </label>
+                    </div>
+                    <div id="file-list" class="mt-4 space-y-2"></div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-8 flex justify-end gap-4">
+                    <a href="{{ url_for('client.dashboard') }}" class="px-6 py-3 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition">
+                        Annuler
+                    </a>
+                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                        Soumettre la demande
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.getElementById('documents').addEventListener('change', function(e) {
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+        
+        for (const file of e.target.files) {
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-3 p-3 bg-gray-50 rounded-lg';
+            div.innerHTML = `
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span class="text-sm text-gray-700">${file.name}</span>
+                <span class="text-xs text-gray-400 ml-auto">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+            `;
+            fileList.appendChild(div);
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

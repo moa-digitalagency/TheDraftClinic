@@ -1,0 +1,116 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50">
+    <nav class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('client.dashboard') }}" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
+                            <span class="text-white font-bold">T</span>
+                        </div>
+                        <span class="text-xl font-serif font-bold text-slate-900">Mon profil</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-xl alert-dismissible transition-all duration-300 
+                        {% if category == 'error' %}bg-red-100 text-red-700 border border-red-200
+                        {% elif category == 'success' %}bg-green-100 text-green-700 border border-green-200
+                        {% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-6 mb-8 pb-8 border-b border-gray-100">
+                <div class="w-20 h-20 rounded-full gradient-bg flex items-center justify-center">
+                    <span class="text-white text-3xl font-bold">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-serif font-bold text-slate-900">{{ current_user.full_name }}</h1>
+                    <p class="text-gray-600">{{ current_user.email }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Membre depuis {{ current_user.created_at.strftime('%B %Y') }}</p>
+                </div>
+            </div>
+
+            <form method="POST" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+                        <input type="text" name="first_name" value="{{ current_user.first_name }}"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                        <input type="text" name="last_name" value="{{ current_user.last_name }}"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                    <input type="tel" name="phone" value="{{ current_user.phone or '' }}"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                </div>
+
+                <div class="border-t border-gray-100 pt-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Informations académiques</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Établissement</label>
+                            <input type="text" name="institution" value="{{ current_user.institution or '' }}"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Niveau académique</label>
+                                <select name="academic_level"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="licence" {% if current_user.academic_level == 'licence' %}selected{% endif %}>Licence</option>
+                                    <option value="master" {% if current_user.academic_level == 'master' %}selected{% endif %}>Master</option>
+                                    <option value="doctorat" {% if current_user.academic_level == 'doctorat' %}selected{% endif %}>Doctorat</option>
+                                    <option value="post_doc" {% if current_user.academic_level == 'post_doc' %}selected{% endif %}>Post-doctorat</option>
+                                    <option value="chercheur" {% if current_user.academic_level == 'chercheur' %}selected{% endif %}>Chercheur</option>
+                                    <option value="professeur" {% if current_user.academic_level == 'professeur' %}selected{% endif %}>Professeur</option>
+                                    <option value="autre" {% if current_user.academic_level == 'autre' %}selected{% endif %}>Autre</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Domaine d'étude</label>
+                                <input type="text" name="field_of_study" value="{{ current_user.field_of_study or '' }}"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-6">
+                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                        Sauvegarder les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

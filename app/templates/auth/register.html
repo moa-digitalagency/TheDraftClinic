@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<div class="min-h-screen gradient-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div class="absolute inset-0">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary-400/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-accent-400/20 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="relative max-w-2xl w-full">
+        <div class="text-center mb-8">
+            <a href="{{ url_for('main.index') }}" class="inline-flex items-center space-x-2">
+                <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur">
+                    <span class="text-white font-bold text-2xl">T</span>
+                </div>
+                <span class="text-3xl font-serif font-bold text-white">TheraftClinic</span>
+            </a>
+        </div>
+        
+        <div class="glass-card rounded-3xl p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-serif font-bold text-slate-900">Créer un compte</h2>
+                <p class="text-gray-600 mt-2">Rejoignez notre communauté de chercheurs</p>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-4 p-4 rounded-xl alert-dismissible transition-all duration-300 
+                            {% if category == 'error' %}bg-red-100 text-red-700 border border-red-200
+                            {% elif category == 'success' %}bg-green-100 text-green-700 border border-green-200
+                            {% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('auth.register') }}" class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                        <input type="text" name="first_name" id="first_name" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                            placeholder="Jean">
+                    </div>
+                    <div>
+                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                        <input type="text" name="last_name" id="last_name" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                            placeholder="Dupont">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <input type="email" name="email" id="email" required
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                        placeholder="jean.dupont@universite.fr">
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe *</label>
+                        <input type="password" name="password" id="password" required minlength="6"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                            placeholder="Min. 6 caractères">
+                    </div>
+                    <div>
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Confirmer *</label>
+                        <input type="password" name="confirm_password" id="confirm_password" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                            placeholder="Répéter le mot de passe">
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informations académiques (optionnel)</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                            <input type="tel" name="phone" id="phone"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="+33 6 12 34 56 78">
+                        </div>
+                        <div>
+                            <label for="academic_level" class="block text-sm font-medium text-gray-700 mb-2">Niveau académique</label>
+                            <select name="academic_level" id="academic_level"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                                <option value="">Sélectionner...</option>
+                                <option value="licence">Licence</option>
+                                <option value="master">Master</option>
+                                <option value="doctorat">Doctorat</option>
+                                <option value="post_doc">Post-doctorat</option>
+                                <option value="chercheur">Chercheur</option>
+                                <option value="professeur">Professeur</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div>
+                            <label for="institution" class="block text-sm font-medium text-gray-700 mb-2">Établissement</label>
+                            <input type="text" name="institution" id="institution"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="Université de Paris">
+                        </div>
+                        <div>
+                            <label for="field_of_study" class="block text-sm font-medium text-gray-700 mb-2">Domaine d'étude</label>
+                            <input type="text" name="field_of_study" id="field_of_study"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="Sciences sociales">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary-500/25 transition-all transform hover:-translate-y-0.5">
+                    Créer mon compte
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">
+                    Déjà un compte? 
+                    <a href="{{ url_for('auth.login') }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                        Se connecter
+                    </a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-6">
+            <a href="{{ url_for('main.index') }}" class="text-white/80 hover:text-white transition">
+                &larr; Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

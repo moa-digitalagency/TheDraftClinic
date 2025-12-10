@@ -1,0 +1,283 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Demande #{{ request.id }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50">
+    <nav class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('client.dashboard') }}" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
+                            <span class="text-white font-bold">T</span>
+                        </div>
+                        <span class="text-xl font-serif font-bold text-slate-900">Demande #{{ request.id }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-xl alert-dismissible transition-all duration-300 
+                        {% if category == 'error' %}bg-red-100 text-red-700 border border-red-200
+                        {% elif category == 'success' %}bg-green-100 text-green-700 border border-green-200
+                        {% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium status-{{ request.status }}">
+                                {{ request.get_status_display() }}
+                            </span>
+                            <h1 class="text-2xl font-serif font-bold text-slate-900 mt-3">{{ request.title }}</h1>
+                            <p class="text-gray-600 mt-1">{{ request.get_service_display() }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if request.progress_percentage > 0 %}
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-500">Progression</span>
+                            <span class="font-medium text-slate-900">{{ request.progress_percentage }}%</span>
+                        </div>
+                        <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full transition-all" style="width: {{ request.progress_percentage }}%"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if request.description %}
+                    <div class="mt-6">
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Description</h3>
+                        <p class="text-gray-600 whitespace-pre-line">{{ request.description }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if request.additional_info %}
+                    <div class="mt-6">
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Informations supplémentaires</h3>
+                        <p class="text-gray-600 whitespace-pre-line">{{ request.additional_info }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if request.status == 'quote_sent' and not request.quote_accepted %}
+                <div class="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-6 border border-primary-100">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Devis reçu</h3>
+                    <div class="bg-white rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-600">Montant total:</span>
+                            <span class="text-3xl font-bold gradient-text">{{ "%.2f"|format(request.quote_amount) }} €</span>
+                        </div>
+                        {% if request.deposit_required %}
+                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+                            <span class="text-gray-600">Acompte requis:</span>
+                            <span class="text-xl font-semibold text-slate-900">{{ "%.2f"|format(request.deposit_required) }} €</span>
+                        </div>
+                        {% endif %}
+                        {% if request.quote_message %}
+                        <p class="text-gray-600 text-sm mb-4">{{ request.quote_message }}</p>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('client.accept_quote', request_id=request.id) }}">
+                            {{ payment_form.hidden_tag() }}
+                            <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                                Accepter le devis
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if request.status in ['awaiting_deposit', 'deposit_pending'] %}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Soumettre votre acompte</h3>
+                    
+                    {% if request.status == 'deposit_pending' %}
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+                        <p class="text-amber-700 text-sm">Votre preuve de paiement est en cours de vérification...</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Acompte à verser:</span>
+                            <span class="text-2xl font-bold text-slate-900">{{ "%.2f"|format(request.deposit_required) }} €</span>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('client.submit_payment', request_id=request.id) }}" enctype="multipart/form-data" class="space-y-4">
+                        {{ payment_form.hidden_tag() }}
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Montant payé *</label>
+                            <input type="number" name="amount" step="0.01" required value="{{ request.deposit_required }}"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Méthode de paiement *</label>
+                            <select name="payment_method" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <option value="bank_transfer">Virement bancaire</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="card">Carte bancaire</option>
+                                <option value="mobile_money">Mobile Money</option>
+                                <option value="other">Autre</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Capture/Justificatif de paiement</label>
+                            <input type="file" name="proof_document" accept=".pdf,.png,.jpg,.jpeg"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Référence de transaction</label>
+                            <input type="text" name="transaction_reference"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                placeholder="Ex: VIR2024123456">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                            <textarea name="notes" rows="2"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                            Soumettre la preuve de paiement
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+
+                {% if documents %}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Documents</h3>
+                    <div class="space-y-3">
+                        {% for doc in documents %}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg {% if doc.document_type == 'deliverable' %}bg-green-100{% else %}bg-gray-100{% endif %} flex items-center justify-center">
+                                    <svg class="w-5 h-5 {% if doc.document_type == 'deliverable' %}text-green-600{% else %}text-gray-500{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-slate-900">{{ doc.original_filename }}</p>
+                                    <p class="text-sm text-gray-500">{{ doc.get_type_display() }}</p>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('static', filename='uploads/' + doc.filename) }}" download class="text-primary-600 hover:text-primary-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Informations</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-sm text-gray-500">Créée le</span>
+                            <p class="font-medium text-slate-900">{{ request.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                        </div>
+                        {% if request.deadline %}
+                        <div>
+                            <span class="text-sm text-gray-500">Deadline</span>
+                            <p class="font-medium text-slate-900">{{ request.deadline.strftime('%d/%m/%Y à %H:%M') }}</p>
+                        </div>
+                        {% endif %}
+                        {% if request.word_count %}
+                        <div>
+                            <span class="text-sm text-gray-500">Nombre de mots</span>
+                            <p class="font-medium text-slate-900">{{ request.word_count }}</p>
+                        </div>
+                        {% endif %}
+                        {% if request.pages_count %}
+                        <div>
+                            <span class="text-sm text-gray-500">Nombre de pages</span>
+                            <p class="font-medium text-slate-900">{{ request.pages_count }}</p>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <span class="text-sm text-gray-500">Urgence</span>
+                            <p class="font-medium text-slate-900">{{ request.urgency_level }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if request.quote_amount %}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Devis</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-sm text-gray-500">Montant total</span>
+                            <p class="text-2xl font-bold gradient-text">{{ "%.2f"|format(request.quote_amount) }} €</p>
+                        </div>
+                        {% if request.deposit_required %}
+                        <div>
+                            <span class="text-sm text-gray-500">Acompte</span>
+                            <p class="font-medium text-slate-900">{{ "%.2f"|format(request.deposit_required) }} €</p>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <span class="text-sm text-gray-500">Statut devis</span>
+                            <p class="font-medium {% if request.quote_accepted %}text-green-600{% else %}text-amber-600{% endif %}">
+                                {% if request.quote_accepted %}Accepté{% else %}En attente{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if payments %}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Paiements</h3>
+                    <div class="space-y-3">
+                        {% for payment in payments %}
+                        <div class="p-3 bg-gray-50 rounded-xl">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium text-slate-900">{{ "%.2f"|format(payment.amount) }} €</span>
+                                <span class="px-2 py-1 rounded text-xs font-medium 
+                                    {% if payment.status == 'verified' %}bg-green-100 text-green-700
+                                    {% elif payment.status == 'rejected' %}bg-red-100 text-red-700
+                                    {% else %}bg-amber-100 text-amber-700{% endif %}">
+                                    {{ payment.get_status_display() }}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">{{ payment.created_at.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

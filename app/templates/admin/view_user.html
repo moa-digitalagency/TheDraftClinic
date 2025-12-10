@@ -1,0 +1,104 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Admin - {{ user.full_name }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-900">
+    <nav class="bg-slate-800 border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('admin.users_list') }}" class="text-gray-400 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
+                            <span class="text-white font-bold">T</span>
+                        </div>
+                        <span class="text-xl font-serif font-bold text-white">{{ user.full_name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid lg:grid-cols-3 gap-6">
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 rounded-full gradient-bg flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-3xl font-bold">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">{{ user.full_name }}</h2>
+                    <p class="text-gray-400">{{ user.email }}</p>
+                </div>
+                
+                <div class="space-y-4 border-t border-slate-700 pt-6">
+                    {% if user.phone %}
+                    <div>
+                        <span class="text-sm text-gray-400">Téléphone</span>
+                        <p class="text-white">{{ user.phone }}</p>
+                    </div>
+                    {% endif %}
+                    {% if user.institution %}
+                    <div>
+                        <span class="text-sm text-gray-400">Établissement</span>
+                        <p class="text-white">{{ user.institution }}</p>
+                    </div>
+                    {% endif %}
+                    {% if user.academic_level %}
+                    <div>
+                        <span class="text-sm text-gray-400">Niveau académique</span>
+                        <p class="text-white">{{ user.academic_level }}</p>
+                    </div>
+                    {% endif %}
+                    {% if user.field_of_study %}
+                    <div>
+                        <span class="text-sm text-gray-400">Domaine d'étude</span>
+                        <p class="text-white">{{ user.field_of_study }}</p>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <span class="text-sm text-gray-400">Inscrit le</span>
+                        <p class="text-white">{{ user.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-700">
+                    <h3 class="text-lg font-semibold text-white">Demandes ({{ requests|length }})</h3>
+                </div>
+                
+                {% if requests %}
+                <div class="divide-y divide-slate-700">
+                    {% for request in requests %}
+                    <a href="{{ url_for('admin.view_request', request_id=request.id) }}" class="block p-4 hover:bg-slate-700/50 transition">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="px-2 py-0.5 rounded text-xs font-medium status-{{ request.status }}">
+                                        {{ request.get_status_display() }}
+                                    </span>
+                                    <span class="text-gray-500 text-xs">#{{ request.id }}</span>
+                                </div>
+                                <p class="text-white font-medium">{{ request.title }}</p>
+                                <p class="text-gray-400 text-sm">{{ request.get_service_display() }}</p>
+                            </div>
+                            <div class="text-gray-500 text-sm">{{ request.created_at.strftime('%d/%m/%Y') }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="p-8 text-center text-gray-500">
+                    Aucune demande de cet utilisateur
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
