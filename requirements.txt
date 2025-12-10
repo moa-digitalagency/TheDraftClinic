@@ -33,3 +33,8 @@ python-dotenv>=1.2.1
 
 # Production Server
 gunicorn>=23.0.0
+email_validator
+flask
+flask-sqlalchemy
+gunicorn
+psycopg2-binary
