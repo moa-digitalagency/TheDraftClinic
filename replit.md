@@ -1,7 +1,9 @@
-# TheraftClinic - Plateforme de Services de Rédaction Académique
+# TheDraftClinic - Plateforme de Services de Rédaction Académique
+
+**By MOA Digital Agency LLC | Developed by: Aisance KALONJI | Contact: moa@myoneart.com**
 
 ## Vue d'ensemble
-TheraftClinic est une plateforme web permettant aux doctorants et chercheurs de soumettre des demandes de services de rédaction académique. La plateforme offre un système complet de gestion des demandes avec suivi de progression, gestion des devis et paiements.
+TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de soumettre des demandes de services de rédaction académique. La plateforme offre un système complet de gestion des demandes avec suivi de progression, gestion des devis et paiements.
 
 ## Architecture
 
@@ -92,7 +94,7 @@ python main.py
 ### Variables d'environnement
 - `DATABASE_URL` - URL de connexion PostgreSQL
 - `SECRET_KEY` - Clé secrète Flask
-- `ADMIN_EMAIL` - Email de l'admin (défaut: admin@theraftclinic.com)
+- `ADMIN_EMAIL` - Email de l'admin (défaut: admin@thedraftclinic.com)
 - `ADMIN_PASSWORD` - Mot de passe de l'admin (requis pour créer le compte)
 
 ## Préférences utilisateur
