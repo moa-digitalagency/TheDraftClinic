@@ -357,6 +357,7 @@ dependencies = [
     { name = "gunicorn" },
     { name = "psycopg2-binary" },
     { name = "python-dotenv" },
+    { name = "sqlalchemy" },
     { name = "werkzeug" },
 ]
 
@@ -370,6 +371,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.11" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
+    { name = "sqlalchemy", specifier = ">=2.0.45" },
     { name = "werkzeug", specifier = ">=3.1.4" },
 ]
 
