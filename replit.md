@@ -79,8 +79,8 @@ app/
 - **PostgreSQL** via Replit
 - Tables: users, service_requests, payments, documents
 
-## Comptes par défaut
-- **Admin**: admin@theraftclinic.com / admin123
+## Compte administrateur
+Le compte admin est créé automatiquement au démarrage si les variables d'environnement sont configurées.
 
 ## Développement
 
@@ -92,6 +92,8 @@ python main.py
 ### Variables d'environnement
 - `DATABASE_URL` - URL de connexion PostgreSQL
 - `SECRET_KEY` - Clé secrète Flask
+- `ADMIN_EMAIL` - Email de l'admin (défaut: admin@theraftclinic.com)
+- `ADMIN_PASSWORD` - Mot de passe de l'admin (requis pour créer le compte)
 
 ## Préférences utilisateur
 - Interface en français
