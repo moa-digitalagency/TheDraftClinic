@@ -16,11 +16,11 @@ request management, payment verification, and user management.
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from app import db
-from app.models.user import User
-from app.models.request import ServiceRequest
-from app.models.document import Document
-from app.models.payment import Payment
-from app.services.file_service import save_uploaded_file
+from models.user import User
+from models.request import ServiceRequest
+from models.document import Document
+from models.payment import Payment
+from services.file_service import save_uploaded_file
 from datetime import datetime
 
 bp = Blueprint('admin', __name__)

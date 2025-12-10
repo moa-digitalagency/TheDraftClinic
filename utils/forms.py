@@ -71,7 +71,7 @@ class ServiceRequestForm(FlaskForm):
     
     def __init__(self, *args, **kwargs):
         super(ServiceRequestForm, self).__init__(*args, **kwargs)
-        from app.models.request import ServiceRequest
+        from models.request import ServiceRequest
         self.service_type.choices = ServiceRequest.SERVICE_TYPES
 
 

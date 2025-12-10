@@ -14,7 +14,7 @@ services page, about page, and contact page.
 """
 
 from flask import Blueprint, render_template
-from app.models.request import ServiceRequest
+from models.request import ServiceRequest
 
 bp = Blueprint('main', __name__)
 

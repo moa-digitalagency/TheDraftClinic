@@ -1,0 +1,55 @@
+.glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+}
+
+.hero-light-bg {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.status-submitted { background: #fef3c7; color: #92400e; }
+.status-under_review { background: #e0f2fe; color: #0369a1; }
+.status-quote_sent { background: #ddd6fe; color: #7c3aed; }
+.status-awaiting_deposit { background: #fce7f3; color: #be185d; }
+.status-deposit_pending { background: #fed7aa; color: #c2410c; }
+.status-in_progress { background: #bfdbfe; color: #1d4ed8; }
+.status-completed { background: #bbf7d0; color: #15803d; }
+.status-delivered { background: #86efac; color: #166534; }
+.status-cancelled { background: #fecaca; color: #dc2626; }
+.status-rejected { background: #fecaca; color: #dc2626; }

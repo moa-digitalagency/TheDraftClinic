@@ -17,11 +17,11 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
-from app.models.request import ServiceRequest
-from app.models.document import Document
-from app.models.payment import Payment
-from app.utils.forms import ServiceRequestForm, PaymentProofForm
-from app.services.file_service import save_uploaded_file
+from models.request import ServiceRequest
+from models.document import Document
+from models.payment import Payment
+from utils.forms import ServiceRequestForm, PaymentProofForm
+from services.file_service import save_uploaded_file
 import os
 
 bp = Blueprint('client', __name__)

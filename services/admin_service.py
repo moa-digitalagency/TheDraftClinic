@@ -15,7 +15,7 @@ creation and management utilities.
 
 import os
 from app import db
-from app.models.user import User
+from models.user import User
 
 
 def create_default_admin():

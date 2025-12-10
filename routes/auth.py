@@ -16,8 +16,8 @@ and logout functionality for the TheDraftClinic platform.
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models.user import User
-from app.utils.forms import LoginForm, RegistrationForm
+from models.user import User
+from utils.forms import LoginForm, RegistrationForm
 
 bp = Blueprint('auth', __name__)
 
