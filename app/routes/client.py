@@ -1,3 +1,18 @@
+"""
+================================================================================
+TheDraftClinic - Client Routes Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module handles all client-facing routes including dashboard,
+service request submission, payment submission, and profile management.
+================================================================================
+"""
+
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename

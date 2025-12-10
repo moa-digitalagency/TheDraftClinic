@@ -1,3 +1,18 @@
+"""
+================================================================================
+TheDraftClinic - Authentication Routes Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module handles user authentication including login, registration,
+and logout functionality for the TheDraftClinic platform.
+================================================================================
+"""
+
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db

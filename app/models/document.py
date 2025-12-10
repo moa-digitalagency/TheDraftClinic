@@ -1,8 +1,41 @@
+"""
+================================================================================
+TheDraftClinic - Document Model Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module defines the Document model for managing file uploads
+including client documents, admin uploads, and deliverables.
+================================================================================
+"""
+
 from app import db
 from datetime import datetime
 
 
 class Document(db.Model):
+    """
+    Document model for managing uploaded files.
+    
+    Supports different document types:
+    - client_upload: Files uploaded by clients
+    - admin_upload: Files uploaded by administrators
+    - deliverable: Final work delivered to clients
+    - revision: Revised versions of deliverables
+    
+    Attributes:
+        id: Primary key
+        request_id: Foreign key to ServiceRequest
+        filename: Stored filename (unique)
+        original_filename: Original uploaded filename
+        file_type: MIME type of the file
+        document_type: Category of document
+        uploaded_by: User ID who uploaded the file
+    """
     __tablename__ = 'documents'
     
     id = db.Column(db.Integer, primary_key=True)

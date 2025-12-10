@@ -1,3 +1,18 @@
+"""
+================================================================================
+TheDraftClinic - Application Factory Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module contains the Flask application factory and configuration.
+It initializes all Flask extensions and registers blueprints.
+================================================================================
+"""
+
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -13,9 +28,18 @@ csrf = CSRFProtect()
 
 
 def create_app():
+    """
+    Application factory function.
+    
+    Creates and configures the Flask application with all extensions,
+    blueprints, and database initialization.
+    
+    Returns:
+        Flask: Configured Flask application instance
+    """
     app = Flask(__name__)
     
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'theraftclinic-secret-key-2024')
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'thedraftclinic-secret-key-2024')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024

@@ -1,3 +1,18 @@
+"""
+================================================================================
+TheDraftClinic - Forms Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module defines all WTForms used in the application including
+login, registration, service request, and payment forms.
+================================================================================
+"""
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SelectField, IntegerField, FloatField, DateTimeLocalField, MultipleFileField
@@ -5,6 +20,14 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, N
 
 
 class LoginForm(FlaskForm):
+    """
+    Login form for user authentication.
+    
+    Fields:
+        email: User email address
+        password: User password
+        remember: Remember me checkbox
+    """
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Mot de passe', validators=[DataRequired()])
     remember = BooleanField('Se souvenir de moi')

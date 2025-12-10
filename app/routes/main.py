@@ -1,3 +1,18 @@
+"""
+================================================================================
+TheDraftClinic - Main Routes Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module handles public-facing routes including the landing page,
+services page, about page, and contact page.
+================================================================================
+"""
+
 from flask import Blueprint, render_template
 from app.models.request import ServiceRequest
 

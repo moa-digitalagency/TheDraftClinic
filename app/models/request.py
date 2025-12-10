@@ -1,8 +1,44 @@
+"""
+================================================================================
+TheDraftClinic - Service Request Model Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module defines the ServiceRequest model for academic writing service
+requests. It tracks the entire lifecycle from submission to delivery.
+================================================================================
+"""
+
 from app import db
 from datetime import datetime
 
 
 class ServiceRequest(db.Model):
+    """
+    Service Request model representing academic writing project requests.
+    
+    This model tracks the complete workflow of a service request including:
+    - Initial submission details
+    - Quotation information
+    - Payment status
+    - Work progress
+    - Delivery information
+    
+    Attributes:
+        id: Primary key
+        user_id: Foreign key to User
+        service_type: Type of academic service requested
+        title: Project title
+        description: Detailed project description
+        status: Current request status
+        quote_amount: Quoted price for the service
+        deposit_required: Required deposit amount
+        progress_percentage: Work completion percentage
+    """
     __tablename__ = 'service_requests'
     
     id = db.Column(db.Integer, primary_key=True)

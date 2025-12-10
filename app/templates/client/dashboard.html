@@ -11,7 +11,7 @@
                     <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
                         <span class="text-white font-bold">T</span>
                     </div>
-                    <span class="text-xl font-serif font-bold text-slate-900">TheraftClinic</span>
+                    <span class="text-xl font-bold text-slate-900">TheDraftClinic</span>
                 </div>
                 
                 <div class="flex items-center space-x-4">
@@ -47,10 +47,10 @@
         
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
             <div>
-                <h1 class="text-2xl font-serif font-bold text-slate-900">Bienvenue, {{ current_user.first_name }}!</h1>
+                <h1 class="text-2xl font-bold text-slate-900">Bienvenue, {{ current_user.first_name }}!</h1>
                 <p class="text-gray-600 mt-1">Gérez vos demandes de services académiques</p>
             </div>
-            <a href="{{ url_for('client.new_request') }}" class="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
+            <a href="{{ url_for('client.new_request') }}" class="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium rounded-xl hover:shadow-lg transition-all">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
@@ -106,7 +106,7 @@
                                     <span class="font-medium">{{ request.progress_percentage }}%</span>
                                 </div>
                                 <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" style="width: {{ request.progress_percentage }}%"></div>
+                                    <div class="h-full bg-gradient-to-r from-primary-500 to-primary-700 rounded-full" style="width: {{ request.progress_percentage }}%"></div>
                                 </div>
                             </div>
                             {% endif %}
@@ -140,7 +140,7 @@
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune demande</h3>
                 <p class="text-gray-500 mb-6">Commencez par créer votre première demande de service.</p>
-                <a href="{{ url_for('client.new_request') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
+                <a href="{{ url_for('client.new_request') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium rounded-xl hover:shadow-lg transition-all">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>

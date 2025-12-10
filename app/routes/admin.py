@@ -1,3 +1,18 @@
+"""
+================================================================================
+TheDraftClinic - Admin Routes Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module handles all administrative routes including dashboard,
+request management, payment verification, and user management.
+================================================================================
+"""
+
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from app import db

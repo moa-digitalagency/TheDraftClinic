@@ -1,8 +1,41 @@
+"""
+================================================================================
+TheDraftClinic - Payment Model Module
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+This module defines the Payment model for tracking client payments
+including deposits, final payments, and verification status.
+================================================================================
+"""
+
 from app import db
 from datetime import datetime
 
 
 class Payment(db.Model):
+    """
+    Payment model for tracking client payments.
+    
+    Supports different payment types and verification workflow:
+    - Clients submit payment proof
+    - Admins verify and approve/reject payments
+    - Status tracking throughout the process
+    
+    Attributes:
+        id: Primary key
+        request_id: Foreign key to ServiceRequest
+        amount: Payment amount
+        payment_type: Type (deposit, final, full)
+        payment_method: Method used for payment
+        proof_document: Uploaded payment proof filename
+        status: Verification status
+        verified_by: Admin who verified the payment
+    """
     __tablename__ = 'payments'
     
     id = db.Column(db.Integer, primary_key=True)
