@@ -17,13 +17,19 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 │   ├── user.py          # Utilisateurs (clients et admins)
 │   ├── request.py       # Demandes de services
 │   ├── payment.py       # Paiements et justificatifs
-│   └── document.py      # Documents uploadés
+│   ├── document.py      # Documents uploadés
+│   ├── activity_log.py  # Historique des actions (traçabilité)
+│   ├── site_settings.py # Paramètres du site (logo, SEO, etc.)
+│   ├── page.py          # Pages dynamiques (CGU, CGV, etc.)
+│   ├── deadline_extension.py # Extensions de délai
+│   └── revision_request.py   # Demandes de révision
 ├── routes/              # Routes/Endpoints Flask
 │   ├── __init__.py
-│   ├── main.py          # Pages publiques (landing, services)
+│   ├── main.py          # Pages publiques (landing, services, pages dynamiques)
 │   ├── auth.py          # Authentification (login, register, logout)
-│   ├── client.py        # Dashboard client
-│   └── admin.py         # Dashboard admin
+│   ├── client.py        # Dashboard client, révisions, commentaires
+│   ├── admin.py         # Dashboard admin, livraisons, révisions
+│   └── admin_settings.py # Paramètres, pages, statistiques
 ├── services/            # Services métier
 │   ├── __init__.py
 │   ├── admin_service.py # Création admin par défaut
@@ -79,18 +85,26 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 3. Devis → Réception et acceptation du devis
 4. Paiement → Soumission de preuve d'acompte
 5. Suivi → Visualisation de la progression en temps réel
-6. Livraison → Téléchargement des livrables
+6. Livraison → Téléchargement des livrables (traçabilité)
+7. Révisions → Demande de modifications avec fichiers joints
+8. Extensions → Réponse aux demandes d'extension de délai
+9. Commentaires → Communication avec l'équipe
 
 ### Admin
 1. Examen → Révision des demandes soumises
 2. Devis → Envoi de devis personnalisés
 3. Vérification → Validation des preuves de paiement
 4. Traitement → Mise à jour de la progression
-5. Livraison → Upload des livrables
+5. Livraison → Upload des livrables avec commentaires
+6. Révisions → Gestion des demandes de révision
+7. Extensions → Demandes d'extension de délai
+8. Statistiques → Dashboard de traçabilité et stats
+9. Paramètres → Logo, favicon, SEO, informations légales
+10. Pages → Gestion des pages dynamiques (CGU, CGV, etc.)
 
 ## Base de données
 - **PostgreSQL** via Replit
-- Tables: users, service_requests, payments, documents
+- Tables: users, service_requests, payments, documents, activity_logs, site_settings, pages, deadline_extensions, revision_requests, revision_attachments
 
 ## Sécurité
 - Mots de passe hashés avec Werkzeug (bcrypt)

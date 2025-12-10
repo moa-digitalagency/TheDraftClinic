@@ -24,10 +24,11 @@ Note:
 # IMPORTATIONS
 # ==============================================================================
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 import logging
 
 from models.request import ServiceRequest
+from models.page import Page
 
 # Configuration du logger pour ce module
 logger = logging.getLogger(__name__)
@@ -145,22 +146,35 @@ def contact():
 # CONFIGURATION DU CACHE (ANTI-CACHE)
 # ==============================================================================
 
+@bp.route('/page/<slug>')
+def view_page(slug):
+    """
+    Affiche une page dynamique par son slug.
+    
+    Args:
+        slug: L'identifiant unique de la page
+        
+    Returns:
+        Template page.html avec le contenu de la page
+    """
+    try:
+        page = Page.query.filter_by(slug=slug, is_published=True).first()
+        
+        if not page:
+            abort(404)
+        
+        return render_template('page.html', page=page)
+        
+    except Exception as e:
+        logger.error(f"Erreur affichage page {slug}: {e}")
+        abort(404)
+
+
 @bp.after_request
 def add_header(response):
     """
     Ajoute des en-têtes HTTP pour désactiver le cache.
-    
-    Ceci est nécessaire dans l'environnement Replit car le site
-    est affiché dans un iframe. Sans ces en-têtes, les modifications
-    peuvent ne pas être visibles immédiatement pour l'utilisateur.
-    
-    Args:
-        response: L'objet Response de Flask
-        
-    Returns:
-        Response avec les en-têtes de cache modifiés
     """
-    # Désactivation du cache pour éviter les problèmes de mise à jour
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'

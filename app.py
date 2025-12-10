@@ -277,6 +277,7 @@ def create_app():
     
     # Import des blueprints depuis le dossier routes
     from routes import auth, client, admin, main
+    from routes import admin_settings
     
     # Blueprint principal (pages publiques: accueil, services, etc.)
     app.register_blueprint(main.bp)
@@ -290,12 +291,34 @@ def create_app():
     # Blueprint administrateur (gestion des demandes, utilisateurs)
     app.register_blueprint(admin.bp, url_prefix='/admin')
     
+    # Blueprint paramètres admin (settings, pages, stats)
+    app.register_blueprint(admin_settings.bp, url_prefix='/admin')
+    
     # --------------------------------------------------------------------------
     # ENREGISTREMENT DES GESTIONNAIRES D'ERREURS
     # --------------------------------------------------------------------------
     
     from security.error_handlers import register_error_handlers
     register_error_handlers(app)
+    
+    # --------------------------------------------------------------------------
+    # CONTEXT PROCESSORS (Variables globales pour templates)
+    # --------------------------------------------------------------------------
+    
+    @app.context_processor
+    def inject_site_settings():
+        """Injecte les paramètres du site dans tous les templates."""
+        try:
+            from models.site_settings import SiteSettings
+            from models.page import Page
+            settings = SiteSettings.get_settings()
+            footer_pages = Page.get_footer_pages()
+            return {
+                'site_settings': settings,
+                'footer_pages': footer_pages
+            }
+        except Exception:
+            return {'site_settings': None, 'footer_pages': []}
     
     # --------------------------------------------------------------------------
     # INITIALISATION DE LA BASE DE DONNÉES ET ADMIN PAR DÉFAUT

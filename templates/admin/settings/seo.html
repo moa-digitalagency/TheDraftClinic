@@ -1,0 +1,103 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}SEO et OpenGraph{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100">
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold">Administration</a>
+                <a href="{{ url_for('admin_settings.settings') }}" class="hover:text-gray-300">Retour aux paramètres</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">SEO et OpenGraph</h1>
+
+        <form method="POST" enctype="multipart/form-data" class="bg-white rounded-xl shadow p-6 space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="border-b pb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">SEO</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Titre SEO (max 70 caractères)</label>
+                        <input type="text" name="seo_title" value="{{ settings.seo_title or '' }}" maxlength="70"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description SEO (max 160 caractères)</label>
+                        <textarea name="seo_description" rows="2" maxlength="160"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">{{ settings.seo_description or '' }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mots-clés (séparés par des virgules)</label>
+                        <input type="text" name="seo_keywords" value="{{ settings.seo_keywords or '' }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-b pb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">OpenGraph (partage sur réseaux sociaux)</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Titre OG</label>
+                        <input type="text" name="og_title" value="{{ settings.og_title or '' }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description OG</label>
+                        <textarea name="og_description" rows="2"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">{{ settings.og_description or '' }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Image OG (1200x630px recommandé)</label>
+                        {% if settings.og_image_filename %}
+                        <div class="mb-3">
+                            <img src="{{ url_for('static', filename='uploads/branding/' ~ settings.og_image_filename) }}" 
+                                 alt="Image OG actuelle" class="h-32 object-contain rounded">
+                        </div>
+                        {% endif %}
+                        <input type="file" name="og_image" accept="image/*"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Twitter Card</h2>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Type de carte</label>
+                        <select name="twitter_card" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                            <option value="summary" {{ 'selected' if settings.twitter_card == 'summary' }}>Summary</option>
+                            <option value="summary_large_image" {{ 'selected' if settings.twitter_card == 'summary_large_image' }}>Summary Large Image</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Compte Twitter (@)</label>
+                        <input type="text" name="twitter_site" value="{{ settings.twitter_site or '' }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-700 transition">
+                    Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    </main>
+</div>
+{% endblock %}

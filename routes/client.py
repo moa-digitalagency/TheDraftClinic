@@ -34,11 +34,15 @@ from flask import (
 from flask_login import login_required, current_user
 from functools import wraps
 import logging
+import os
 
 from app import db
 from models.request import ServiceRequest
 from models.document import Document
 from models.payment import Payment
+from models.activity_log import ActivityLog
+from models.deadline_extension import DeadlineExtension
+from models.revision_request import RevisionRequest, RevisionAttachment
 from utils.forms import ServiceRequestForm, PaymentProofForm
 from services.file_service import save_uploaded_file
 
@@ -417,3 +421,210 @@ def profile():
         logger.error(f"Erreur mise à jour profil {current_user.email}: {e}")
         flash('Une erreur est survenue.', 'error')
         return render_template('client/profile.html')
+
+
+@bp.route('/request/<int:request_id>/download/<int:document_id>')
+@login_required
+@client_required
+def download_document(request_id, document_id):
+    """Télécharge un document et enregistre l'action dans l'historique."""
+    from flask import send_from_directory
+    
+    try:
+        service_request = ServiceRequest.query.filter_by(
+            id=request_id, 
+            user_id=current_user.id
+        ).first_or_404()
+        
+        document = Document.query.filter_by(
+            id=document_id,
+            request_id=request_id
+        ).first_or_404()
+        
+        ActivityLog.log_action(
+            request_id=request_id,
+            user_id=current_user.id,
+            action_type='download',
+            title='Document téléchargé',
+            description=f"Le client a téléchargé: {document.original_filename}",
+            metadata={'document_id': document_id, 'filename': document.original_filename},
+            visible_to_client=True
+        )
+        db.session.commit()
+        
+        return send_from_directory(
+            current_app.config['UPLOAD_FOLDER'],
+            document.filename,
+            as_attachment=True,
+            download_name=document.original_filename
+        )
+        
+    except Exception as e:
+        logger.error(f"Erreur téléchargement document {document_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('client.view_request', request_id=request_id))
+
+
+@bp.route('/request/<int:request_id>/request-revision', methods=['POST'])
+@login_required
+@client_required
+def request_revision(request_id):
+    """Demande une révision sur un livrable."""
+    from datetime import datetime
+    
+    try:
+        service_request = ServiceRequest.query.filter_by(
+            id=request_id, 
+            user_id=current_user.id
+        ).first_or_404()
+        
+        revision_details = request.form.get('revision_details', '').strip()
+        delivery_doc_id = request.form.get('delivery_document_id', type=int)
+        
+        if not revision_details:
+            flash('Veuillez décrire les révisions souhaitées.', 'error')
+            return redirect(url_for('client.view_request', request_id=request_id))
+        
+        revision = RevisionRequest(
+            request_id=request_id,
+            delivery_document_id=delivery_doc_id,
+            requested_by=current_user.id,
+            revision_details=revision_details,
+            status='pending'
+        )
+        db.session.add(revision)
+        db.session.flush()
+        
+        if 'revision_files' in request.files:
+            for file in request.files.getlist('revision_files'):
+                if file and file.filename:
+                    saved_filename = save_uploaded_file(
+                        file,
+                        os.path.join(current_app.config['UPLOAD_FOLDER'], 'revisions')
+                    )
+                    if saved_filename:
+                        attachment = RevisionAttachment(
+                            revision_request_id=revision.id,
+                            filename=saved_filename,
+                            original_filename=file.filename,
+                            file_type=file.content_type,
+                            file_size=0,
+                            uploaded_by=current_user.id
+                        )
+                        db.session.add(attachment)
+        
+        ActivityLog.log_action(
+            request_id=request_id,
+            user_id=current_user.id,
+            action_type='revision_request',
+            title='Demande de révision',
+            description=revision_details,
+            visible_to_client=True
+        )
+        
+        db.session.commit()
+        flash('Demande de révision envoyée.', 'success')
+        return redirect(url_for('client.view_request', request_id=request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur demande révision {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('client.view_request', request_id=request_id))
+
+
+@bp.route('/request/<int:request_id>/add-comment', methods=['POST'])
+@login_required
+@client_required
+def add_comment(request_id):
+    """Ajoute un commentaire client à une demande."""
+    try:
+        service_request = ServiceRequest.query.filter_by(
+            id=request_id, 
+            user_id=current_user.id
+        ).first_or_404()
+        
+        comment = request.form.get('comment', '').strip()
+        
+        if comment:
+            ActivityLog.log_action(
+                request_id=request_id,
+                user_id=current_user.id,
+                action_type='comment',
+                title='Message du client',
+                description=comment,
+                visible_to_client=True
+            )
+            db.session.commit()
+            flash('Commentaire ajouté.', 'success')
+        
+        return redirect(url_for('client.view_request', request_id=request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur ajout commentaire client {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('client.view_request', request_id=request_id))
+
+
+@bp.route('/deadline-extension/<int:extension_id>/respond', methods=['POST'])
+@login_required
+@client_required
+def respond_deadline_extension(extension_id):
+    """Répond à une demande d'extension de délai."""
+    from datetime import datetime
+    
+    try:
+        extension = DeadlineExtension.query.get_or_404(extension_id)
+        
+        if extension.service_request.user_id != current_user.id:
+            flash('Accès non autorisé.', 'error')
+            return redirect(url_for('client.dashboard'))
+        
+        action = request.form.get('action')
+        response_message = request.form.get('response_message', '').strip()
+        
+        if action == 'approve':
+            extension.status = 'approved'
+            extension.response_message = response_message
+            extension.responded_by = current_user.id
+            extension.responded_at = datetime.utcnow()
+            
+            extension.service_request.deadline = extension.new_deadline
+            
+            ActivityLog.log_action(
+                request_id=extension.request_id,
+                user_id=current_user.id,
+                action_type='deadline_extension_approved',
+                title='Extension de délai approuvée',
+                description=f"Nouvelle date: {extension.new_deadline.strftime('%d/%m/%Y %H:%M')}",
+                visible_to_client=True
+            )
+            
+            flash('Extension de délai approuvée.', 'success')
+            
+        elif action == 'reject':
+            extension.status = 'rejected'
+            extension.response_message = response_message
+            extension.responded_by = current_user.id
+            extension.responded_at = datetime.utcnow()
+            
+            ActivityLog.log_action(
+                request_id=extension.request_id,
+                user_id=current_user.id,
+                action_type='deadline_extension_rejected',
+                title='Extension de délai refusée',
+                description=response_message or 'Le client a refusé l\'extension.',
+                visible_to_client=True
+            )
+            
+            flash('Extension de délai refusée.', 'warning')
+        
+        db.session.commit()
+        return redirect(url_for('client.view_request', request_id=extension.request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur réponse extension {extension_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('client.dashboard'))

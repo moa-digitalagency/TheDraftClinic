@@ -23,6 +23,12 @@
 | **Tableau de Bord** | Suivi en temps réel de l'avancement des projets |
 | **Gestion Utilisateurs** | Inscription, connexion et gestion de profil |
 | **Panel Administrateur** | Interface complète pour la gestion des demandes |
+| **Traçabilité Complète** | Historique de toutes les actions (livraisons, téléchargements, révisions) |
+| **Système de Révisions** | Demandes de modifications avec fichiers joints |
+| **Extensions de Délai** | Demandes et validation des extensions de deadline |
+| **Paramètres du Site** | Logo, favicon, SEO, informations légales |
+| **Pages Dynamiques** | CGU, CGV, Politique de confidentialité personnalisables |
+| **Statistiques** | Dashboard de stats avec métriques de performance |
 
 ---
 
@@ -271,6 +277,15 @@ Format: `YYYY-MM-DD HH:MM:SS - LEVEL - module - message`
 - `GET /admin/users` - Liste utilisateurs
 - `GET /admin/user/<id>` - Détails utilisateur
 - `POST /admin/payment/<id>/verify` - Vérifier paiement
+
+---
+
+## Documentation Complète
+
+- [README English](docs/README_EN.md)
+- [Guide de déploiement VPS](docs/DEPLOYMENT_VPS.md)
+- [Guide de déploiement AWS](docs/DEPLOYMENT_AWS.md)
+- [Documentation API](docs/API.md)
 
 ---
 

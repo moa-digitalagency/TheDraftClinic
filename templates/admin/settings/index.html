@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Paramètres du site{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100">
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold">Administration</a>
+                <div class="flex space-x-4">
+                    <a href="{{ url_for('admin.dashboard') }}" class="hover:text-gray-300">Dashboard</a>
+                    <a href="{{ url_for('admin_settings.statistics') }}" class="hover:text-gray-300">Stats</a>
+                    <a href="{{ url_for('admin_settings.settings') }}" class="text-primary-400">Paramètres</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Paramètres du site</h1>
+
+        <div class="grid gap-6">
+            <a href="{{ url_for('admin_settings.settings_general') }}" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition block">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                    <i data-feather="settings" class="h-5 w-5 mr-3 text-primary-600"></i>
+                    Paramètres généraux
+                </h2>
+                <p class="text-gray-600 mt-2">Nom du site, description, fuseau horaire, pays, langue par défaut</p>
+            </a>
+
+            <a href="{{ url_for('admin_settings.settings_branding') }}" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition block">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                    <i data-feather="image" class="h-5 w-5 mr-3 text-primary-600"></i>
+                    Branding
+                </h2>
+                <p class="text-gray-600 mt-2">Logo et favicon du site (upload de fichiers)</p>
+            </a>
+
+            <a href="{{ url_for('admin_settings.settings_seo') }}" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition block">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                    <i data-feather="search" class="h-5 w-5 mr-3 text-primary-600"></i>
+                    SEO et OpenGraph
+                </h2>
+                <p class="text-gray-600 mt-2">Métadonnées SEO, balises OpenGraph, image de partage</p>
+            </a>
+
+            <a href="{{ url_for('admin_settings.settings_legal') }}" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition block">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                    <i data-feather="file-text" class="h-5 w-5 mr-3 text-primary-600"></i>
+                    Informations légales
+                </h2>
+                <p class="text-gray-600 mt-2">Raison sociale, SIRET, mentions légales, hébergeur, DPO</p>
+            </a>
+
+            <a href="{{ url_for('admin_settings.settings_advanced') }}" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition block">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                    <i data-feather="code" class="h-5 w-5 mr-3 text-primary-600"></i>
+                    Paramètres avancés
+                </h2>
+                <p class="text-gray-600 mt-2">Analytics, scripts personnalisés, mode maintenance</p>
+            </a>
+
+            <a href="{{ url_for('admin_settings.pages_list') }}" class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition block">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                    <i data-feather="file" class="h-5 w-5 mr-3 text-primary-600"></i>
+                    Gestion des pages
+                </h2>
+                <p class="text-gray-600 mt-2">CGU, CGV, Politique de confidentialité, pages personnalisées</p>
+            </a>
+        </div>
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Gestion des pages{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100">
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold">Administration</a>
+                <a href="{{ url_for('admin_settings.settings') }}" class="hover:text-gray-300">Retour aux paramètres</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Gestion des pages</h1>
+            <a href="{{ url_for('admin_settings.page_new') }}" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                + Nouvelle page
+            </a>
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Affichage</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for page in pages %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ page.title }}</div>
+                            <div class="text-sm text-gray-500">/page/{{ page.slug }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ page.get_type_display() }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if page.is_published %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Publié</span>
+                            {% else %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Brouillon</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {% if page.show_in_footer %}Footer{% endif %}
+                            {% if page.show_in_navigation %}Nav{% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ url_for('main.view_page', slug=page.slug) }}" target="_blank" class="text-gray-600 hover:text-gray-900 mr-3">Voir</a>
+                            <a href="{{ url_for('admin_settings.page_edit', page_id=page.id) }}" class="text-primary-600 hover:text-primary-900 mr-3">Modifier</a>
+                            <form action="{{ url_for('admin_settings.page_delete', page_id=page.id) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette page?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                            Aucune page créée. <a href="{{ url_for('admin_settings.page_new') }}" class="text-primary-600 hover:underline">Créer une page</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

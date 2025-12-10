@@ -40,6 +40,9 @@ from models.user import User
 from models.request import ServiceRequest
 from models.document import Document
 from models.payment import Payment
+from models.activity_log import ActivityLog
+from models.deadline_extension import DeadlineExtension
+from models.revision_request import RevisionRequest
 from services.file_service import save_uploaded_file
 
 # Configuration du logger pour ce module
@@ -316,9 +319,10 @@ def update_status(request_id):
         progress = request.form.get('progress', type=int)
         admin_notes = request.form.get('admin_notes', '').strip()
         
+        old_status = service_request.status
+        
         if new_status:
             service_request.status = new_status
-            # Si livré, marquer comme 100% et enregistrer la date
             if new_status == 'delivered':
                 service_request.delivered_at = datetime.utcnow()
                 service_request.progress_percentage = 100
@@ -328,6 +332,28 @@ def update_status(request_id):
         
         if admin_notes:
             service_request.admin_notes = admin_notes
+        
+        if new_status and new_status != old_status:
+            ActivityLog.log_action(
+                request_id=request_id,
+                user_id=current_user.id,
+                action_type='status_change',
+                title='Changement de statut',
+                description=f"Statut modifié: {service_request.get_status_display()}",
+                metadata={'old_status': old_status, 'new_status': new_status},
+                visible_to_client=True
+            )
+        
+        if progress is not None:
+            ActivityLog.log_action(
+                request_id=request_id,
+                user_id=current_user.id,
+                action_type='progress_update',
+                title='Mise à jour progression',
+                description=f"Progression: {progress}%",
+                metadata={'progress': progress},
+                visible_to_client=True
+            )
         
         db.session.commit()
         
@@ -370,16 +396,29 @@ def upload_deliverable(request_id):
                     current_app.config['UPLOAD_FOLDER']
                 )
                 if saved_filename:
+                    delivery_comment = request.form.get('delivery_comment', '').strip()
+                    
                     doc = Document(
                         request_id=request_id,
                         filename=saved_filename,
                         original_filename=file.filename,
                         file_type=file.content_type,
                         document_type='deliverable',
-                        description=request.form.get('description', '').strip(),
+                        description=delivery_comment,
                         uploaded_by=current_user.id
                     )
                     db.session.add(doc)
+                    
+                    ActivityLog.log_action(
+                        request_id=request_id,
+                        user_id=current_user.id,
+                        action_type='delivery',
+                        title='Livraison du travail',
+                        description=delivery_comment or 'Un nouveau livrable a été uploadé.',
+                        metadata={'document_filename': file.filename},
+                        visible_to_client=True
+                    )
+                    
                     db.session.commit()
                     
                     logger.info(f"Livrable uploadé pour demande {request_id} par {current_user.email}")
@@ -513,3 +552,151 @@ def view_user(user_id):
         logger.error(f"Erreur affichage utilisateur {user_id}: {e}")
         flash('Une erreur est survenue.', 'error')
         return redirect(url_for('admin.users_list'))
+
+
+@bp.route('/request/<int:request_id>/add-comment', methods=['POST'])
+@login_required
+@admin_required
+def add_comment(request_id):
+    """Ajoute un commentaire à une demande."""
+    try:
+        service_request = ServiceRequest.query.get_or_404(request_id)
+        comment = request.form.get('comment', '').strip()
+        
+        if comment:
+            ActivityLog.log_action(
+                request_id=request_id,
+                user_id=current_user.id,
+                action_type='comment',
+                title='Commentaire de l\'équipe',
+                description=comment,
+                visible_to_client=True
+            )
+            db.session.commit()
+            flash('Commentaire ajouté.', 'success')
+        
+        return redirect(url_for('admin.view_request', request_id=request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur ajout commentaire {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.view_request', request_id=request_id))
+
+
+@bp.route('/request/<int:request_id>/request-deadline-extension', methods=['POST'])
+@login_required
+@admin_required
+def request_deadline_extension(request_id):
+    """Demande une extension de délai (doit être validée par le client)."""
+    try:
+        service_request = ServiceRequest.query.get_or_404(request_id)
+        
+        new_deadline_str = request.form.get('new_deadline', '')
+        reason = request.form.get('reason', '').strip()
+        
+        if not new_deadline_str:
+            flash('Veuillez spécifier une nouvelle date.', 'error')
+            return redirect(url_for('admin.view_request', request_id=request_id))
+        
+        new_deadline = datetime.strptime(new_deadline_str, '%Y-%m-%dT%H:%M')
+        
+        extension = DeadlineExtension(
+            request_id=request_id,
+            requested_by=current_user.id,
+            original_deadline=service_request.deadline,
+            new_deadline=new_deadline,
+            reason=reason,
+            status='pending'
+        )
+        db.session.add(extension)
+        
+        ActivityLog.log_action(
+            request_id=request_id,
+            user_id=current_user.id,
+            action_type='deadline_extension_request',
+            title='Demande d\'extension de délai',
+            description=f"Nouvelle date proposée: {new_deadline.strftime('%d/%m/%Y %H:%M')}. Raison: {reason}",
+            visible_to_client=True
+        )
+        
+        db.session.commit()
+        flash('Demande d\'extension envoyée au client.', 'success')
+        return redirect(url_for('admin.view_request', request_id=request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur demande extension {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.view_request', request_id=request_id))
+
+
+@bp.route('/revision/<int:revision_id>/handle', methods=['POST'])
+@login_required
+@admin_required
+def handle_revision(revision_id):
+    """Traite une demande de révision."""
+    try:
+        revision = RevisionRequest.query.get_or_404(revision_id)
+        action = request.form.get('action')
+        response = request.form.get('response', '').strip()
+        
+        if action == 'accept':
+            revision.status = 'in_progress'
+            revision.admin_response = response
+            revision.responded_by = current_user.id
+            revision.responded_at = datetime.utcnow()
+            
+            revision.service_request.status = 'revision'
+            
+            ActivityLog.log_action(
+                request_id=revision.request_id,
+                user_id=current_user.id,
+                action_type='comment',
+                title='Révision acceptée',
+                description=response or 'La demande de révision a été acceptée.',
+                visible_to_client=True
+            )
+            
+            flash('Révision acceptée.', 'success')
+            
+        elif action == 'complete':
+            revision.status = 'completed'
+            revision.responded_at = datetime.utcnow()
+            
+            ActivityLog.log_action(
+                request_id=revision.request_id,
+                user_id=current_user.id,
+                action_type='revision_delivery',
+                title='Révision terminée',
+                description='La révision demandée a été effectuée.',
+                visible_to_client=True
+            )
+            
+            flash('Révision terminée.', 'success')
+            
+        elif action == 'reject':
+            revision.status = 'rejected'
+            revision.admin_response = response
+            revision.responded_by = current_user.id
+            revision.responded_at = datetime.utcnow()
+            
+            ActivityLog.log_action(
+                request_id=revision.request_id,
+                user_id=current_user.id,
+                action_type='comment',
+                title='Révision refusée',
+                description=response or 'La demande de révision a été refusée.',
+                visible_to_client=True
+            )
+            
+            flash('Révision refusée.', 'warning')
+        
+        db.session.commit()
+        return redirect(url_for('admin.view_request', request_id=revision.request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur traitement révision {revision_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.dashboard'))

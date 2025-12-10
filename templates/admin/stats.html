@@ -1,0 +1,116 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100">
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold">Administration</a>
+                <div class="flex space-x-4">
+                    <a href="{{ url_for('admin.dashboard') }}" class="hover:text-gray-300">Dashboard</a>
+                    <a href="{{ url_for('admin.requests_list') }}" class="hover:text-gray-300">Demandes</a>
+                    <a href="{{ url_for('admin_settings.statistics') }}" class="text-primary-400">Stats</a>
+                    <a href="{{ url_for('admin_settings.settings') }}" class="hover:text-gray-300">Paramètres</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Statistiques et Traçabilité</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="text-3xl font-bold text-primary-600">{{ stats.total_requests }}</div>
+                <div class="text-gray-600">Total demandes</div>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="text-3xl font-bold text-green-600">{{ stats.completed_requests }}</div>
+                <div class="text-gray-600">Demandes terminées</div>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="text-3xl font-bold text-blue-600">{{ stats.total_users }}</div>
+                <div class="text-gray-600">Total clients</div>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="text-3xl font-bold text-indigo-600">{{ stats.avg_delivery_time }}j</div>
+                <div class="text-gray-600">Temps moyen livraison</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Respect des délais</h2>
+                <div class="flex items-center justify-center h-48">
+                    <div class="text-center">
+                        <div class="text-5xl font-bold text-green-600">{{ "%.1f"|format(stats.on_time_rate) }}%</div>
+                        <div class="text-gray-600 mt-2">Taux de livraison à temps</div>
+                        <div class="mt-4 flex justify-center space-x-8 text-sm">
+                            <div>
+                                <span class="text-green-600 font-semibold">{{ stats.on_time_deliveries }}</span> à temps
+                            </div>
+                            <div>
+                                <span class="text-red-600 font-semibold">{{ stats.late_deliveries }}</span> en retard
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Demandes par statut</h2>
+                <div class="space-y-3">
+                    {% for status, count in stats.requests_by_status.items() %}
+                    {% if count > 0 %}
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">{{ status }}</span>
+                        <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">{{ count }}</span>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Demandes par type de service</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {% for service, count in stats.requests_by_service.items() %}
+                <div class="bg-gray-50 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-primary-600">{{ count }}</div>
+                    <div class="text-sm text-gray-600">{{ service }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Historique des activités récentes</h2>
+            <div class="space-y-4 max-h-96 overflow-y-auto">
+                {% for activity in recent_activities %}
+                <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg">
+                    <div class="flex-shrink-0">
+                        <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-{{ activity.get_color() }}-100">
+                            <i data-feather="{{ activity.get_icon() }}" class="h-4 w-4 text-{{ activity.get_color() }}-600"></i>
+                        </span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900">{{ activity.title }}</p>
+                        <p class="text-sm text-gray-500">{{ activity.description[:100] }}{% if activity.description|length > 100 %}...{% endif %}</p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            {{ activity.user.full_name if activity.user else 'Système' }} - 
+                            Projet #{{ activity.request_id }} - 
+                            {{ activity.created_at.strftime('%d/%m/%Y %H:%M') }}
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-gray-500 text-center py-8">Aucune activité récente</p>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
