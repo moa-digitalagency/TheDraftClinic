@@ -1,0 +1,35 @@
+# ================================================================================
+# TheDraftClinic - Requirements
+# ================================================================================
+# By MOA Digital Agency LLC
+# Developed by: Aisance KALONJI
+# Contact: moa@myoneart.com
+# Website: www.myoneart.com
+# ================================================================================
+# This file lists all Python dependencies required to run TheDraftClinic.
+# Install with: pip install -r requirements.txt
+# ================================================================================
+
+# Web Framework
+Flask>=3.1.2
+Werkzeug>=3.1.4
+
+# Database
+Flask-SQLAlchemy>=3.1.1
+SQLAlchemy>=2.0.45
+psycopg2-binary>=2.9.11
+
+# Authentication
+Flask-Login>=0.6.3
+
+# Forms and Security
+Flask-WTF>=1.2.2
+
+# Validation
+email-validator>=2.3.0
+
+# Environment
+python-dotenv>=1.2.1
+
+# Production Server
+gunicorn>=23.0.0
