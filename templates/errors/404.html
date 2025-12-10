@@ -1,0 +1,63 @@
+<!-- 
+================================================================================
+TheDraftClinic - Page d'Erreur 404 (Page Non Trouvée)
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+================================================================================
+
+Cette page est affichée lorsqu'un utilisateur tente d'accéder à une URL 
+qui n'existe pas sur le serveur.
+
+Hérite de: layouts/base.html
+================================================================================
+-->
+
+{% extends "layouts/base.html" %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+<!-- Conteneur principal centré verticalement et horizontalement -->
+<div class="min-h-screen hero-light-bg flex items-center justify-center px-4">
+    
+    <!-- Carte d'erreur avec effet glassmorphisme -->
+    <div class="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full text-center shadow-xl">
+        
+        <!-- Code d'erreur stylisé -->
+        <h1 class="text-8xl font-bold gradient-text mb-4">404</h1>
+        
+        <!-- Titre de l'erreur -->
+        <h2 class="text-2xl font-semibold text-slate-800 mb-4">
+            Page non trouvée
+        </h2>
+        
+        <!-- Message explicatif -->
+        <p class="text-slate-600 mb-8">
+            Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
+        </p>
+        
+        <!-- Boutons d'action -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            
+            <!-- Bouton retour à l'accueil -->
+            <a href="{{ url_for('main.index') }}" 
+               class="gradient-bg text-white px-6 py-3 rounded-lg font-medium 
+                      hover:opacity-90 transition-opacity">
+                Retour à l'accueil
+            </a>
+            
+            <!-- Bouton retour en arrière -->
+            <button onclick="history.back()" 
+                    class="border border-slate-300 text-slate-700 px-6 py-3 rounded-lg 
+                           font-medium hover:bg-slate-100 transition-colors">
+                Page précédente
+            </button>
+            
+        </div>
+        
+    </div>
+    
+</div>
+{% endblock %}

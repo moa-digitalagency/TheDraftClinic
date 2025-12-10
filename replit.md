@@ -10,33 +10,43 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 ### Backend (Python Flask)
 ```
 /
-├── app.py               # Configuration Flask, initialisation DB
+├── app.py               # Configuration Flask, initialisation DB, logging
 ├── main.py              # Point d'entrée de l'application
 ├── models/              # Modèles SQLAlchemy
+│   ├── __init__.py
 │   ├── user.py          # Utilisateurs (clients et admins)
 │   ├── request.py       # Demandes de services
 │   ├── payment.py       # Paiements et justificatifs
 │   └── document.py      # Documents uploadés
-├── routes/              # Routes/Endpoints
+├── routes/              # Routes/Endpoints Flask
+│   ├── __init__.py
 │   ├── main.py          # Pages publiques (landing, services)
 │   ├── auth.py          # Authentification (login, register, logout)
 │   ├── client.py        # Dashboard client
 │   └── admin.py         # Dashboard admin
 ├── services/            # Services métier
+│   ├── __init__.py
 │   ├── admin_service.py # Création admin par défaut
 │   └── file_service.py  # Gestion fichiers uploadés
+├── security/            # Modules de sécurité
+│   ├── __init__.py
+│   ├── decorators.py    # Décorateurs d'autorisation
+│   ├── validators.py    # Validation des entrées
+│   ├── rate_limiter.py  # Limitation de taux
+│   └── error_handlers.py # Gestionnaires d'erreurs
 ├── utils/               # Utilitaires
 │   └── forms.py         # Formulaires WTForms
-├── security/            # Sécurité (à étendre)
 ├── templates/           # Templates Jinja2
 │   ├── layouts/         # Template de base
 │   ├── auth/            # Pages authentification
 │   ├── client/          # Dashboard client
-│   └── admin/           # Dashboard admin
-└── static/              # Fichiers statiques
-    ├── css/styles.css   # Styles personnalisés
-    ├── js/main.js       # JavaScript personnalisé
-    └── uploads/         # Documents uploadés
+│   ├── admin/           # Dashboard admin
+│   └── errors/          # Pages d'erreur (404, 500, etc.)
+├── static/              # Fichiers statiques
+│   ├── css/styles.css   # Styles personnalisés
+│   ├── js/main.js       # JavaScript personnalisé
+│   └── uploads/         # Documents uploadés
+└── logs/                # Fichiers de log (générés)
 ```
 
 ### Frontend
@@ -82,24 +92,48 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 - **PostgreSQL** via Replit
 - Tables: users, service_requests, payments, documents
 
-## Compte administrateur
-Le compte admin est créé automatiquement au démarrage si les variables d'environnement sont configurées.
+## Sécurité
+- Mots de passe hashés avec Werkzeug (bcrypt)
+- Protection CSRF sur tous les formulaires
+- Décorateurs d'autorisation (admin_required, client_required)
+- Validation des entrées utilisateur
+- Limitation de taux sur les connexions
+- Logging complet des erreurs et actions
+- Pages d'erreur personnalisées (400, 401, 403, 404, 500)
+
+## Logging
+L'application utilise un système de logging robuste:
+- `logs/thedraftclinic.log` - Log général avec rotation
+- `logs/errors.log` - Erreurs uniquement
+
+## Variables d'environnement
+
+### Requises
+- `DATABASE_URL` - URL de connexion PostgreSQL
+- `SESSION_SECRET` - Clé secrète Flask pour les sessions
+
+### Admin (dans variables d'environnement)
+- `ADMIN_EMAIL` - Email de l'admin (défaut: admin@thedraftclinic.com)
+- `ADMIN_PASSWORD` - Mot de passe de l'admin (requis pour créer le compte)
 
 ## Développement
 
 ### Lancer le serveur
 ```bash
-python main.py
+uv run gunicorn --bind 0.0.0.0:5000 --reload main:app
 ```
 
-### Variables d'environnement
-- `DATABASE_URL` - URL de connexion PostgreSQL
-- `SECRET_KEY` - Clé secrète Flask
-- `ADMIN_EMAIL` - Email de l'admin (défaut: admin@thedraftclinic.com)
-- `ADMIN_PASSWORD` - Mot de passe de l'admin (requis pour créer le compte)
+### Structure des commentaires
+Tous les fichiers sont commentés avec:
+- En-tête d'identification (auteur, contact)
+- Description du module/fichier
+- Commentaires de section
+- Docstrings pour les fonctions/classes
 
 ## Préférences utilisateur
 - Interface en français
 - Design moderne avec glassmorphisme
-- Backend Python Flask organisé
+- Backend Python Flask bien structuré
 - Frontend Tailwind CSS (pas de Node.js)
+- Code entièrement commenté
+- Système de logging robuste

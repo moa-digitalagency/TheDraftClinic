@@ -1,21 +1,87 @@
+<!-- 
+================================================================================
+TheDraftClinic - Template de Base
+================================================================================
+By MOA Digital Agency LLC
+Developed by: Aisance KALONJI
+Contact: moa@myoneart.com
+Website: www.myoneart.com
+================================================================================
+
+Ce template est le squelette de base pour toutes les pages de l'application.
+Il définit:
+- La structure HTML5 commune
+- Les imports CSS (Tailwind CDN + styles personnalisés)
+- Les imports JS (main.js personnalisé)
+- La configuration Tailwind personnalisée
+- Les blocs Jinja2 pour l'extension par les pages enfants
+
+Blocs disponibles:
+- title: Titre de la page (avant " - TheDraftClinic")
+- extra_css: CSS additionnel spécifique à la page
+- body: Contenu principal de la page
+- extra_js: JavaScript additionnel spécifique à la page
+================================================================================
+-->
+
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
+    <!-- ====================================================================
+         META TAGS
+         ==================================================================== -->
+    <!-- Encodage des caractères -->
     <meta charset="UTF-8">
+    
+    <!-- Viewport pour le responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ====================================================================
+         TITRE DE LA PAGE
+         ==================================================================== 
+         Le bloc 'title' peut être surchargé dans les templates enfants
+         pour personnaliser le titre de chaque page.
+    -->
     <title>{% block title %}TheDraftClinic{% endblock %} - Services de Rédaction Académique</title>
+    
+    <!-- ====================================================================
+         TAILWIND CSS (via CDN)
+         ==================================================================== 
+         Note: En production, il est recommandé d'installer Tailwind
+         localement avec PostCSS pour de meilleures performances.
+         Le CDN est utilisé ici pour simplifier le développement.
+    -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ====================================================================
+         GOOGLE FONTS - INTER
+         ==================================================================== 
+         La police Inter est utilisée pour tout le texte du site.
+         Elle offre une excellente lisibilité et un aspect moderne.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- ====================================================================
+         CONFIGURATION TAILWIND PERSONNALISÉE
+         ==================================================================== 
+         Extension du thème Tailwind avec:
+         - Police Inter par défaut
+         - Palette de couleurs primaires (bleu)
+         - Palette de couleurs d'accent (indigo)
+    -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    // Police personnalisée
                     fontFamily: {
                         'sans': ['Inter', 'sans-serif']
                     },
+                    // Couleurs personnalisées
                     colors: {
+                        // Couleur primaire - Bleu
                         primary: {
                             50: '#eff6ff',
                             100: '#dbeafe',
@@ -28,6 +94,7 @@
                             800: '#1e40af',
                             900: '#1e3a8a',
                         },
+                        // Couleur d'accent - Indigo
                         accent: {
                             50: '#eef2ff',
                             100: '#e0e7ff',
@@ -45,13 +112,51 @@
             }
         }
     </script>
+    
+    <!-- ====================================================================
+         STYLES PERSONNALISÉS
+         ==================================================================== 
+         Fichier CSS contenant:
+         - Effets glassmorphisme
+         - Dégradés de couleurs
+         - Animations
+         - Classes de statut
+    -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <!-- ====================================================================
+         CSS ADDITIONNEL (BLOC POUR PAGES ENFANTS)
+         ==================================================================== 
+         Les pages enfants peuvent ajouter du CSS spécifique ici.
+    -->
     {% block extra_css %}{% endblock %}
 </head>
+
 <body class="font-sans bg-slate-50 min-h-screen">
+    <!-- ====================================================================
+         CONTENU PRINCIPAL (BLOC POUR PAGES ENFANTS)
+         ==================================================================== 
+         Tout le contenu visible de la page est défini dans ce bloc
+         par les templates enfants.
+    -->
     {% block body %}{% endblock %}
     
+    <!-- ====================================================================
+         JAVASCRIPT PRINCIPAL
+         ==================================================================== 
+         Script contenant:
+         - Gestion des alertes flash (auto-dismiss)
+         - Validation de formulaires
+         - Menu mobile
+         - Utilitaires
+    -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- ====================================================================
+         JAVASCRIPT ADDITIONNEL (BLOC POUR PAGES ENFANTS)
+         ==================================================================== 
+         Les pages enfants peuvent ajouter du JavaScript spécifique ici.
+    -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>

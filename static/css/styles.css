@@ -1,55 +1,178 @@
+/**
+ * ================================================================================
+ * TheDraftClinic - Feuille de Styles Personnalisée
+ * ================================================================================
+ * By MOA Digital Agency LLC
+ * Developed by: Aisance KALONJI
+ * Contact: moa@myoneart.com
+ * Website: www.myoneart.com
+ * ================================================================================
+ * 
+ * Ce fichier contient les styles CSS personnalisés pour l'application:
+ * - Effets glassmorphisme (verre dépoli)
+ * - Dégradés de couleurs
+ * - Animations
+ * - Classes de statut pour les demandes
+ * 
+ * Note: Ce fichier complète Tailwind CSS qui est chargé via CDN
+ * ================================================================================
+ */
+
+
+/* ==============================================================================
+ * EFFETS GLASSMORPHISME
+ * ==============================================================================
+ * Les effets glassmorphisme créent un aspect de verre dépoli moderne.
+ * Utilise backdrop-filter pour le flou et une bordure semi-transparente.
+ */
+
+/* Effet glass clair - utilisé pour les cartes sur fond coloré */
 .glass {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);           /* Fond blanc semi-transparent */
+    backdrop-filter: blur(20px);                      /* Flou de l'arrière-plan */
+    -webkit-backdrop-filter: blur(20px);              /* Support Safari */
+    border: 1px solid rgba(255, 255, 255, 0.2);       /* Bordure subtile */
 }
 
+/* Effet glass sombre - utilisé pour les barres de navigation */
 .glass-dark {
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.7);               /* Fond slate-900 semi-transparent */
+    backdrop-filter: blur(20px);                      /* Flou de l'arrière-plan */
+    -webkit-backdrop-filter: blur(20px);              /* Support Safari */
+    border: 1px solid rgba(255, 255, 255, 0.1);       /* Bordure très subtile */
 }
 
+/* Effet glass pour les cartes de contenu */
 .glass-card {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8);            /* Fond blanc plus opaque */
+    backdrop-filter: blur(10px);                      /* Flou léger */
+    -webkit-backdrop-filter: blur(10px);              /* Support Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3);       /* Bordure visible */
 }
 
+
+/* ==============================================================================
+ * DÉGRADÉS DE COULEURS
+ * ==============================================================================
+ * Les dégradés sont utilisés pour les éléments importants comme les titres
+ * et les boutons d'appel à l'action.
+ */
+
+/* Texte avec dégradé - utilisé pour les titres principaux */
 .gradient-text {
-    background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);  /* Bleu primaire */
+    -webkit-background-clip: text;                    /* Clip le background au texte */
+    -webkit-text-fill-color: transparent;             /* Rend le texte transparent */
+    background-clip: text;                            /* Version standard */
 }
 
+/* Fond avec dégradé - utilisé pour les boutons principaux */
 .gradient-bg {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);  /* Bleu vif */
 }
 
+/* Fond clair pour les sections hero */
 .hero-light-bg {
-    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);  /* Gris-bleu */
 }
 
+
+/* ==============================================================================
+ * ANIMATIONS
+ * ==============================================================================
+ * Animations CSS pour les éléments interactifs et décoratifs.
+ */
+
+/* Animation de flottement - utilisée pour les éléments décoratifs */
 .animate-float {
-    animation: float 6s ease-in-out infinite;
+    animation: float 6s ease-in-out infinite;         /* Animation continue */
 }
 
+/* Keyframes de l'animation de flottement */
 @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { 
+        transform: translateY(0px);                    /* Position initiale et finale */
+    }
+    50% { 
+        transform: translateY(-20px);                  /* Monte de 20px au milieu */
+    }
 }
 
-.status-submitted { background: #fef3c7; color: #92400e; }
-.status-under_review { background: #e0f2fe; color: #0369a1; }
-.status-quote_sent { background: #ddd6fe; color: #7c3aed; }
-.status-awaiting_deposit { background: #fce7f3; color: #be185d; }
-.status-deposit_pending { background: #fed7aa; color: #c2410c; }
-.status-in_progress { background: #bfdbfe; color: #1d4ed8; }
-.status-completed { background: #bbf7d0; color: #15803d; }
-.status-delivered { background: #86efac; color: #166534; }
-.status-cancelled { background: #fecaca; color: #dc2626; }
-.status-rejected { background: #fecaca; color: #dc2626; }
+
+/* ==============================================================================
+ * CLASSES DE STATUT DES DEMANDES
+ * ==============================================================================
+ * Ces classes colorent les badges de statut selon l'état de la demande.
+ * Chaque statut a sa propre couleur pour une identification rapide.
+ */
+
+/* Statut: Soumise - Orange/Ambre pour "en attente d'action" */
+.status-submitted { 
+    background: #fef3c7;                              /* Fond ambre clair */
+    color: #92400e;                                   /* Texte ambre foncé */
+}
+
+/* Statut: En examen - Bleu clair pour "en cours de traitement" */
+.status-under_review { 
+    background: #e0f2fe;                              /* Fond bleu clair */
+    color: #0369a1;                                   /* Texte bleu foncé */
+}
+
+/* Statut: Devis envoyé - Violet pour "attente de réponse client" */
+.status-quote_sent { 
+    background: #ddd6fe;                              /* Fond violet clair */
+    color: #7c3aed;                                   /* Texte violet */
+}
+
+/* Statut: En attente d'acompte - Rose pour "action requise" */
+.status-awaiting_deposit { 
+    background: #fce7f3;                              /* Fond rose clair */
+    color: #be185d;                                   /* Texte rose foncé */
+}
+
+/* Statut: Acompte en vérification - Orange pour "traitement en cours" */
+.status-deposit_pending { 
+    background: #fed7aa;                              /* Fond orange clair */
+    color: #c2410c;                                   /* Texte orange foncé */
+}
+
+/* Statut: En cours - Bleu pour "travail actif" */
+.status-in_progress { 
+    background: #bfdbfe;                              /* Fond bleu primaire clair */
+    color: #1d4ed8;                                   /* Texte bleu primaire */
+}
+
+/* Statut: Terminée - Vert clair pour "presque fini" */
+.status-completed { 
+    background: #bbf7d0;                              /* Fond vert clair */
+    color: #15803d;                                   /* Texte vert foncé */
+}
+
+/* Statut: Livrée - Vert vif pour "succès complet" */
+.status-delivered { 
+    background: #86efac;                              /* Fond vert vif */
+    color: #166534;                                   /* Texte vert très foncé */
+}
+
+/* Statut: Annulée - Rouge pour "terminé négativement" */
+.status-cancelled { 
+    background: #fecaca;                              /* Fond rouge clair */
+    color: #dc2626;                                   /* Texte rouge */
+}
+
+/* Statut: Refusée - Rouge pour "rejet" */
+.status-rejected { 
+    background: #fecaca;                              /* Fond rouge clair */
+    color: #dc2626;                                   /* Texte rouge */
+}
+
+
+/* ==============================================================================
+ * STYLES UTILITAIRES ADDITIONNELS
+ * ==============================================================================
+ */
+
+/* Transition douce pour les alertes qui disparaissent */
+.alert-dismissible {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}

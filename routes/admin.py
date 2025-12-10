@@ -1,6 +1,6 @@
 """
 ================================================================================
-TheDraftClinic - Admin Routes Module
+TheDraftClinic - Routes Administrateur
 ================================================================================
 By MOA Digital Agency LLC
 Developed by: Aisance KALONJI
@@ -8,215 +8,508 @@ Contact: moa@myoneart.com
 Website: www.myoneart.com
 ================================================================================
 
-This module handles all administrative routes including dashboard,
-request management, payment verification, and user management.
+Ce module gère toutes les routes du panel administrateur:
+- Dashboard admin avec statistiques globales
+- Gestion des demandes (liste, détail, devis, statut)
+- Vérification des paiements
+- Gestion des utilisateurs
+- Upload des livrables
+
+Sécurité:
+- Toutes les routes nécessitent une authentification admin
+- Logging complet des actions administratives
+- Protection CSRF sur les formulaires
 ================================================================================
 """
 
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+# ==============================================================================
+# IMPORTATIONS
+# ==============================================================================
+
+from flask import (
+    Blueprint, render_template, redirect, url_for, 
+    flash, request, current_app
+)
 from flask_login import login_required, current_user
+from functools import wraps
+from datetime import datetime
+import logging
+
 from app import db
 from models.user import User
 from models.request import ServiceRequest
 from models.document import Document
 from models.payment import Payment
 from services.file_service import save_uploaded_file
-from datetime import datetime
 
+# Configuration du logger pour ce module
+logger = logging.getLogger(__name__)
+
+# Création du blueprint admin
 bp = Blueprint('admin', __name__)
 
 
+# ==============================================================================
+# DÉCORATEUR ADMIN REQUIRED
+# ==============================================================================
+
 def admin_required(f):
-    from functools import wraps
+    """
+    Décorateur vérifiant que l'utilisateur est administrateur.
+    
+    Combine la vérification d'authentification et de statut admin.
+    Redirige vers l'accueil si l'utilisateur n'est pas admin.
+    
+    Args:
+        f: La fonction à décorer
+        
+    Returns:
+        function: La fonction décorée
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or not current_user.is_admin:
+        # Vérification d'authentification
+        if not current_user.is_authenticated:
+            flash('Veuillez vous connecter.', 'warning')
+            return redirect(url_for('auth.login'))
+        
+        # Vérification du statut admin
+        if not current_user.is_admin:
+            logger.warning(f"Accès admin refusé pour: {current_user.email}")
             flash('Accès réservé aux administrateurs.', 'error')
             return redirect(url_for('main.index'))
+        
         return f(*args, **kwargs)
     return decorated_function
 
+
+# ==============================================================================
+# DASHBOARD ADMIN
+# ==============================================================================
 
 @bp.route('/dashboard')
 @login_required
 @admin_required
 def dashboard():
-    total_requests = ServiceRequest.query.count()
-    pending_requests = ServiceRequest.query.filter(ServiceRequest.status.in_(['submitted', 'under_review'])).count()
-    in_progress = ServiceRequest.query.filter(ServiceRequest.status.in_(['in_progress', 'revision'])).count()
-    pending_payments = Payment.query.filter_by(status='pending').count()
-    total_users = User.query.filter_by(is_admin=False).count()
+    """
+    Affiche le tableau de bord administrateur.
     
-    recent_requests = ServiceRequest.query.order_by(ServiceRequest.created_at.desc()).limit(10).all()
-    pending_payment_verifications = Payment.query.filter_by(status='pending').order_by(Payment.created_at.desc()).all()
+    Présente:
+    - Statistiques globales (demandes, utilisateurs, paiements)
+    - Demandes récentes
+    - Paiements en attente de vérification
     
-    stats = {
-        'total_requests': total_requests,
-        'pending_requests': pending_requests,
-        'in_progress': in_progress,
-        'pending_payments': pending_payments,
-        'total_users': total_users
-    }
-    
-    return render_template('admin/dashboard.html', 
-                         stats=stats, 
-                         recent_requests=recent_requests,
-                         pending_payments=pending_payment_verifications)
+    Returns:
+        Template dashboard admin
+    """
+    try:
+        # Calcul des statistiques
+        total_requests = ServiceRequest.query.count()
+        pending_requests = ServiceRequest.query.filter(
+            ServiceRequest.status.in_(['submitted', 'under_review'])
+        ).count()
+        in_progress = ServiceRequest.query.filter(
+            ServiceRequest.status.in_(['in_progress', 'revision'])
+        ).count()
+        pending_payments = Payment.query.filter_by(status='pending').count()
+        total_users = User.query.filter_by(is_admin=False).count()
+        
+        # Demandes récentes
+        recent_requests = ServiceRequest.query.order_by(
+            ServiceRequest.created_at.desc()
+        ).limit(10).all()
+        
+        # Paiements en attente
+        pending_payment_verifications = Payment.query.filter_by(
+            status='pending'
+        ).order_by(Payment.created_at.desc()).all()
+        
+        stats = {
+            'total_requests': total_requests,
+            'pending_requests': pending_requests,
+            'in_progress': in_progress,
+            'pending_payments': pending_payments,
+            'total_users': total_users
+        }
+        
+        return render_template(
+            'admin/dashboard.html', 
+            stats=stats, 
+            recent_requests=recent_requests,
+            pending_payments=pending_payment_verifications
+        )
+        
+    except Exception as e:
+        logger.error(f"Erreur dashboard admin: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return render_template('admin/dashboard.html', stats={}, recent_requests=[], pending_payments=[])
 
+
+# ==============================================================================
+# LISTE DES DEMANDES
+# ==============================================================================
 
 @bp.route('/requests')
 @login_required
 @admin_required
 def requests_list():
-    status_filter = request.args.get('status', 'all')
+    """
+    Affiche la liste de toutes les demandes avec filtrage par statut.
     
-    query = ServiceRequest.query
-    if status_filter != 'all':
-        query = query.filter_by(status=status_filter)
-    
-    requests_list = query.order_by(ServiceRequest.created_at.desc()).all()
-    statuses = ServiceRequest.STATUS_CHOICES
-    
-    return render_template('admin/requests_list.html', 
-                         requests=requests_list, 
-                         statuses=statuses,
-                         current_filter=status_filter)
+    Query params:
+        status: Filtre par statut (optionnel)
+        
+    Returns:
+        Template liste des demandes
+    """
+    try:
+        # Récupération du filtre de statut
+        status_filter = request.args.get('status', 'all')
+        
+        # Construction de la requête
+        query = ServiceRequest.query
+        if status_filter != 'all':
+            query = query.filter_by(status=status_filter)
+        
+        # Exécution avec tri
+        requests_list = query.order_by(ServiceRequest.created_at.desc()).all()
+        
+        # Liste des statuts pour le filtre
+        statuses = ServiceRequest.STATUS_CHOICES
+        
+        return render_template(
+            'admin/requests_list.html', 
+            requests=requests_list, 
+            statuses=statuses,
+            current_filter=status_filter
+        )
+        
+    except Exception as e:
+        logger.error(f"Erreur liste demandes: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return render_template('admin/requests_list.html', requests=[], statuses=[], current_filter='all')
 
+
+# ==============================================================================
+# DÉTAIL D'UNE DEMANDE (ADMIN)
+# ==============================================================================
 
 @bp.route('/request/<int:request_id>')
 @login_required
 @admin_required
 def view_request(request_id):
-    service_request = ServiceRequest.query.get_or_404(request_id)
-    documents = Document.query.filter_by(request_id=request_id).all()
-    payments = Payment.query.filter_by(request_id=request_id).order_by(Payment.created_at.desc()).all()
+    """
+    Affiche les détails complets d'une demande pour l'admin.
     
-    return render_template('admin/view_request.html', 
-                         request=service_request, 
-                         documents=documents,
-                         payments=payments)
+    Inclut:
+    - Informations du client
+    - Documents uploadés
+    - Historique des paiements
+    - Formulaires d'action (devis, statut, livrable)
+    
+    Args:
+        request_id: ID de la demande
+        
+    Returns:
+        Template détail demande admin
+    """
+    try:
+        service_request = ServiceRequest.query.get_or_404(request_id)
+        documents = Document.query.filter_by(request_id=request_id).all()
+        payments = Payment.query.filter_by(request_id=request_id).order_by(
+            Payment.created_at.desc()
+        ).all()
+        
+        return render_template(
+            'admin/view_request.html', 
+            request=service_request, 
+            documents=documents,
+            payments=payments
+        )
+        
+    except Exception as e:
+        logger.error(f"Erreur affichage demande admin {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.requests_list'))
 
+
+# ==============================================================================
+# ENVOI D'UN DEVIS
+# ==============================================================================
 
 @bp.route('/request/<int:request_id>/send-quote', methods=['POST'])
 @login_required
 @admin_required
 def send_quote(request_id):
-    service_request = ServiceRequest.query.get_or_404(request_id)
+    """
+    Envoie un devis pour une demande.
     
-    quote_amount = float(request.form.get('quote_amount', 0))
-    deposit_required = float(request.form.get('deposit_required', 0))
-    quote_message = request.form.get('quote_message', '')
-    
-    service_request.quote_amount = quote_amount
-    service_request.deposit_required = deposit_required
-    service_request.quote_message = quote_message
-    service_request.quote_sent_at = datetime.utcnow()
-    service_request.status = 'quote_sent'
-    
-    db.session.commit()
-    flash('Devis envoyé avec succès!', 'success')
-    return redirect(url_for('admin.view_request', request_id=request_id))
+    Args:
+        request_id: ID de la demande
+        
+    Form data:
+        quote_amount: Montant total du devis
+        deposit_required: Montant de l'acompte
+        quote_message: Message accompagnant le devis
+        
+    Returns:
+        Redirection vers la page de la demande
+    """
+    try:
+        service_request = ServiceRequest.query.get_or_404(request_id)
+        
+        # Récupération des données du formulaire
+        quote_amount = float(request.form.get('quote_amount', 0))
+        deposit_required = float(request.form.get('deposit_required', 0))
+        quote_message = request.form.get('quote_message', '').strip()
+        
+        # Mise à jour de la demande
+        service_request.quote_amount = quote_amount
+        service_request.deposit_required = deposit_required
+        service_request.quote_message = quote_message
+        service_request.quote_sent_at = datetime.utcnow()
+        service_request.status = 'quote_sent'
+        
+        db.session.commit()
+        
+        logger.info(f"Devis envoyé pour demande {request_id} par {current_user.email}: {quote_amount}€")
+        flash('Devis envoyé avec succès!', 'success')
+        return redirect(url_for('admin.view_request', request_id=request_id))
+        
+    except ValueError as e:
+        flash('Montant invalide.', 'error')
+        return redirect(url_for('admin.view_request', request_id=request_id))
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur envoi devis {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.view_request', request_id=request_id))
 
+
+# ==============================================================================
+# MISE À JOUR DU STATUT
+# ==============================================================================
 
 @bp.route('/request/<int:request_id>/update-status', methods=['POST'])
 @login_required
 @admin_required
 def update_status(request_id):
-    service_request = ServiceRequest.query.get_or_404(request_id)
+    """
+    Met à jour le statut et la progression d'une demande.
     
-    new_status = request.form.get('status')
-    progress = request.form.get('progress', type=int)
-    admin_notes = request.form.get('admin_notes')
-    
-    if new_status:
-        service_request.status = new_status
-        if new_status == 'delivered':
-            service_request.delivered_at = datetime.utcnow()
-            service_request.progress_percentage = 100
-    
-    if progress is not None:
-        service_request.progress_percentage = progress
-    
-    if admin_notes:
-        service_request.admin_notes = admin_notes
-    
-    db.session.commit()
-    flash('Statut mis à jour!', 'success')
-    return redirect(url_for('admin.view_request', request_id=request_id))
+    Args:
+        request_id: ID de la demande
+        
+    Form data:
+        status: Nouveau statut
+        progress: Pourcentage de progression
+        admin_notes: Notes internes
+        
+    Returns:
+        Redirection vers la page de la demande
+    """
+    try:
+        service_request = ServiceRequest.query.get_or_404(request_id)
+        
+        # Récupération et application des modifications
+        new_status = request.form.get('status')
+        progress = request.form.get('progress', type=int)
+        admin_notes = request.form.get('admin_notes', '').strip()
+        
+        if new_status:
+            service_request.status = new_status
+            # Si livré, marquer comme 100% et enregistrer la date
+            if new_status == 'delivered':
+                service_request.delivered_at = datetime.utcnow()
+                service_request.progress_percentage = 100
+        
+        if progress is not None:
+            service_request.progress_percentage = progress
+        
+        if admin_notes:
+            service_request.admin_notes = admin_notes
+        
+        db.session.commit()
+        
+        logger.info(f"Statut mis à jour pour demande {request_id}: {new_status} par {current_user.email}")
+        flash('Statut mis à jour!', 'success')
+        return redirect(url_for('admin.view_request', request_id=request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur mise à jour statut {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.view_request', request_id=request_id))
 
+
+# ==============================================================================
+# UPLOAD DE LIVRABLE
+# ==============================================================================
 
 @bp.route('/request/<int:request_id>/upload-deliverable', methods=['POST'])
 @login_required
 @admin_required
 def upload_deliverable(request_id):
-    service_request = ServiceRequest.query.get_or_404(request_id)
+    """
+    Upload un fichier livrable pour une demande.
     
-    if 'deliverable' in request.files:
-        file = request.files['deliverable']
-        if file and file.filename:
-            saved_filename = save_uploaded_file(file, current_app.config['UPLOAD_FOLDER'])
-            if saved_filename:
-                doc = Document(
-                    request_id=request_id,
-                    filename=saved_filename,
-                    original_filename=file.filename,
-                    file_type=file.content_type,
-                    document_type='deliverable',
-                    description=request.form.get('description', ''),
-                    uploaded_by=current_user.id
+    Args:
+        request_id: ID de la demande
+        
+    Returns:
+        Redirection vers la page de la demande
+    """
+    try:
+        service_request = ServiceRequest.query.get_or_404(request_id)
+        
+        if 'deliverable' in request.files:
+            file = request.files['deliverable']
+            if file and file.filename:
+                saved_filename = save_uploaded_file(
+                    file, 
+                    current_app.config['UPLOAD_FOLDER']
                 )
-                db.session.add(doc)
-                db.session.commit()
-                flash('Livrable uploadé avec succès!', 'success')
-    
-    return redirect(url_for('admin.view_request', request_id=request_id))
+                if saved_filename:
+                    doc = Document(
+                        request_id=request_id,
+                        filename=saved_filename,
+                        original_filename=file.filename,
+                        file_type=file.content_type,
+                        document_type='deliverable',
+                        description=request.form.get('description', '').strip(),
+                        uploaded_by=current_user.id
+                    )
+                    db.session.add(doc)
+                    db.session.commit()
+                    
+                    logger.info(f"Livrable uploadé pour demande {request_id} par {current_user.email}")
+                    flash('Livrable uploadé avec succès!', 'success')
+        
+        return redirect(url_for('admin.view_request', request_id=request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur upload livrable {request_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.view_request', request_id=request_id))
 
+
+# ==============================================================================
+# VÉRIFICATION DE PAIEMENT
+# ==============================================================================
 
 @bp.route('/payment/<int:payment_id>/verify', methods=['POST'])
 @login_required
 @admin_required
 def verify_payment(payment_id):
-    payment = Payment.query.get_or_404(payment_id)
-    action = request.form.get('action')
+    """
+    Vérifie (approuve ou rejette) un paiement.
     
-    if action == 'approve':
-        payment.status = 'verified'
-        payment.verified_by = current_user.id
-        payment.verified_at = datetime.utcnow()
+    Args:
+        payment_id: ID du paiement
         
-        service_request = payment.request
-        service_request.deposit_paid = True
-        service_request.status = 'in_progress'
+    Form data:
+        action: 'approve' ou 'reject'
+        rejection_reason: Raison du rejet (si rejeté)
         
-        flash('Paiement vérifié! La demande est maintenant en traitement.', 'success')
-    
-    elif action == 'reject':
-        payment.status = 'rejected'
-        payment.rejection_reason = request.form.get('rejection_reason', '')
-        payment.verified_by = current_user.id
-        payment.verified_at = datetime.utcnow()
+    Returns:
+        Redirection vers la page de la demande
+    """
+    try:
+        payment = Payment.query.get_or_404(payment_id)
+        action = request.form.get('action')
         
-        service_request = payment.request
-        service_request.status = 'awaiting_deposit'
+        if action == 'approve':
+            # Approbation du paiement
+            payment.status = 'verified'
+            payment.verified_by = current_user.id
+            payment.verified_at = datetime.utcnow()
+            
+            # Mise à jour de la demande
+            service_request = payment.request
+            service_request.deposit_paid = True
+            service_request.status = 'in_progress'
+            
+            logger.info(f"Paiement {payment_id} approuvé par {current_user.email}")
+            flash('Paiement vérifié! La demande est maintenant en traitement.', 'success')
         
-        flash('Paiement rejeté.', 'warning')
-    
-    db.session.commit()
-    return redirect(url_for('admin.view_request', request_id=payment.request_id))
+        elif action == 'reject':
+            # Rejet du paiement
+            payment.status = 'rejected'
+            payment.rejection_reason = request.form.get('rejection_reason', '').strip()
+            payment.verified_by = current_user.id
+            payment.verified_at = datetime.utcnow()
+            
+            # Retour au statut précédent
+            service_request = payment.request
+            service_request.status = 'awaiting_deposit'
+            
+            logger.info(f"Paiement {payment_id} rejeté par {current_user.email}")
+            flash('Paiement rejeté.', 'warning')
+        
+        db.session.commit()
+        return redirect(url_for('admin.view_request', request_id=payment.request_id))
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur vérification paiement {payment_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.dashboard'))
 
+
+# ==============================================================================
+# LISTE DES UTILISATEURS
+# ==============================================================================
 
 @bp.route('/users')
 @login_required
 @admin_required
 def users_list():
-    users = User.query.filter_by(is_admin=False).order_by(User.created_at.desc()).all()
-    return render_template('admin/users_list.html', users=users)
+    """
+    Affiche la liste de tous les utilisateurs (clients).
+    
+    Returns:
+        Template liste utilisateurs
+    """
+    try:
+        users = User.query.filter_by(is_admin=False).order_by(
+            User.created_at.desc()
+        ).all()
+        
+        return render_template('admin/users_list.html', users=users)
+        
+    except Exception as e:
+        logger.error(f"Erreur liste utilisateurs: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return render_template('admin/users_list.html', users=[])
 
+
+# ==============================================================================
+# DÉTAIL D'UN UTILISATEUR
+# ==============================================================================
 
 @bp.route('/user/<int:user_id>')
 @login_required
 @admin_required
 def view_user(user_id):
-    user = User.query.get_or_404(user_id)
-    user_requests = ServiceRequest.query.filter_by(user_id=user_id).order_by(ServiceRequest.created_at.desc()).all()
-    return render_template('admin/view_user.html', user=user, requests=user_requests)
+    """
+    Affiche les détails d'un utilisateur et ses demandes.
+    
+    Args:
+        user_id: ID de l'utilisateur
+        
+    Returns:
+        Template détail utilisateur
+    """
+    try:
+        user = User.query.get_or_404(user_id)
+        user_requests = ServiceRequest.query.filter_by(user_id=user_id).order_by(
+            ServiceRequest.created_at.desc()
+        ).all()
+        
+        return render_template('admin/view_user.html', user=user, requests=user_requests)
+        
+    except Exception as e:
+        logger.error(f"Erreur affichage utilisateur {user_id}: {e}")
+        flash('Une erreur est survenue.', 'error')
+        return redirect(url_for('admin.users_list'))
