@@ -9,8 +9,9 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 
 ### Backend (Python Flask)
 ```
-app/
-├── __init__.py          # Configuration Flask, initialisation DB
+/
+├── app.py               # Configuration Flask, initialisation DB
+├── main.py              # Point d'entrée de l'application
 ├── models/              # Modèles SQLAlchemy
 │   ├── user.py          # Utilisateurs (clients et admins)
 │   ├── request.py       # Demandes de services
@@ -33,8 +34,8 @@ app/
 │   ├── client/          # Dashboard client
 │   └── admin/           # Dashboard admin
 └── static/              # Fichiers statiques
-    ├── css/
-    ├── js/
+    ├── css/styles.css   # Styles personnalisés
+    ├── js/main.js       # JavaScript personnalisé
     └── uploads/         # Documents uploadés
 ```
 
