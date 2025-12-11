@@ -24,9 +24,9 @@ Website: www.myoneart.com
         <div class="text-center mb-8">
             <a href="{{ url_for('main.index') }}" class="inline-flex items-center space-x-2">
                 <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur">
-                    <span class="text-white font-bold text-2xl">T</span>
+                    <span class="text-white font-bold text-2xl">{{ t('site.name')[0] }}</span>
                 </div>
-                <span class="text-3xl font-bold text-white">TheDraftClinic</span>
+                <span class="text-3xl font-bold text-white">{{ t('site.name') }}</span>
             </a>
         </div>
         

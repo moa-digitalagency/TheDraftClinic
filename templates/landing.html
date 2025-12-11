@@ -18,9 +18,9 @@ Website: www.myoneart.com
             <div class="flex items-center justify-between h-20">
                 <div class="flex items-center space-x-2">
                     <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">T</span>
+                        <span class="text-white font-bold text-xl">{{ t('site.name')[0] }}</span>
                     </div>
-                    <span class="text-2xl font-bold text-white">TheDraftClinic</span>
+                    <span class="text-2xl font-bold text-white">{{ t('site.name') }}</span>
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-8">
@@ -322,9 +322,9 @@ Website: www.myoneart.com
                 <div class="md:col-span-2">
                     <div class="flex items-center space-x-2 mb-6">
                         <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-                            <span class="text-white font-bold text-xl">T</span>
+                            <span class="text-white font-bold text-xl">{{ t('site.name')[0] }}</span>
                         </div>
-                        <span class="text-2xl font-bold">TheDraftClinic</span>
+                        <span class="text-2xl font-bold">{{ t('site.name') }}</span>
                     </div>
                     <p class="text-gray-400 mb-6 max-w-md">
                         {{ t('landing.footer.description') }}
@@ -348,7 +348,7 @@ Website: www.myoneart.com
                 </div>
             </div>
             <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-500">
-                <p>&copy; 2024 TheDraftClinic. {{ t('site.copyright') }}</p>
+                <p>&copy; {{ now().year }} {{ t('site.name') }}. {{ t('site.copyright') }}</p>
             </div>
         </div>
     </footer>

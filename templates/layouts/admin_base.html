@@ -7,9 +7,9 @@
             <div class="flex items-center justify-between h-16 px-4 border-b border-slate-700">
                 <a href="{{ url_for('admin.dashboard') }}" class="flex items-center space-x-2">
                     <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
-                        <span class="text-white font-bold text-sm">T</span>
+                        <span class="text-white font-bold text-sm">{{ t('site.name')[0] }}</span>
                     </div>
-                    <span class="text-lg font-bold text-white">TheDraftClinic</span>
+                    <span class="text-lg font-bold text-white">{{ t('site.name') }}</span>
                 </a>
                 <button class="lg:hidden text-gray-400 hover:text-white" onclick="toggleSidebar()">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

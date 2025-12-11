@@ -315,6 +315,7 @@ def create_app():
     @app.context_processor
     def inject_site_settings():
         """Injecte les paramètres du site dans tous les templates."""
+        from datetime import datetime
         try:
             from models.site_settings import SiteSettings
             from models.page import Page
@@ -322,10 +323,11 @@ def create_app():
             footer_pages = Page.get_footer_pages()
             return {
                 'site_settings': settings,
-                'footer_pages': footer_pages
+                'footer_pages': footer_pages,
+                'now': datetime.now
             }
         except Exception:
-            return {'site_settings': None, 'footer_pages': []}
+            return {'site_settings': None, 'footer_pages': [], 'now': datetime.now}
     
     # --------------------------------------------------------------------------
     # INITIALISATION DE LA BASE DE DONNÉES ET ADMIN PAR DÉFAUT
