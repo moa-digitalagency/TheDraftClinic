@@ -95,6 +95,10 @@ def create_default_admin():
                 logger.info(f"Compte admin existant trouvé: {admin_email}")
             return
         
+        # Vérifier si c'est le premier admin (sera super_admin)
+        existing_admins = User.query.filter_by(is_admin=True).count()
+        is_first_admin = existing_admins == 0
+        
         # Création du nouveau compte admin
         logger.info(f"Création du compte admin: {admin_email}")
         
@@ -103,6 +107,7 @@ def create_default_admin():
             first_name='Admin',
             last_name='TheDraftClinic',
             is_admin=True,
+            admin_role='super_admin' if is_first_admin else 'admin',
             account_active=True
         )
         
@@ -110,7 +115,8 @@ def create_default_admin():
         db.session.add(admin)
         db.session.commit()
         
-        logger.info(f"Compte admin créé avec succès: {admin_email}")
+        role_label = "super administrateur" if is_first_admin else "administrateur"
+        logger.info(f"Compte {role_label} créé avec succès: {admin_email}")
         
     except Exception as e:
         # Log de l'erreur sans interrompre le démarrage de l'application

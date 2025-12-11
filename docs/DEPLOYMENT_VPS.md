@@ -1,68 +1,68 @@
-# Guide de Déploiement VPS / VPS Deployment Guide
+# guide de deploiement vps / vps deployment guide
 
-**Par MOA Digital Agency LLC**
+**par MOA Digital Agency LLC**
 
-Ce guide explique comment déployer TheDraftClinic sur un serveur VPS (Virtual Private Server).
+Ce guide explique comment deployer TheDraftClinic sur un serveur VPS (Virtual Private Server).
 
 This guide explains how to deploy TheDraftClinic on a VPS (Virtual Private Server).
 
 ---
 
-## Prérequis / Prerequisites
+## prerequis / prerequisites
 
-- Un VPS avec Ubuntu 22.04 LTS / A VPS with Ubuntu 22.04 LTS
-- Accès root ou sudo / Root or sudo access
-- Un nom de domaine (optionnel) / A domain name (optional)
-- Minimum 1GB RAM, 20GB stockage / Minimum 1GB RAM, 20GB storage
+- un vps avec Ubuntu 22.04 LTS / a vps with Ubuntu 22.04 LTS
+- acces root ou sudo / root or sudo access
+- un nom de domaine (optionnel) / a domain name (optional)
+- minimum 1gb ram, 20gb stockage / minimum 1gb ram, 20gb storage
 
-## 1. Configuration Initiale / Initial Setup
+## 1. configuration initiale / initial setup
 
-### Mise à jour du système / System Update
+### mise a jour du systeme / system update
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-### Installation des dépendances / Install Dependencies
+### installation des dependances / install dependencies
 
 ```bash
-# Python 3.11
+# python 3.11
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt install -y python3.11 python3.11-venv python3.11-dev
 
-# PostgreSQL
+# postgresql
 sudo apt install -y postgresql postgresql-contrib
 
-# Nginx
+# nginx
 sudo apt install -y nginx
 
-# Autres outils / Other tools
+# autres outils / other tools
 sudo apt install -y git supervisor
 ```
 
-## 2. Configuration PostgreSQL
+## 2. configuration postgresql
 
 ```bash
-# Connexion à PostgreSQL / Connect to PostgreSQL
+# connexion a postgresql / connect to postgresql
 sudo -u postgres psql
 
-# Créer l'utilisateur et la base / Create user and database
+# creer l'utilisateur et la base / create user and database
 CREATE USER thedraftclinic WITH PASSWORD 'votre_mot_de_passe_securise';
 CREATE DATABASE thedraftclinic_db OWNER thedraftclinic;
 GRANT ALL PRIVILEGES ON DATABASE thedraftclinic_db TO thedraftclinic;
 \q
 ```
 
-## 3. Déploiement de l'Application / Application Deployment
+## 3. deploiement de l'application / application deployment
 
-### Créer un utilisateur dédié / Create a dedicated user
+### creer un utilisateur dedie / create a dedicated user
 
 ```bash
 sudo adduser --disabled-password --gecos "" thedraftclinic
 sudo usermod -aG www-data thedraftclinic
 ```
 
-### Cloner et configurer / Clone and configure
+### cloner et configurer / clone and configure
 
 ```bash
 cd /var/www
@@ -70,19 +70,19 @@ sudo git clone https://github.com/your-repo/thedraftclinic.git
 sudo chown -R thedraftclinic:www-data thedraftclinic
 cd thedraftclinic
 
-# Créer l'environnement virtuel / Create virtual environment
+# creer l'environnement virtuel / create virtual environment
 sudo -u thedraftclinic python3.11 -m venv venv
 sudo -u thedraftclinic venv/bin/pip install -r requirements.txt
 sudo -u thedraftclinic venv/bin/pip install gunicorn
 ```
 
-### Configuration des variables d'environnement / Environment Variables
+### configuration des variables d'environnement / environment variables
 
 ```bash
 sudo -u thedraftclinic nano /var/www/thedraftclinic/.env
 ```
 
-Contenu / Content:
+contenu / content:
 ```env
 DATABASE_URL=postgresql://thedraftclinic:votre_mot_de_passe@localhost:5432/thedraftclinic_db
 SESSION_SECRET=generez-une-cle-securisee-tres-longue-ici
@@ -90,19 +90,19 @@ ADMIN_EMAIL=admin@votredomaine.com
 ADMIN_PASSWORD=MotDePasseSecurise123!
 ```
 
-### Initialiser la base / Initialize database
+### initialiser la base / initialize database
 
 ```bash
 sudo -u thedraftclinic venv/bin/python init_db.py
 ```
 
-## 4. Configuration Gunicorn avec Supervisor
+## 4. configuration gunicorn avec supervisor
 
 ```bash
 sudo nano /etc/supervisor/conf.d/thedraftclinic.conf
 ```
 
-Contenu / Content:
+contenu / content:
 ```ini
 [program:thedraftclinic]
 directory=/var/www/thedraftclinic
@@ -125,13 +125,13 @@ sudo supervisorctl update
 sudo supervisorctl start thedraftclinic
 ```
 
-## 5. Configuration Nginx
+## 5. configuration nginx
 
 ```bash
 sudo nano /etc/nginx/sites-available/thedraftclinic
 ```
 
-Contenu / Content:
+contenu / content:
 ```nginx
 server {
     listen 80;
@@ -157,14 +157,14 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-## 6. SSL avec Let's Encrypt (HTTPS)
+## 6. ssl avec let's encrypt (https)
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d votredomaine.com -d www.votredomaine.com
 ```
 
-## 7. Configuration du Pare-feu / Firewall
+## 7. configuration du pare-feu / firewall
 
 ```bash
 sudo ufw allow OpenSSH
@@ -172,9 +172,9 @@ sudo ufw allow 'Nginx Full'
 sudo ufw enable
 ```
 
-## 8. Maintenance
+## 8. maintenance
 
-### Mise à jour de l'application / Update Application
+### mise a jour de l'application / update application
 
 ```bash
 cd /var/www/thedraftclinic
@@ -183,22 +183,22 @@ sudo -u thedraftclinic venv/bin/pip install -r requirements.txt
 sudo supervisorctl restart thedraftclinic
 ```
 
-### Vérifier les logs / Check Logs
+### verifier les logs / check logs
 
 ```bash
-# Logs applicatifs / Application logs
+# logs applicatifs / application logs
 tail -f /var/log/thedraftclinic/error.log
 tail -f /var/log/thedraftclinic/access.log
 
-# Logs Nginx
+# logs nginx
 tail -f /var/log/nginx/access.log
 tail -f /var/log/nginx/error.log
 ```
 
-### Sauvegardes PostgreSQL / PostgreSQL Backups
+### sauvegardes postgresql / postgresql backups
 
 ```bash
-# Créer un script de backup / Create backup script
+# creer un script de backup / create backup script
 sudo nano /var/www/thedraftclinic/backup.sh
 ```
 
@@ -208,31 +208,31 @@ DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="/var/www/thedraftclinic/backups"
 mkdir -p $BACKUP_DIR
 pg_dump -U thedraftclinic thedraftclinic_db > $BACKUP_DIR/backup_$DATE.sql
-# Garder les 7 derniers backups / Keep last 7 backups
+# garder les 7 derniers backups / keep last 7 backups
 find $BACKUP_DIR -type f -mtime +7 -delete
 ```
 
 ```bash
 chmod +x /var/www/thedraftclinic/backup.sh
-# Ajouter au cron (tous les jours à 2h) / Add to cron (daily at 2am)
+# ajouter au cron (tous les jours a 2h) / add to cron (daily at 2am)
 (crontab -l ; echo "0 2 * * * /var/www/thedraftclinic/backup.sh") | crontab -
 ```
 
-## Dépannage / Troubleshooting
+## depannage / troubleshooting
 
-### L'application ne démarre pas / Application won't start
+### l'application ne demarre pas / application won't start
 ```bash
 sudo supervisorctl status thedraftclinic
 tail -50 /var/log/thedraftclinic/error.log
 ```
 
-### Erreur 502 Bad Gateway
+### erreur 502 bad gateway
 ```bash
 sudo systemctl status nginx
 ls -la /var/www/thedraftclinic/thedraftclinic.sock
 ```
 
-### Problèmes de permissions / Permission issues
+### problemes de permissions / permission issues
 ```bash
 sudo chown -R thedraftclinic:www-data /var/www/thedraftclinic
 sudo chmod -R 755 /var/www/thedraftclinic

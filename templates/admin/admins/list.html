@@ -1,0 +1,115 @@
+{% extends 'layouts/admin_base.html' %}
+
+{% block title %}Admin - Administrateurs{% endblock %}
+{% block page_title %}Administrateurs{% endblock %}
+
+{% block admin_content %}
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-white">Gestion des administrateurs</h1>
+        <p class="text-gray-400 mt-1">{{ admins|length }} administrateur(s)</p>
+    </div>
+    <a href="{{ url_for('admin.create_admin') }}" 
+       class="inline-flex items-center px-4 py-2 gradient-bg text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nouvel administrateur
+    </a>
+</div>
+
+{% if admins %}
+<div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-slate-700">
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Administrateur</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Role</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Statut</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Creation</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700">
+                {% for admin in admins %}
+                <tr class="hover:bg-slate-700/30 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full {% if admin.admin_role == 'super_admin' %}bg-gradient-to-r from-amber-500 to-orange-600{% else %}gradient-bg{% endif %} flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm">{{ admin.first_name[0] }}{{ admin.last_name[0] }}</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-medium">{{ admin.full_name }}</p>
+                                <p class="text-gray-400 text-sm">{{ admin.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if admin.admin_role == 'super_admin' %}
+                        <span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 rounded-lg text-sm font-medium">
+                            Super Admin
+                        </span>
+                        {% else %}
+                        <span class="px-2.5 py-1 bg-primary-500/20 text-primary-400 rounded-lg text-sm font-medium">
+                            Admin
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if admin.account_active %}
+                        <span class="px-2.5 py-1 bg-green-500/20 text-green-400 rounded-lg text-sm font-medium">
+                            Actif
+                        </span>
+                        {% else %}
+                        <span class="px-2.5 py-1 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium">
+                            Inactif
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-gray-400 text-sm">{{ admin.created_at.strftime('%d/%m/%Y') if admin.created_at else '-' }}</p>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            {% if admin.id != current_user.id %}
+                            <a href="{{ url_for('admin.edit_admin', admin_id=admin.id) }}" 
+                               class="inline-flex items-center px-3 py-1.5 bg-primary-600/20 text-primary-400 rounded-lg text-sm font-medium hover:bg-primary-600/30 transition-colors">
+                                Modifier
+                            </a>
+                            <form action="{{ url_for('admin.toggle_admin_status', admin_id=admin.id) }}" method="POST" class="inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                {% if admin.account_active %}
+                                <button type="submit" 
+                                        class="inline-flex items-center px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-600/30 transition-colors"
+                                        onclick="return confirm('Desactiver cet administrateur ?')">
+                                    Desactiver
+                                </button>
+                                {% else %}
+                                <button type="submit" 
+                                        class="inline-flex items-center px-3 py-1.5 bg-green-600/20 text-green-400 rounded-lg text-sm font-medium hover:bg-green-600/30 transition-colors">
+                                    Activer
+                                </button>
+                                {% endif %}
+                            </form>
+                            {% else %}
+                            <span class="text-gray-500 text-sm italic">Votre compte</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="bg-slate-800 rounded-2xl border border-slate-700 p-12 text-center">
+    <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+    </svg>
+    <h3 class="text-xl font-semibold text-white mb-2">Aucun administrateur</h3>
+    <p class="text-gray-400">Cliquez sur "Nouvel administrateur" pour en creer un.</p>
+</div>
+{% endif %}
+{% endblock %}

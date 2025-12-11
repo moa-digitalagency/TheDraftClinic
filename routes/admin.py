@@ -705,3 +705,169 @@ def handle_revision(revision_id):
         logger.error(f"Erreur traitement révision {revision_id}: {e}")
         flash('Une erreur est survenue.', 'error')
         return redirect(url_for('admin.dashboard'))
+
+
+# ==============================================================================
+# GESTION DES ADMINISTRATEURS (SUPER ADMIN UNIQUEMENT)
+# ==============================================================================
+
+def super_admin_required(f):
+    """
+    Décorateur vérifiant que l'utilisateur est super administrateur.
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            flash('Veuillez vous connecter.', 'warning')
+            return redirect(url_for('auth.login'))
+        
+        if not current_user.is_admin:
+            flash('Accès réservé aux administrateurs.', 'error')
+            return redirect(url_for('main.index'))
+        
+        if not current_user.is_super_admin:
+            flash('Cette fonctionnalité est réservée au super administrateur.', 'error')
+            return redirect(url_for('admin.dashboard'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@bp.route('/admins')
+@login_required
+@super_admin_required
+def list_admins():
+    """
+    Liste tous les administrateurs (super admin uniquement).
+    """
+    admins = User.query.filter_by(is_admin=True).order_by(User.created_at.asc()).all()
+    return render_template('admin/admins/list.html', admins=admins)
+
+
+@bp.route('/admins/new', methods=['GET', 'POST'])
+@login_required
+@super_admin_required
+def create_admin():
+    """
+    Créer un nouveau compte administrateur.
+    """
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        first_name = request.form.get('first_name', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        password = request.form.get('password', '')
+        admin_role = request.form.get('admin_role', 'admin')
+        
+        if not all([email, first_name, last_name, password]):
+            flash('Tous les champs sont requis.', 'error')
+            return render_template('admin/admins/create.html')
+        
+        if User.query.filter_by(email=email).first():
+            flash('Un compte avec cet email existe déjà.', 'error')
+            return render_template('admin/admins/create.html')
+        
+        if len(password) < 8:
+            flash('Le mot de passe doit contenir au moins 8 caractères.', 'error')
+            return render_template('admin/admins/create.html')
+        
+        try:
+            new_admin = User(
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                is_admin=True,
+                admin_role=admin_role,
+                account_active=True
+            )
+            new_admin.set_password(password)
+            db.session.add(new_admin)
+            db.session.commit()
+            
+            logger.info(f"Nouvel admin créé par {current_user.email}: {email}")
+            flash(f'Administrateur {email} créé avec succès.', 'success')
+            return redirect(url_for('admin.list_admins'))
+            
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erreur création admin: {e}")
+            flash('Erreur lors de la création.', 'error')
+    
+    return render_template('admin/admins/create.html')
+
+
+@bp.route('/admins/<int:admin_id>/edit', methods=['GET', 'POST'])
+@login_required
+@super_admin_required
+def edit_admin(admin_id):
+    """
+    Modifier un compte administrateur.
+    """
+    admin = User.query.get_or_404(admin_id)
+    
+    if not admin.is_admin:
+        flash('Cet utilisateur n\'est pas un administrateur.', 'error')
+        return redirect(url_for('admin.list_admins'))
+    
+    if admin.id == current_user.id:
+        flash('Vous ne pouvez pas modifier votre propre compte ici.', 'warning')
+        return redirect(url_for('admin.list_admins'))
+    
+    if request.method == 'POST':
+        admin_role = request.form.get('admin_role', 'admin')
+        account_active = request.form.get('account_active') == 'on'
+        new_password = request.form.get('new_password', '').strip()
+        
+        try:
+            admin.admin_role = admin_role
+            admin.account_active = account_active
+            
+            if new_password:
+                if len(new_password) < 8:
+                    flash('Le mot de passe doit contenir au moins 8 caractères.', 'error')
+                    return render_template('admin/admins/edit.html', admin=admin)
+                admin.set_password(new_password)
+            
+            db.session.commit()
+            logger.info(f"Admin {admin.email} modifié par {current_user.email}")
+            flash('Administrateur modifié avec succès.', 'success')
+            return redirect(url_for('admin.list_admins'))
+            
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erreur modification admin: {e}")
+            flash('Erreur lors de la modification.', 'error')
+    
+    return render_template('admin/admins/edit.html', admin=admin)
+
+
+@bp.route('/admins/<int:admin_id>/toggle-status', methods=['POST'])
+@login_required
+@super_admin_required
+def toggle_admin_status(admin_id):
+    """
+    Activer/désactiver un compte administrateur.
+    """
+    admin = User.query.get_or_404(admin_id)
+    
+    if admin.id == current_user.id:
+        flash('Vous ne pouvez pas désactiver votre propre compte.', 'error')
+        return redirect(url_for('admin.list_admins'))
+    
+    if not admin.is_admin:
+        flash('Cet utilisateur n\'est pas un administrateur.', 'error')
+        return redirect(url_for('admin.list_admins'))
+    
+    try:
+        admin.account_active = not admin.account_active
+        db.session.commit()
+        
+        status = 'activé' if admin.account_active else 'désactivé'
+        logger.info(f"Admin {admin.email} {status} par {current_user.email}")
+        flash(f'Compte {admin.email} {status}.', 'success')
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erreur toggle admin status: {e}")
+        flash('Erreur lors de l\'opération.', 'error')
+    
+    return redirect(url_for('admin.list_admins'))

@@ -142,6 +142,14 @@ class User(UserMixin, db.Model):
         doc="True si l'utilisateur est administrateur"
     )
     
+    # Rôle admin : 'super_admin' (premier compte), 'admin' (autres admins), None (utilisateur normal)
+    admin_role = db.Column(
+        db.String(20),
+        nullable=True,
+        default=None,
+        doc="Rôle admin: 'super_admin' ou 'admin'. None pour les utilisateurs normaux"
+    )
+    
     # Note: Renommé de is_active pour éviter conflit avec UserMixin
     account_active = db.Column(
         db.Boolean, 
@@ -248,6 +256,30 @@ class User(UserMixin, db.Model):
             bool: True si le compte est actif et peut se connecter
         """
         return self.account_active
+    
+    @property
+    def is_super_admin(self):
+        """
+        Vérifie si l'utilisateur est un super administrateur.
+        
+        Le super admin est le premier compte admin créé et a tous les droits,
+        y compris la gestion des autres administrateurs.
+        
+        Returns:
+            bool: True si l'utilisateur est super admin
+        """
+        return self.is_admin and self.admin_role == 'super_admin'
+    
+    def can_manage_admins(self):
+        """
+        Vérifie si l'utilisateur peut gérer les autres administrateurs.
+        
+        Seul le super admin peut ajouter/modifier/supprimer des admins.
+        
+        Returns:
+            bool: True si l'utilisateur peut gérer les admins
+        """
+        return self.is_super_admin
     
     # --------------------------------------------------------------------------
     # MÉTHODES SPÉCIALES

@@ -1,222 +1,244 @@
-# 🎨 Guide du Panel Administrateur
+# guide du panel administrateur
 
-> **TheDraftClinic - Documentation Admin**
+> TheDraftClinic - documentation admin
 
 ---
 
-## 📖 Introduction
+## introduction
 
 Ce guide detaille l'utilisation du panel administrateur de TheDraftClinic. L'interface a ete redesignee avec une navigation laterale intuitive pour une meilleure ergonomie.
 
 ---
 
-## 🧭 Navigation
+## navigation
 
-### Sidebar (Barre laterale)
+### sidebar (barre laterale)
 
 La sidebar gauche offre un acces rapide a toutes les sections:
 
-| Section | Description |
+| section | description |
 |---------|-------------|
-| 🏠 **Tableau de bord** | Vue d'ensemble avec statistiques |
-| 📝 **Demandes** | Liste et gestion des demandes clients |
-| 👥 **Utilisateurs** | Gestion des comptes utilisateurs |
-| 📄 **Pages** | CGU, CGV, pages personnalisees |
-| 📊 **Statistiques** | Metriques de performance |
-| ⚙️ **Parametres** | Configuration du site |
+| tableau de bord | vue d'ensemble avec statistiques |
+| demandes | liste et gestion des demandes clients |
+| utilisateurs | gestion des comptes utilisateurs |
+| administrateurs | gestion des admins (super admin uniquement) |
+| pages | cgu, cgv, pages personnalisees |
+| statistiques | metriques de performance |
+| parametres | configuration du site |
 
 ---
 
-## 📊 Tableau de Bord
+## tableau de bord
 
 Le tableau de bord affiche:
 
-### Cartes de Statistiques
-- 📋 **Total demandes** - Nombre total de demandes recues
-- ⏳ **En attente** - Demandes en attente de traitement
-- 🔄 **En cours** - Demandes en cours de traitement
-- 💰 **Paiements** - Paiements en attente de verification
-- 👤 **Utilisateurs** - Nombre total d'utilisateurs inscrits
+### cartes de statistiques
+- total demandes - nombre total de demandes recues
+- en attente - demandes en attente de traitement
+- en cours - demandes en cours de traitement
+- paiements - paiements en attente de verification
+- utilisateurs - nombre total d'utilisateurs inscrits
 
-### Sections
-- 📝 **Demandes recentes** - Les 6 dernieres demandes avec progression
-- 💳 **Paiements a verifier** - Paiements en attente d'approbation
-- 📜 **Activite recente** - Historique des 10 dernieres actions
+### sections
+- demandes recentes - les 6 dernieres demandes avec progression
+- paiements a verifier - paiements en attente d'approbation
+- activite recente - historique des 10 dernieres actions
 
 ---
 
-## 📝 Gestion des Demandes
+## gestion des demandes
 
-### Liste des Demandes
+### liste des demandes
 
 La page affiche toutes les demandes avec:
-- 🔢 **ID** - Numero unique de la demande
-- 📌 **Titre** - Titre du projet
-- 👤 **Client** - Nom et email du client
-- 📊 **Statut** - Etat actuel de la demande
-- 📈 **Progression** - Barre de progression visuelle
-- 📅 **Date** - Date de creation
+- id - numero unique de la demande
+- titre - titre du projet
+- client - nom et email du client
+- statut - etat actuel de la demande
+- progression - barre de progression visuelle
+- date - date de creation
 
-### Filtres
-Utilisez le filtre par statut pour afficher:
-- Tous les statuts
-- Soumises
-- En examen
-- Devis envoyes
-- En cours
-- Terminees
-- Livrees
+### filtres
+utilisez le filtre par statut pour afficher:
+- tous les statuts
+- soumises
+- en examen
+- devis envoyes
+- en cours
+- terminees
+- livrees
 
-### Actions sur une Demande
+### actions sur une demande
 
-#### Envoyer un Devis
-1. Ouvrir la demande
-2. Remplir le montant total
-3. Indiquer l'acompte requis
-4. Ajouter un message (optionnel)
-5. Cliquer sur "Envoyer le devis"
+#### envoyer un devis
+1. ouvrir la demande
+2. remplir le montant total
+3. indiquer l'acompte requis
+4. ajouter un message (optionnel)
+5. cliquer sur "envoyer le devis"
 
-#### Mettre a jour le Statut
-1. Selectionner le nouveau statut
-2. Ajuster la progression (%)
-3. Ajouter des notes admin
-4. Cliquer sur "Mettre a jour"
+#### mettre a jour le statut
+1. selectionner le nouveau statut
+2. ajuster la progression (%)
+3. ajouter des notes admin
+4. cliquer sur "mettre a jour"
 
-#### Uploader un Livrable
-1. Selectionner le fichier
-2. Ajouter un commentaire de livraison
-3. Cliquer sur "Uploader le livrable"
+#### uploader un livrable
+1. selectionner le fichier
+2. ajouter un commentaire de livraison
+3. cliquer sur "uploader le livrable"
 
-#### Verifier un Paiement
-1. Consulter le justificatif
-2. Cliquer sur "Approuver" ou "Rejeter"
-
----
-
-## 👥 Gestion des Utilisateurs
-
-### Liste des Utilisateurs
-- 👤 **Nom et email**
-- 🏫 **Etablissement**
-- 🎓 **Niveau academique**
-- 📋 **Nombre de demandes**
-- 📅 **Date d'inscription**
-
-### Profil Utilisateur
-Vue detaillee avec:
-- Informations personnelles
-- Historique des demandes
+#### verifier un paiement
+1. consulter le justificatif
+2. cliquer sur "approuver" ou "rejeter"
 
 ---
 
-## 📄 Gestion des Pages
+## gestion des utilisateurs
 
-### Types de Pages
-- 📜 **CGU** - Conditions Generales d'Utilisation
-- 📜 **CGV** - Conditions Generales de Vente
-- 🔒 **Politique de confidentialite**
-- ⚖️ **Mentions legales**
-- ❓ **FAQ**
-- 📝 **Pages personnalisees**
+### liste des utilisateurs
+- nom et email
+- etablissement
+- niveau academique
+- nombre de demandes
+- date d'inscription
 
-### Creer une Page
-1. Cliquer sur "Nouvelle page"
-2. Remplir le titre
-3. Selectionner le type de page
-4. Choisir le format (HTML ou Markdown)
-5. Ecrire le contenu
-6. Configurer les metadonnees SEO
-7. Definir les options d'affichage
-8. Publier la page
+### profil utilisateur
+vue detaillee avec:
+- informations personnelles
+- historique des demandes
 
 ---
 
-## ⚙️ Parametres
+## gestion des administrateurs (super admin)
 
-### Parametres Generaux
-- 📛 Nom du site
-- 📝 Description
-- 🌍 Fuseau horaire
-- 🏳️ Pays
-- 🗣️ Langue par defaut
-- 💱 Devise
+Accessible uniquement au super administrateur (premier compte cree).
 
-### Branding
-- 🖼️ Logo du site
-- 🔳 Favicon
+### ajouter un admin
+1. aller dans "administrateurs"
+2. cliquer sur "nouvel administrateur"
+3. remplir email, nom, prenom, mot de passe
+4. valider
 
-### SEO et OpenGraph
-- 📊 Titre SEO
-- 📝 Description SEO
-- 🔑 Mots-cles
-- 🖼️ Image OG
-- 🐦 Twitter Card
+### modifier un admin
+- changer le role (admin/super_admin)
+- activer/desactiver le compte
+- reinitialiser le mot de passe
 
-### Informations Legales
-- 🏢 Raison sociale
-- 📍 Adresse
-- 📧 Email / Telephone
-- 📋 SIRET, RCS, TVA
-- 🌐 Hebergeur
-- 🔐 DPO
-
-### Parametres Avances
-- 📈 Google Analytics
-- 📊 Google Tag Manager
-- 📱 Facebook Pixel
-- 🧪 Scripts personnalises
-- 🛠️ Mode maintenance
+### desactiver un admin
+- le compte reste en base mais ne peut plus se connecter
+- les actions passees restent tracees
 
 ---
 
-## 📜 Historique des Activites
+## gestion des pages
+
+### types de pages
+- cgu - conditions generales d'utilisation
+- cgv - conditions generales de vente
+- politique de confidentialite
+- mentions legales
+- faq
+- pages personnalisees
+
+### creer une page
+1. cliquer sur "nouvelle page"
+2. remplir le titre
+3. selectionner le type de page
+4. choisir le format (html ou markdown)
+5. ecrire le contenu
+6. configurer les metadonnees seo
+7. definir les options d'affichage
+8. publier la page
+
+---
+
+## parametres
+
+### parametres generaux
+- nom du site
+- description
+- fuseau horaire
+- pays
+- langue par defaut
+- devise
+
+### branding
+- logo du site
+- favicon
+
+### seo et opengraph
+- titre seo
+- description seo
+- mots-cles
+- image og
+- twitter card
+
+### informations legales
+- raison sociale
+- adresse
+- email / telephone
+- siret, rcs, tva
+- hebergeur
+- dpo
+
+### parametres avances
+- google analytics
+- google tag manager
+- facebook pixel
+- scripts personnalises
+- mode maintenance
+
+---
+
+## historique des activites
 
 Le systeme enregistre automatiquement:
-- 💬 **Commentaires** - Messages ajoutes aux demandes
-- 📤 **Livraisons** - Fichiers uploades
-- 🔄 **Changements de statut** - Modifications d'etat
-- 💰 **Paiements** - Verifications de paiement
-- 📥 **Telechargements** - Documents telecharges
+- commentaires - messages ajoutes aux demandes
+- livraisons - fichiers uploades
+- changements de statut - modifications d'etat
+- paiements - verifications de paiement
+- telechargements - documents telecharges
 
 Chaque activite inclut:
-- Titre de l'action
-- Description
-- Auteur
-- Date et heure
-- Lien vers la demande
+- titre de l'action
+- description
+- auteur
+- date et heure
+- lien vers la demande
 
 ---
 
-## 🎨 Interface
+## interface
 
-### Design
-- 🌙 Theme sombre moderne
-- 📱 Responsive (mobile-friendly)
-- 🎯 Navigation intuitive
-- ⚡ Chargement rapide
+### design
+- theme sombre moderne
+- responsive (mobile-friendly)
+- navigation intuitive
+- chargement rapide
 
-### Codes Couleurs des Statuts
-- 🟡 **Jaune** - En attente
-- 🔵 **Bleu** - En cours
-- 🟢 **Vert** - Complete/Livree
-- 🔴 **Rouge** - Rejetee/Annulee
+### codes couleurs des statuts
+- jaune - en attente
+- bleu - en cours
+- vert - complete/livree
+- rouge - rejetee/annulee
 
 ---
 
-## 💡 Conseils
+## conseils
 
-1. **Consultez le tableau de bord regulierement** pour voir les nouvelles demandes
-2. **Verifiez les paiements rapidement** pour eviter les retards
-3. **Utilisez les commentaires** pour communiquer avec les clients
-4. **Mettez a jour la progression** pour que les clients suivent l'avancement
-5. **Consultez l'historique** pour retracer les actions
+1. consultez le tableau de bord regulierement pour voir les nouvelles demandes
+2. verifiez les paiements rapidement pour eviter les retards
+3. utilisez les commentaires pour communiquer avec les clients
+4. mettez a jour la progression pour que les clients suivent l'avancement
+5. consultez l'historique pour retracer les actions
 
 ---
 
 <div align="center">
 
-**🚀 TheDraftClinic - Panel Administrateur**
+**TheDraftClinic - panel administrateur**
 
-*Interface redesignee pour une meilleure productivite*
+*interface redesignee pour une meilleure productivite*
 
 </div>

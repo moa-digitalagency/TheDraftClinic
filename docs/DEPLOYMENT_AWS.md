@@ -1,14 +1,14 @@
-# Guide de Déploiement AWS / AWS Deployment Guide
+# guide de deploiement aws / aws deployment guide
 
-**Par MOA Digital Agency LLC**
+**par MOA Digital Agency LLC**
 
-Ce guide explique comment déployer TheDraftClinic sur Amazon Web Services (AWS).
+Ce guide explique comment deployer TheDraftClinic sur Amazon Web Services (AWS).
 
 This guide explains how to deploy TheDraftClinic on Amazon Web Services (AWS).
 
 ---
 
-## Architecture Recommandée / Recommended Architecture
+## architecture recommandee / recommended architecture
 
 ```
                     ┌─────────────┐
@@ -39,89 +39,89 @@ This guide explains how to deploy TheDraftClinic on Amazon Web Services (AWS).
        └─────────────┘
 ```
 
-## Option 1: Déploiement EC2 Simple / Simple EC2 Deployment
+## option 1: deploiement ec2 simple / simple ec2 deployment
 
-### 1.1 Créer une Instance EC2 / Create EC2 Instance
+### 1.1 creer une instance ec2 / create ec2 instance
 
-1. Aller sur AWS Console > EC2 > Launch Instance
-2. Choisir / Choose:
-   - AMI: Ubuntu Server 22.04 LTS
-   - Instance Type: t2.micro (free tier) ou t2.small
-   - Storage: 20GB gp3
-   - Security Group: SSH (22), HTTP (80), HTTPS (443)
+1. aller sur aws console > ec2 > launch instance
+2. choisir / choose:
+   - ami: Ubuntu Server 22.04 LTS
+   - instance type: t2.micro (free tier) ou t2.small
+   - storage: 20gb gp3
+   - security group: ssh (22), http (80), https (443)
 
-### 1.2 Créer une Base RDS PostgreSQL / Create RDS PostgreSQL
+### 1.2 creer une base rds postgresql / create rds postgresql
 
-1. RDS > Create Database
-2. Configuration:
-   - Engine: PostgreSQL 15
-   - Template: Free tier (ou Production)
-   - DB Instance: db.t3.micro
-   - Storage: 20GB gp2
-   - Credentials: Noter le username/password
+1. rds > create database
+2. configuration:
+   - engine: PostgreSQL 15
+   - template: free tier (ou production)
+   - db instance: db.t3.micro
+   - storage: 20gb gp2
+   - credentials: noter le username/password
 
-### 1.3 Configurer le Security Group RDS
+### 1.3 configurer le security group rds
 
-- Autoriser le trafic entrant sur port 5432 depuis le Security Group de l'EC2
+- autoriser le trafic entrant sur port 5432 depuis le security group de l'ec2
 
-### 1.4 Déployer sur EC2
+### 1.4 deployer sur ec2
 
 ```bash
-# Se connecter à l'instance / Connect to instance
+# se connecter a l'instance / connect to instance
 ssh -i your-key.pem ubuntu@your-ec2-ip
 
-# Suivre le guide VPS depuis la section "Configuration Initiale"
-# Follow VPS guide from "Initial Setup" section
+# suivre le guide vps depuis la section "configuration initiale"
+# follow vps guide from "initial setup" section
 ```
 
-La seule différence: utilisez l'endpoint RDS pour DATABASE_URL:
+la seule difference: utilisez l'endpoint rds pour DATABASE_URL:
 ```env
 DATABASE_URL=postgresql://username:password@your-rds-endpoint:5432/thedraftclinic_db
 ```
 
-## Option 2: Déploiement avec Elastic Beanstalk / Elastic Beanstalk Deployment
+## option 2: deploiement avec elastic beanstalk / elastic beanstalk deployment
 
-### 2.1 Préparation du Projet
+### 2.1 preparation du projet
 
-Créer un fichier `.ebextensions/01_packages.config`:
+creer un fichier `.ebextensions/01_packages.config`:
 ```yaml
 packages:
   yum:
     postgresql-devel: []
 ```
 
-Créer un fichier `Procfile`:
+creer un fichier `Procfile`:
 ```
 web: gunicorn --bind :8000 --workers 3 main:app
 ```
 
-Créer un fichier `.platform/nginx/conf.d/client_max_body_size.conf`:
+creer un fichier `.platform/nginx/conf.d/client_max_body_size.conf`:
 ```
 client_max_body_size 50M;
 ```
 
-### 2.2 Déploiement via EB CLI
+### 2.2 deploiement via eb cli
 
 ```bash
-# Installer EB CLI / Install EB CLI
+# installer eb cli / install eb cli
 pip install awsebcli
 
-# Initialiser / Initialize
+# initialiser / initialize
 eb init -p python-3.11 thedraftclinic
 
-# Créer l'environnement / Create environment
+# creer l'environnement / create environment
 eb create thedraftclinic-prod
 
-# Configurer les variables / Configure variables
+# configurer les variables / configure variables
 eb setenv DATABASE_URL=postgresql://... SESSION_SECRET=...
 
-# Déployer / Deploy
+# deployer / deploy
 eb deploy
 ```
 
-## Option 3: Déploiement ECS avec Fargate / ECS Fargate Deployment
+## option 3: deploiement ecs avec fargate / ecs fargate deployment
 
-### 3.1 Créer le Dockerfile
+### 3.1 creer le dockerfile
 
 ```dockerfile
 FROM python:3.11-slim
@@ -142,36 +142,36 @@ EXPOSE 5000
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "main:app"]
 ```
 
-### 3.2 Créer le Repository ECR
+### 3.2 creer le repository ecr
 
 ```bash
 aws ecr create-repository --repository-name thedraftclinic
 
-# Authentification
+# authentification
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
 
-# Build et push
+# build et push
 docker build -t thedraftclinic .
 docker tag thedraftclinic:latest YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/thedraftclinic:latest
 docker push YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/thedraftclinic:latest
 ```
 
-### 3.3 Créer le Cluster ECS
+### 3.3 creer le cluster ecs
 
-Via AWS Console:
-1. ECS > Create Cluster > Networking only (Fargate)
-2. Create Task Definition > Fargate
-3. Create Service avec ALB
+via aws console:
+1. ecs > create cluster > networking only (fargate)
+2. create task definition > fargate
+3. create service avec alb
 
-## Configuration S3 pour les Uploads
+## configuration s3 pour les uploads
 
-### Créer un Bucket S3
+### creer un bucket s3
 
 ```bash
 aws s3 mb s3://thedraftclinic-uploads --region us-east-1
 ```
 
-### Configurer CORS
+### configurer cors
 
 ```json
 [
@@ -184,30 +184,30 @@ aws s3 mb s3://thedraftclinic-uploads --region us-east-1
 ]
 ```
 
-### Modifier le Code pour S3
+### modifier le code pour s3
 
-Installer boto3:
+installer boto3:
 ```bash
 pip install boto3
 ```
 
-Modifier `services/file_service.py` pour utiliser S3 au lieu du stockage local.
+modifier `services/file_service.py` pour utiliser s3 au lieu du stockage local.
 
-## Configuration CloudFront (CDN)
+## configuration cloudfront (cdn)
 
-1. CloudFront > Create Distribution
-2. Origin: Votre ALB ou S3
-3. SSL: Certificate Manager (ACM)
-4. Cache Policy: Optimisé pour Flask
+1. cloudfront > create distribution
+2. origin: votre alb ou s3
+3. ssl: certificate manager (acm)
+4. cache policy: optimise pour flask
 
-## Monitoring avec CloudWatch
+## monitoring avec cloudwatch
 
-### Métriques à Surveiller / Metrics to Monitor
-- EC2: CPU, Memory, Network
-- RDS: Connections, CPU, Storage
-- ALB: Request count, Latency, 5xx errors
+### metriques a surveiller / metrics to monitor
+- ec2: cpu, memory, network
+- rds: connections, cpu, storage
+- alb: request count, latency, 5xx errors
 
-### Alarmes Recommandées / Recommended Alarms
+### alarmes recommandees / recommended alarms
 ```bash
 aws cloudwatch put-metric-alarm \
     --alarm-name "CPU-High" \
@@ -220,40 +220,40 @@ aws cloudwatch put-metric-alarm \
     --evaluation-periods 2
 ```
 
-## Coûts Estimés / Estimated Costs
+## couts estimes / estimated costs
 
-### Configuration Minimale (Free Tier)
-- EC2 t2.micro: Gratuit (12 mois)
-- RDS db.t3.micro: ~$15/mois
-- ALB: ~$16/mois
-- **Total: ~$30/mois**
+### configuration minimale (free tier)
+- ec2 t2.micro: gratuit (12 mois)
+- rds db.t3.micro: ~$15/mois
+- alb: ~$16/mois
+- total: ~$30/mois
 
-### Configuration Production
-- EC2 t3.small: ~$15/mois
-- RDS db.t3.small: ~$30/mois
-- ALB: ~$16/mois
-- CloudFront: ~$10/mois
-- S3: ~$5/mois
-- **Total: ~$75-100/mois**
+### configuration production
+- ec2 t3.small: ~$15/mois
+- rds db.t3.small: ~$30/mois
+- alb: ~$16/mois
+- cloudfront: ~$10/mois
+- s3: ~$5/mois
+- total: ~$75-100/mois
 
-## Sécurité AWS / AWS Security
+## securite aws / aws security
 
-### IAM Best Practices
-- Créer des utilisateurs IAM dédiés
-- Utiliser des rôles pour EC2/ECS
-- Activer MFA sur tous les comptes
+### iam best practices
+- creer des utilisateurs iam dedies
+- utiliser des roles pour ec2/ecs
+- activer mfa sur tous les comptes
 
-### Secrets Manager
+### secrets manager
 ```bash
 aws secretsmanager create-secret \
     --name thedraftclinic/prod \
     --secret-string '{"DATABASE_URL":"...","SESSION_SECRET":"..."}'
 ```
 
-### VPC Configuration
-- Placer RDS dans un subnet privé
-- Utiliser NAT Gateway pour l'accès sortant
-- Security Groups restrictifs
+### vpc configuration
+- placer rds dans un subnet prive
+- utiliser nat gateway pour l'acces sortant
+- security groups restrictifs
 
 ---
 

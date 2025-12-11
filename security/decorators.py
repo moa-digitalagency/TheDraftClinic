@@ -60,6 +60,46 @@ def admin_required(f):
     return decorated_function
 
 
+def super_admin_required(f):
+    """
+    Décorateur qui vérifie que l'utilisateur connecté est super administrateur.
+    
+    Le super admin est le premier compte admin créé et peut gérer les autres admins.
+    
+    Args:
+        f: La fonction à décorer
+        
+    Returns:
+        function: La fonction décorée qui redirige si l'utilisateur n'est pas super admin
+        
+    Example:
+        @bp.route('/admin/admins')
+        @login_required
+        @super_admin_required
+        def manage_admins():
+            return render_template('admin/admins.html')
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            logger.warning(f"Tentative d'accès super admin non authentifié depuis {request.remote_addr}")
+            flash('Veuillez vous connecter pour accéder à cette page.', 'warning')
+            return redirect(url_for('auth.login', next=request.url))
+        
+        if not current_user.is_admin:
+            logger.warning(f"Tentative d'accès super admin refusée pour l'utilisateur {current_user.id}")
+            flash('Accès réservé aux administrateurs.', 'error')
+            return redirect(url_for('main.index'))
+        
+        if not current_user.is_super_admin:
+            logger.warning(f"Tentative d'accès super admin refusée pour l'admin {current_user.id}")
+            flash('Cette fonctionnalité est réservée au super administrateur.', 'error')
+            return redirect(url_for('admin.dashboard'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 def client_required(f):
     """
     Décorateur qui vérifie que l'utilisateur connecté est un client (non-admin).

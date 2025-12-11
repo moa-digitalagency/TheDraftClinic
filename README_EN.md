@@ -1,6 +1,6 @@
 # TheDraftClinic
 
-> **Academic Writing Services Platform**
+> academic writing services platform
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.0-green?logo=flask)
@@ -9,365 +9,367 @@
 
 ---
 
-## About
+## about
 
-**TheDraftClinic** is a professional web platform designed for doctoral candidates and researchers who wish to entrust their academic writing projects. Whether it's theses, dissertations, research proposals, scientific articles, or book chapters, our platform offers a complete and secure solution.
+TheDraftClinic is a professional web platform designed for doctoral candidates and researchers who wish to entrust their academic writing projects. Whether it's theses, dissertations, research proposals, scientific articles, or book chapters, our platform offers a complete and secure solution.
 
-### Main Features
+### main features
 
-| Feature | Description |
+| feature | description |
 |---------|-------------|
-| **Request Submission** | Detailed form to submit academic projects |
-| **Quote System** | Receive and accept personalized quotes |
-| **Payment Management** | Upload payment proofs with admin verification |
-| **Dashboard** | Real-time tracking of project progress |
-| **User Management** | Registration, login, and profile management |
-| **Admin Panel** | Complete interface for request management |
-| **Full Traceability** | History of all actions (deliveries, downloads, revisions) |
-| **Revision System** | Modification requests with attached files |
-| **Deadline Extensions** | Request and validate deadline extensions |
-| **Site Settings** | Logo, favicon, SEO, legal information |
-| **Dynamic Pages** | Customizable Terms of Service, Privacy Policy |
-| **Statistics** | Stats dashboard with performance metrics |
+| request submission | detailed form to submit academic projects |
+| quote system | receive and accept personalized quotes |
+| payment management | upload payment proofs with admin verification |
+| dashboard | real-time tracking of project progress |
+| user management | registration, login, and profile management |
+| admin panel | complete interface for request management |
+| full traceability | history of all actions (deliveries, downloads, revisions) |
+| revision system | modification requests with attached files |
+| deadline extensions | request and validate deadline extensions |
+| site settings | logo, favicon, seo, legal information |
+| dynamic pages | customizable terms of service, privacy policy |
+| statistics | stats dashboard with performance metrics |
 
 ---
 
-## Technologies Used
+## technologies used
 
-### Backend
-- **Python 3.11** - Main programming language
-- **Flask** - Lightweight and powerful web framework
-- **SQLAlchemy** - ORM for database management
-- **Flask-Login** - Authentication management
-- **Flask-WTF** - CSRF protection and form validation
-- **Gunicorn** - WSGI server for production
+### backend
+- Python 3.11 - main programming language
+- Flask - lightweight and powerful web framework
+- SQLAlchemy - orm for database management
+- Flask-Login - authentication management
+- Flask-WTF - csrf protection and form validation
+- Gunicorn - wsgi server for production
 
-### Frontend
-- **TailwindCSS** - Utility-first CSS framework (via CDN)
-- **Jinja2** - Template engine
-- **JavaScript** - Client-side interactions
+### frontend
+- TailwindCSS - utility-first css framework (via cdn)
+- Jinja2 - template engine
+- JavaScript - client-side interactions
 
-### Database
-- **PostgreSQL** - Robust relational database
+### database
+- PostgreSQL - robust relational database
 
 ---
 
-## Project Structure
+## project structure
 
 ```
 TheDraftClinic/
-├── app.py                   # Flask configuration and initialization
-├── main.py                  # Application entry point
-├── init_db.py               # Database initialization script
-├── models/                  # SQLAlchemy data models
+├── app.py                   # flask configuration and initialization
+├── main.py                  # application entry point
+├── init_db.py               # database initialization script
+├── models/                  # sqlalchemy data models
 │   ├── __init__.py
-│   ├── user.py              # User model
-│   ├── request.py           # Service request model
-│   ├── document.py          # Document model
-│   ├── payment.py           # Payment model
-│   ├── activity_log.py      # Activity log model
-│   ├── site_settings.py     # Site settings model
-│   ├── page.py              # Dynamic pages model
-│   ├── revision_request.py  # Revision request model
-│   └── deadline_extension.py # Deadline extension model
-├── routes/                  # Flask Routes/Blueprints
+│   ├── user.py              # user model with admin roles
+│   ├── request.py           # service request model
+│   ├── document.py          # document model
+│   ├── payment.py           # payment model
+│   ├── activity_log.py      # activity log model
+│   ├── site_settings.py     # site settings model
+│   ├── page.py              # dynamic pages model
+│   ├── revision_request.py  # revision request model
+│   └── deadline_extension.py # deadline extension model
+├── routes/                  # flask routes/blueprints
 │   ├── __init__.py
-│   ├── auth.py              # Authentication (login, register)
-│   ├── client.py            # Client space
-│   ├── admin.py             # Admin panel
-│   ├── admin_settings.py    # Admin settings (stats, pages, settings)
-│   └── main.py              # Public pages
-├── templates/               # Jinja2 Templates
-│   ├── admin/               # Admin templates
-│   ├── auth/                # Authentication templates
-│   ├── client/              # Client templates
-│   ├── errors/              # Error pages (404, 500, etc.)
-│   └── layouts/             # Base templates
-├── static/                  # Static files
-│   ├── css/styles.css       # Custom styles
-│   ├── js/main.js           # Custom JavaScript
-│   └── uploads/             # Uploaded documents
-├── services/                # Business services
-│   ├── admin_service.py     # Admin service
-│   └── file_service.py      # File service
-├── security/                # Security modules
-│   ├── decorators.py        # Authorization decorators
-│   ├── validators.py        # Input validation
-│   ├── rate_limiter.py      # Rate limiting
-│   └── error_handlers.py    # Error handlers
-├── utils/                   # Utilities
-│   └── forms.py             # WTForms forms
-├── docs/                    # Documentation
-│   ├── README_EN.md         # English documentation
-│   ├── DEPLOYMENT_VPS.md    # VPS deployment guide
-│   ├── DEPLOYMENT_AWS.md    # AWS deployment guide
-│   └── API.md               # API documentation
-├── logs/                    # Log files (generated)
-├── pyproject.toml           # Python dependencies (uv)
-├── requirements.txt         # Python dependencies (pip)
-└── README.md                # French documentation
+│   ├── auth.py              # authentication (login, register)
+│   ├── client.py            # client space
+│   ├── admin.py             # admin panel
+│   ├── admin_settings.py    # admin settings (stats, pages, settings)
+│   └── main.py              # public pages
+├── templates/               # jinja2 templates
+│   ├── admin/               # admin templates
+│   ├── auth/                # authentication templates
+│   ├── client/              # client templates
+│   ├── errors/              # error pages (404, 500, etc.)
+│   └── layouts/             # base templates
+├── static/                  # static files
+│   ├── css/styles.css       # custom styles
+│   ├── js/main.js           # custom javascript
+│   └── uploads/             # uploaded documents
+├── services/                # business services
+│   ├── admin_service.py     # admin service
+│   └── file_service.py      # file service
+├── security/                # security modules
+│   ├── decorators.py        # authorization decorators
+│   ├── validators.py        # input validation
+│   ├── rate_limiter.py      # rate limiting
+│   └── error_handlers.py    # error handlers
+├── utils/                   # utilities
+│   └── forms.py             # wtforms forms
+├── docs/                    # documentation
+├── logs/                    # log files (generated)
+├── pyproject.toml           # python dependencies (uv)
+├── requirements.txt         # python dependencies (pip)
+└── README.md                # french documentation
 ```
 
 ---
 
-## Installation
+## installation
 
-### Prerequisites
+### prerequisites
 - Python 3.11+
 - PostgreSQL
-- uv (Python package manager) or pip
+- uv (python package manager) or pip
 
-### Installation Steps
+### installation steps
 
-1. **Clone the repository**
+1. clone the repository
 ```bash
 git clone https://github.com/your-repo/thedraftclinic.git
 cd thedraftclinic
 ```
 
-2. **Install dependencies**
+2. install dependencies
 ```bash
-# Using uv (recommended)
+# using uv (recommended)
 uv sync
 
-# Or using pip
+# or using pip
 pip install -r requirements.txt
 ```
 
-3. **Configure environment variables**
+3. configure environment variables
 ```bash
-# Required variables
+# required variables
 DATABASE_URL=postgresql://user:password@localhost/thedraftclinic
 SESSION_SECRET=your-very-long-and-random-secret-key
 
-# Admin variables (optional but recommended)
+# admin variables (optional but recommended)
 ADMIN_EMAIL=admin@thedraftclinic.com
 ADMIN_PASSWORD=AdminPassword123!
 ```
 
-4. **Initialize the database**
+4. initialize the database
 ```bash
-# Check environment variables
+# check environment variables
 python init_db.py --check
 
-# Initialize database and create admin
+# initialize database and create admin
 python init_db.py
 ```
 
-5. **Run the application**
+5. run the application
 ```bash
-# Development
+# development
 uv run python main.py
 
-# Production
+# production
 uv run gunicorn --bind 0.0.0.0:5000 main:app
 ```
 
 ---
 
-## Environment Variables
+## environment variables
 
-| Variable | Description | Required | Default |
+| variable | description | required | default |
 |----------|-------------|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection URL | Yes | - |
-| `SESSION_SECRET` | Flask session secret key | Yes | - |
-| `ADMIN_EMAIL` | Admin account email | No | admin@thedraftclinic.com |
-| `ADMIN_PASSWORD` | Admin password (auto-creation) | No | - |
+| `DATABASE_URL` | postgresql connection url | yes | - |
+| `SESSION_SECRET` | flask session secret key | yes | - |
+| `ADMIN_EMAIL` | admin account email | no | admin@thedraftclinic.com |
+| `ADMIN_PASSWORD` | admin password (auto-creation) | no | - |
 
 ---
 
-## Service Types
+## service types
 
-| Code | Service |
+| code | service |
 |------|---------|
-| `thesis` | PhD Thesis |
-| `dissertation` | Master's Dissertation |
-| `research_proposal` | Research Proposal |
-| `research_paper` | Research Paper |
-| `book_chapter` | Book Chapter |
-| `literature_review` | Literature Review |
-| `proofreading` | Proofreading & Correction |
-| `editing` | Academic Editing |
-| `formatting` | Formatting |
-| `consultation` | Academic Consultation |
-| `cv_resume` | Academic CV/Resume |
-| `personal_statement` | Personal Statement |
-| `grant_proposal` | Grant Proposal |
-| `poster_review` | Poster Review |
+| `thesis` | phd thesis |
+| `dissertation` | master's dissertation |
+| `research_proposal` | research proposal |
+| `research_paper` | research paper |
+| `book_chapter` | book chapter |
+| `literature_review` | literature review |
+| `proofreading` | proofreading & correction |
+| `editing` | academic editing |
+| `formatting` | formatting |
+| `consultation` | academic consultation |
+| `cv_resume` | academic cv/resume |
+| `personal_statement` | personal statement |
+| `grant_proposal` | grant proposal |
+| `poster_review` | poster review |
 
 ---
 
-## User Roles
+## user roles
 
-### Client (Researcher/Doctoral Candidate)
-- Create an account and log in
-- Submit service requests
-- Upload reference documents
-- Receive and accept quotes
-- Upload payment proofs
-- Track project progress
-- Download deliverables
-- Request revisions with attached files
-- Approve or reject deadline extensions
+### client (researcher/doctoral candidate)
+- create an account and log in
+- submit service requests
+- upload reference documents
+- receive and accept quotes
+- upload payment proofs
+- track project progress
+- download deliverables
+- request revisions with attached files
+- approve or reject deadline extensions
 
-### Administrator
-- View all requests
-- Send personalized quotes
-- Verify payments
-- Update request status
-- Upload deliverables with comments
-- Manage users
-- Request deadline extensions
-- Handle revision requests
-- Configure site settings
-- Manage dynamic pages
-- View statistics and activity logs
+### administrator
+- view all requests
+- send personalized quotes
+- verify payments
+- update request status
+- upload deliverables with comments
+- manage users
+- request deadline extensions
+- handle revision requests
+- configure site settings
+- manage dynamic pages
+- view statistics and activity logs
+
+### super administrator
+- all administrator rights
+- manage other admins (add, modify roles, deactivate)
+- first account created automatically with this role
 
 ---
 
-## Request Workflow
+## request workflow
 
 ```
-1. Submitted         <- Client submits a request
+1. submitted         <- client submits a request
        |
        v
-2. Under Review      <- Admin reviews the request
+2. under review      <- admin reviews the request
        |
        v
-3. Quote Sent        <- Admin sends a quote
+3. quote sent        <- admin sends a quote
        |
        v
-4. Quote Accepted    <- Client accepts the quote
+4. quote accepted    <- client accepts the quote
        |
        v
-5. Awaiting Deposit  <- Client uploads payment proof
+5. awaiting deposit  <- client uploads payment proof
        |
        v
-6. In Progress       <- Admin verifies and starts work
+6. in progress       <- admin verifies and starts work
        |
        v
-7. Completed         <- Work completed
+7. completed         <- work completed
        |
        v
-8. Delivered         <- Client receives deliverable
+8. delivered         <- client receives deliverable
        |
-       └──> Revision Requested (optional)
-            Admin delivers revised version
+       └──> revision requested (optional)
+            admin delivers revised version
 ```
 
 ---
 
-## Activity Tracking
+## activity tracking
 
-All actions are logged in the system:
+all actions are logged in the system:
 
-| Action Type | Description |
+| action type | description |
 |-------------|-------------|
-| `comment` | Comment added |
-| `delivery` | Deliverable uploaded |
-| `revision_request` | Revision requested |
-| `revision_delivery` | Revised version delivered |
-| `download` | Document downloaded |
-| `status_change` | Status changed |
-| `deadline_extension_request` | Deadline extension requested |
-| `deadline_extension_approved` | Extension approved |
-| `deadline_extension_rejected` | Extension rejected |
-| `quote_sent` | Quote sent |
-| `quote_accepted` | Quote accepted |
-| `payment_submitted` | Payment submitted |
-| `payment_verified` | Payment verified |
-| `document_upload` | Document uploaded |
-| `progress_update` | Progress updated |
+| `comment` | comment added |
+| `delivery` | deliverable uploaded |
+| `revision_request` | revision requested |
+| `revision_delivery` | revised version delivered |
+| `download` | document downloaded |
+| `status_change` | status changed |
+| `deadline_extension_request` | deadline extension requested |
+| `deadline_extension_approved` | extension approved |
+| `deadline_extension_rejected` | extension rejected |
+| `quote_sent` | quote sent |
+| `quote_accepted` | quote accepted |
+| `payment_submitted` | payment submitted |
+| `payment_verified` | payment verified |
+| `document_upload` | document uploaded |
+| `progress_update` | progress updated |
 
 ---
 
-## Security
+## security
 
-- **Hashed passwords** with Werkzeug (bcrypt by default)
-- **CSRF protection** on all forms
-- **Authentication required** for private areas
-- **Authorization decorators** for admin/client access control
-- **Secure file upload** with type validation
-- **Rate limiting** on login forms
-- **Complete logging** of errors and sensitive actions
-- **Custom error pages** (400, 401, 403, 404, 500)
-
----
-
-## Logging
-
-The application uses a robust logging system:
-
-- **Console**: All logs in development
-- **logs/thedraftclinic.log**: General log with rotation (10MB)
-- **logs/errors.log**: Errors only with rotation
-
-Format: `YYYY-MM-DD HH:MM:SS - LEVEL - module - message`
+- hashed passwords with werkzeug (bcrypt by default)
+- csrf protection on all forms
+- authentication required for private areas
+- authorization decorators for admin/client access control
+- secure file upload with type validation
+- rate limiting on login forms
+- complete logging of errors and sensitive actions
+- custom error pages (400, 401, 403, 404, 500)
 
 ---
 
-## API Endpoints
+## logging
 
-See [API Documentation](API.md) for detailed endpoint information.
+the application uses a robust logging system:
 
-### Public Pages
-- `GET /` - Home page
-- `GET /page/<slug>` - Dynamic pages (Terms, Privacy, etc.)
+- console: all logs in development
+- logs/thedraftclinic.log: general log with rotation (10mb)
+- logs/errors.log: errors only with rotation
 
-### Authentication (`/auth`)
-- `GET/POST /auth/login` - Login
-- `GET/POST /auth/register` - Registration
-- `GET /auth/logout` - Logout
-
-### Client Space (`/client`)
-- `GET /client/dashboard` - Dashboard
-- `GET/POST /client/new-request` - New request
-- `GET /client/request/<id>` - Request details
-- `POST /client/request/<id>/accept-quote` - Accept quote
-- `POST /client/request/<id>/submit-payment` - Submit payment
-- `POST /client/request/<id>/add-comment` - Add comment
-- `POST /client/request/<id>/request-revision` - Request revision
-- `GET /client/request/<id>/download/<doc_id>` - Download document
-- `GET/POST /client/profile` - User profile
-
-### Admin Panel (`/admin`)
-- `GET /admin/dashboard` - Admin dashboard
-- `GET /admin/requests` - Request list
-- `GET /admin/request/<id>` - Request details
-- `POST /admin/request/<id>/send-quote` - Send quote
-- `POST /admin/request/<id>/update-status` - Update status
-- `POST /admin/request/<id>/upload-deliverable` - Upload deliverable
-- `POST /admin/request/<id>/add-comment` - Add comment
-- `POST /admin/request/<id>/request-deadline-extension` - Request extension
-- `GET /admin/users` - User list
-- `GET /admin/user/<id>` - User details
-- `POST /admin/payment/<id>/verify` - Verify payment
-- `GET /admin/stats` - Statistics page
-- `GET /admin/settings` - Site settings
-- `GET /admin/pages` - Dynamic pages management
+format: `YYYY-MM-DD HH:MM:SS - LEVEL - module - message`
 
 ---
 
-## Deployment
+## api endpoints
 
-- [VPS Deployment Guide](DEPLOYMENT_VPS.md)
-- [AWS Deployment Guide](DEPLOYMENT_AWS.md)
+see [api documentation](API.md) for detailed endpoint information.
+
+### public pages
+- `GET /` - home page
+- `GET /page/<slug>` - dynamic pages (terms, privacy, etc.)
+
+### authentication (`/auth`)
+- `GET/POST /auth/login` - login
+- `GET/POST /auth/register` - registration
+- `GET /auth/logout` - logout
+
+### client space (`/client`)
+- `GET /client/dashboard` - dashboard
+- `GET/POST /client/new-request` - new request
+- `GET /client/request/<id>` - request details
+- `POST /client/request/<id>/accept-quote` - accept quote
+- `POST /client/request/<id>/submit-payment` - submit payment
+- `POST /client/request/<id>/add-comment` - add comment
+- `POST /client/request/<id>/request-revision` - request revision
+- `GET /client/request/<id>/download/<doc_id>` - download document
+- `GET/POST /client/profile` - user profile
+
+### admin panel (`/admin`)
+- `GET /admin/dashboard` - admin dashboard
+- `GET /admin/requests` - request list
+- `GET /admin/request/<id>` - request details
+- `POST /admin/request/<id>/send-quote` - send quote
+- `POST /admin/request/<id>/update-status` - update status
+- `POST /admin/request/<id>/upload-deliverable` - upload deliverable
+- `POST /admin/request/<id>/add-comment` - add comment
+- `POST /admin/request/<id>/request-deadline-extension` - request extension
+- `GET /admin/users` - user list
+- `GET /admin/user/<id>` - user details
+- `POST /admin/payment/<id>/verify` - verify payment
+- `GET /admin/stats` - statistics page
+- `GET /admin/settings` - site settings
+- `GET /admin/pages` - dynamic pages management
+- `GET /admin/admins` - admin management (super admin only)
 
 ---
 
-## Contact
+## deployment
+
+- [vps deployment guide](DEPLOYMENT_VPS.md)
+- [aws deployment guide](DEPLOYMENT_AWS.md)
+
+---
+
+## contact
 
 ### MOA Digital Agency LLC
 
 | | |
 |---|---|
-| **Developer** | Aisance KALONJI |
-| **Email** | moa@myoneart.com |
-| **Website** | [www.myoneart.com](https://www.myoneart.com) |
+| developer | Aisance KALONJI |
+| email | moa@myoneart.com |
+| website | [www.myoneart.com](https://www.myoneart.com) |
 
 ---
 
-## License
+## license
 
 Copyright 2024 MOA Digital Agency LLC. All rights reserved.
 
@@ -375,6 +377,6 @@ Copyright 2024 MOA Digital Agency LLC. All rights reserved.
 
 <div align="center">
 
-**Developed by MOA Digital Agency LLC**
+**developed by MOA Digital Agency LLC**
 
 </div>
