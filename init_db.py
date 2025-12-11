@@ -50,18 +50,18 @@ def check_environment_variables():
         'SESSION_SECRET': 'Flask session secret key'
     }
     
-    admin_vars = {
-        'ADMIN_EMAIL': 'Administrator email address',
-        'ADMIN_PASSWORD': 'Administrator password'
-    }
+    required_vars['ADMIN_EMAIL'] = 'Administrator email address (required)'
+    required_vars['ADMIN_PASSWORD'] = 'Administrator password (required)'
     
-    print("[1/3] Checking required environment variables...")
+    print("[1/2] Checking required environment variables...")
     for var, description in required_vars.items():
         value = os.environ.get(var)
         if value:
             if var == 'DATABASE_URL':
                 masked = value[:20] + '...' if len(value) > 20 else value
                 print(f"      ✓ {var}: {masked}")
+            elif var == 'ADMIN_EMAIL':
+                print(f"      ✓ {var}: {value}")
             else:
                 print(f"      ✓ {var}: ***configured***")
             messages.append(f"✓ {var} is set")
@@ -71,28 +71,7 @@ def check_environment_variables():
             is_valid = False
     
     print()
-    print("[2/3] Checking admin credentials...")
-    admin_ready = True
-    for var, description in admin_vars.items():
-        value = os.environ.get(var)
-        if value:
-            if var == 'ADMIN_EMAIL':
-                print(f"      ✓ {var}: {value}")
-            else:
-                print(f"      ✓ {var}: ***configured***")
-            messages.append(f"✓ {var} is set")
-        else:
-            print(f"      ⚠ {var}: NOT SET - {description}")
-            messages.append(f"⚠ {var} is not set (optional for admin creation)")
-            admin_ready = False
-    
-    if admin_ready:
-        print("      → Admin account will be created automatically")
-    else:
-        print("      → Admin account will NOT be created (set both ADMIN_EMAIL and ADMIN_PASSWORD)")
-    
-    print()
-    print("[3/3] Validating admin credentials format...")
+    print("[2/2] Validating admin credentials format...")
     
     admin_email = os.environ.get('ADMIN_EMAIL', '')
     admin_password = os.environ.get('ADMIN_PASSWORD', '')
@@ -179,28 +158,35 @@ def init_database():
                 pass
             
             print()
-            print("[5/6] Checking for default admin user...")
-            admin_email = os.environ.get('ADMIN_EMAIL', 'admin@thedraftclinic.com')
+            print("[5/6] Creating admin user from environment variables...")
+            admin_email = os.environ.get('ADMIN_EMAIL')
             admin_password = os.environ.get('ADMIN_PASSWORD')
+            
+            if not admin_email or not admin_password:
+                print("      ✗ ERROR: ADMIN_EMAIL and ADMIN_PASSWORD are required!")
+                print("      → Please configure them in your secrets/environment variables")
+                return False
             
             existing_admin = User.query.filter_by(email=admin_email).first()
             
             if existing_admin:
                 print(f"      ✓ Admin user already exists: {admin_email}")
-            elif admin_password:
+                if not existing_admin.check_password(admin_password):
+                    existing_admin.set_password(admin_password)
+                    db.session.commit()
+                    print(f"      ✓ Admin password updated to match environment variable")
+            else:
                 admin = User(
                     email=admin_email,
                     first_name='Admin',
                     last_name='TheDraftClinic',
-                    is_admin=True
+                    is_admin=True,
+                    account_active=True
                 )
                 admin.set_password(admin_password)
                 db.session.add(admin)
                 db.session.commit()
                 print(f"      ✓ Created admin user: {admin_email}")
-            else:
-                print("      ⚠ No ADMIN_PASSWORD set - skipping admin creation")
-                print("      → Set ADMIN_EMAIL and ADMIN_PASSWORD to create admin")
             
             print()
             print("[6/6] Verifying database tables...")

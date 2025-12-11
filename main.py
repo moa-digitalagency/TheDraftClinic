@@ -20,15 +20,61 @@ Usage:
 ================================================================================
 """
 
+import os
+import sys
+
+# ==============================================================================
+# INITIALISATION DE LA BASE DE DONNÉES AU DÉMARRAGE
+# ==============================================================================
+
+def ensure_database_initialized():
+    """
+    S'assure que la base de données est initialisée avec toutes les tables
+    et le compte admin configuré depuis les variables d'environnement.
+    """
+    from app import create_app, db
+    from models.user import User
+    
+    app = create_app()
+    
+    with app.app_context():
+        db.create_all()
+        
+        admin_email = os.environ.get('ADMIN_EMAIL')
+        admin_password = os.environ.get('ADMIN_PASSWORD')
+        
+        if not admin_email or not admin_password:
+            print("ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be configured in secrets!")
+            print("Please set these environment variables before starting the application.")
+            sys.exit(1)
+        
+        existing_admin = User.query.filter_by(email=admin_email).first()
+        
+        if existing_admin:
+            if not existing_admin.check_password(admin_password):
+                existing_admin.set_password(admin_password)
+                db.session.commit()
+                print(f"Admin password updated for: {admin_email}")
+        else:
+            admin = User(
+                email=admin_email,
+                first_name='Admin',
+                last_name='TheDraftClinic',
+                is_admin=True,
+                account_active=True
+            )
+            admin.set_password(admin_password)
+            db.session.add(admin)
+            db.session.commit()
+            print(f"Admin user created: {admin_email}")
+    
+    return app
+
 # ==============================================================================
 # IMPORTATION ET CRÉATION DE L'APPLICATION
 # ==============================================================================
 
-from app import create_app
-
-# Création de l'instance de l'application Flask
-# La fonction create_app() configure: DB, Auth, CSRF, Routes, Logging
-app = create_app()
+app = ensure_database_initialized()
 
 
 # ==============================================================================
