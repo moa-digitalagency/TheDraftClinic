@@ -7,14 +7,6 @@ Developed by: Aisance KALONJI
 Contact: moa@myoneart.com
 Website: www.myoneart.com
 ================================================================================
-Ce template affiche la page d'accueil publique du site.
-Sections:
-- Hero section avec appel à l'action
-- Liste des services proposés
-- Processus de travail en étapes
-- Section à propos
-- Footer avec liens et informations
-================================================================================
 -->
 
 {% extends 'layouts/base.html' %}
@@ -32,12 +24,27 @@ Sections:
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#services" class="text-gray-300 hover:text-white transition">Services</a>
-                    <a href="#process" class="text-gray-300 hover:text-white transition">Processus</a>
-                    <a href="#about" class="text-gray-300 hover:text-white transition">À propos</a>
-                    <a href="{{ url_for('auth.login') }}" class="px-6 py-2.5 border-2 border-primary-400 text-primary-300 rounded-full font-medium hover:bg-primary-500/20 hover:border-primary-300 hover:text-white transition-all">Connexion</a>
+                    <a href="#services" class="text-gray-300 hover:text-white transition">{{ t('nav.services') }}</a>
+                    <a href="#process" class="text-gray-300 hover:text-white transition">{{ t('nav.process') }}</a>
+                    <a href="#about" class="text-gray-300 hover:text-white transition">{{ t('nav.about') }}</a>
+                    
+                    <!-- Language Selector -->
+                    <div class="relative group">
+                        <button class="flex items-center text-gray-300 hover:text-white transition">
+                            <span class="uppercase">{{ current_lang }}</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                            <a href="?lang=fr" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg">{{ t('language.fr') }}</a>
+                            <a href="?lang=en" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-b-lg">{{ t('language.en') }}</a>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('auth.login') }}" class="px-6 py-2.5 border-2 border-primary-400 text-primary-300 rounded-full font-medium hover:bg-primary-500/20 hover:border-primary-300 hover:text-white transition-all">{{ t('nav.login') }}</a>
                     <a href="{{ url_for('auth.register') }}" class="px-6 py-2.5 bg-primary-500 text-white rounded-full font-medium hover:bg-primary-400 hover:shadow-lg hover:shadow-primary-500/25 transition-all">
-                        S'inscrire
+                        {{ t('nav.register') }}
                     </a>
                 </div>
                 
@@ -51,12 +58,16 @@ Sections:
         
         <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 border-t border-white/10">
             <div class="px-4 py-4 space-y-3">
-                <a href="#services" class="block text-gray-300 hover:text-white py-2">Services</a>
-                <a href="#process" class="block text-gray-300 hover:text-white py-2">Processus</a>
-                <a href="#about" class="block text-gray-300 hover:text-white py-2">À propos</a>
-                <a href="{{ url_for('auth.login') }}" class="block px-6 py-2.5 border-2 border-primary-400 text-primary-300 rounded-full font-medium text-center hover:bg-primary-500/20">Connexion</a>
+                <a href="#services" class="block text-gray-300 hover:text-white py-2">{{ t('nav.services') }}</a>
+                <a href="#process" class="block text-gray-300 hover:text-white py-2">{{ t('nav.process') }}</a>
+                <a href="#about" class="block text-gray-300 hover:text-white py-2">{{ t('nav.about') }}</a>
+                <div class="flex space-x-2 py-2">
+                    <a href="?lang=fr" class="px-3 py-1 text-gray-300 hover:text-white {% if current_lang == 'fr' %}bg-primary-500/20 rounded{% endif %}">FR</a>
+                    <a href="?lang=en" class="px-3 py-1 text-gray-300 hover:text-white {% if current_lang == 'en' %}bg-primary-500/20 rounded{% endif %}">EN</a>
+                </div>
+                <a href="{{ url_for('auth.login') }}" class="block px-6 py-2.5 border-2 border-primary-400 text-primary-300 rounded-full font-medium text-center hover:bg-primary-500/20">{{ t('nav.login') }}</a>
                 <a href="{{ url_for('auth.register') }}" class="block px-6 py-2.5 bg-primary-500 text-white rounded-full font-medium text-center hover:bg-primary-400">
-                    S'inscrire
+                    {{ t('nav.register') }}
                 </a>
             </div>
         </div>
@@ -76,42 +87,42 @@ Sections:
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                         </svg>
-                        Rédaction 100% humaine - Certifiée sans IA et sans plagiat
+                        {{ t('landing.hero.badge_certified') }}
                     </div>
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm mb-6">
                         <span class="w-2 h-2 bg-primary-500 rounded-full mr-2 animate-pulse"></span>
-                        Services professionnels de rédaction académique
+                        {{ t('landing.hero.badge_services') }}
                     </div>
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
-                        Donnez vie à vos 
-                        <span class="gradient-text">recherches académiques</span>
+                        {{ t('landing.hero.title_part1') }} 
+                        <span class="gradient-text">{{ t('landing.hero.title_part2') }}</span>
                     </h1>
                     <p class="text-lg text-slate-600 mb-8 max-w-xl">
-                        TheDraftClinic accompagne doctorants et chercheurs dans la rédaction de thèses, mémoires, articles et tous types de documents académiques avec excellence et rigueur.
+                        {{ t('landing.hero.description') }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                         <a href="{{ url_for('auth.register') }}" class="px-8 py-4 bg-primary-600 text-white rounded-full font-semibold hover:bg-primary-700 hover:shadow-xl transition-all transform hover:-translate-y-1">
-                            Commencer maintenant
+                            {{ t('landing.hero.cta_start') }}
                         </a>
                         <a href="#services" class="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-semibold hover:bg-slate-50 transition-all">
-                            Découvrir nos services
+                            {{ t('landing.hero.cta_discover') }}
                         </a>
                     </div>
                     
                     <div class="mt-12 flex items-center justify-center lg:justify-start gap-8">
                         <div class="text-center">
                             <div class="text-3xl font-bold text-slate-900">500+</div>
-                            <div class="text-slate-500 text-sm">Projets livrés</div>
+                            <div class="text-slate-500 text-sm">{{ t('landing.hero.stats_projects') }}</div>
                         </div>
                         <div class="w-px h-12 bg-slate-200"></div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-slate-900">98%</div>
-                            <div class="text-slate-500 text-sm">Satisfaction</div>
+                            <div class="text-slate-500 text-sm">{{ t('landing.hero.stats_satisfaction') }}</div>
                         </div>
                         <div class="w-px h-12 bg-slate-200"></div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-slate-900">24/7</div>
-                            <div class="text-slate-500 text-sm">Support</div>
+                            <div class="text-slate-500 text-sm">{{ t('landing.hero.stats_support') }}</div>
                         </div>
                     </div>
                 </div>
@@ -125,13 +136,13 @@ Sections:
                                 </svg>
                             </div>
                             <div>
-                                <div class="text-slate-900 font-semibold">Thèse de Doctorat</div>
-                                <div class="text-slate-500 text-sm">En cours de rédaction</div>
+                                <div class="text-slate-900 font-semibold">{{ t('landing.hero.card_thesis') }}</div>
+                                <div class="text-slate-500 text-sm">{{ t('landing.hero.card_in_progress') }}</div>
                             </div>
                         </div>
                         <div class="space-y-3">
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Progression</span>
+                                <span class="text-slate-500">{{ t('common.progress') }}</span>
                                 <span class="text-slate-900 font-medium">75%</span>
                             </div>
                             <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -147,7 +158,7 @@ Sections:
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                                 </svg>
                             </div>
-                            <div class="text-slate-700 text-sm font-semibold">100% Sans IA & Sans Plagiat</div>
+                            <div class="text-slate-700 text-sm font-semibold">{{ t('landing.hero.card_no_ai') }}</div>
                         </div>
                     </div>
                 </div>
@@ -158,12 +169,12 @@ Sections:
     <section id="services" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-4">Nos Services</span>
+                <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-4">{{ t('landing.services.title') }}</span>
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                    Solutions complètes pour vos <span class="gradient-text">travaux académiques</span>
+                    {{ t('landing.services.heading_part1') }} <span class="gradient-text">{{ t('landing.services.heading_part2') }}</span>
                 </h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
-                    De la thèse de doctorat aux articles de recherche, nous vous accompagnons à chaque étape de votre parcours académique.
+                    {{ t('landing.services.description') }}
                 </p>
             </div>
             
@@ -175,9 +186,9 @@ Sections:
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-slate-900 group-hover:text-white mb-3">{{ label }}</h3>
+                    <h3 class="text-xl font-semibold text-slate-900 group-hover:text-white mb-3">{{ t('services.' + code) if t('services.' + code) != 'services.' + code else label }}</h3>
                     <p class="text-gray-600 group-hover:text-white/80">
-                        Service professionnel adapté à vos besoins spécifiques avec suivi personnalisé.
+                        {{ t('landing.services.item_description') }}
                     </p>
                 </div>
                 {% endfor %}
@@ -193,32 +204,32 @@ Sections:
         
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <span class="inline-block px-4 py-2 bg-white/10 text-white rounded-full text-sm font-medium mb-4">Comment ça marche</span>
+                <span class="inline-block px-4 py-2 bg-white/10 text-white rounded-full text-sm font-medium mb-4">{{ t('landing.process.title') }}</span>
                 <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                    Un processus <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-200 to-primary-400">simple et transparent</span>
+                    {{ t('landing.process.heading_part1') }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-200 to-primary-400">{{ t('landing.process.heading_part2') }}</span>
                 </h2>
             </div>
             
             <div class="grid md:grid-cols-4 gap-8">
                 <div class="text-center">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">1</div>
-                    <h3 class="text-xl font-semibold text-white mb-3">Soumettez votre demande</h3>
-                    <p class="text-gray-400">Décrivez votre projet et uploadez vos documents sur notre plateforme sécurisée.</p>
+                    <h3 class="text-xl font-semibold text-white mb-3">{{ t('landing.process.step1_title') }}</h3>
+                    <p class="text-gray-400">{{ t('landing.process.step1_description') }}</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">2</div>
-                    <h3 class="text-xl font-semibold text-white mb-3">Recevez un devis</h3>
-                    <p class="text-gray-400">Notre équipe examine votre demande et vous envoie un devis personnalisé.</p>
+                    <h3 class="text-xl font-semibold text-white mb-3">{{ t('landing.process.step2_title') }}</h3>
+                    <p class="text-gray-400">{{ t('landing.process.step2_description') }}</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">3</div>
-                    <h3 class="text-xl font-semibold text-white mb-3">Validez et payez</h3>
-                    <p class="text-gray-400">Acceptez le devis et versez un acompte pour démarrer le travail.</p>
+                    <h3 class="text-xl font-semibold text-white mb-3">{{ t('landing.process.step3_title') }}</h3>
+                    <p class="text-gray-400">{{ t('landing.process.step3_description') }}</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">4</div>
-                    <h3 class="text-xl font-semibold text-white mb-3">Suivez et recevez</h3>
-                    <p class="text-gray-400">Suivez la progression en temps réel et recevez votre travail finalisé.</p>
+                    <h3 class="text-xl font-semibold text-white mb-3">{{ t('landing.process.step4_title') }}</h3>
+                    <p class="text-gray-400">{{ t('landing.process.step4_description') }}</p>
                 </div>
             </div>
         </div>
@@ -228,12 +239,12 @@ Sections:
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div>
-                    <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-4">À propos</span>
+                    <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-4">{{ t('landing.about.title') }}</span>
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-                        Expertise académique au service de <span class="gradient-text">votre réussite</span>
+                        {{ t('landing.about.heading_part1') }} <span class="gradient-text">{{ t('landing.about.heading_part2') }}</span>
                     </h2>
                     <p class="text-gray-600 mb-6">
-                        TheDraftClinic réunit une équipe de professionnels expérimentés dans le domaine académique. Nos rédacteurs et éditeurs, titulaires de doctorats et experts dans leurs domaines, s'engagent à vous fournir un travail de qualité exceptionnelle.
+                        {{ t('landing.about.description') }}
                     </p>
                     <ul class="space-y-4">
                         <li class="flex items-start gap-3">
@@ -242,7 +253,7 @@ Sections:
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
                             </div>
-                            <span class="text-gray-700"><strong>Rédaction 100% humaine</strong> - Certifiée sans IA et sans plagiat</span>
+                            <span class="text-gray-700"><strong>{{ t('landing.about.feature1') }}</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -250,7 +261,7 @@ Sections:
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
                             </div>
-                            <span class="text-gray-700">Équipe d'experts titulaires de doctorats</span>
+                            <span class="text-gray-700">{{ t('landing.about.feature2') }}</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -258,7 +269,7 @@ Sections:
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
                             </div>
-                            <span class="text-gray-700">Confidentialité et sécurité garanties (RGPD)</span>
+                            <span class="text-gray-700">{{ t('landing.about.feature3') }}</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -266,7 +277,7 @@ Sections:
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
                             </div>
-                            <span class="text-gray-700">Respect strict des délais</span>
+                            <span class="text-gray-700">{{ t('landing.about.feature4') }}</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -274,7 +285,7 @@ Sections:
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
                             </div>
-                            <span class="text-gray-700">Support personnalisé tout au long du projet</span>
+                            <span class="text-gray-700">{{ t('landing.about.feature5') }}</span>
                         </li>
                     </ul>
                 </div>
@@ -283,19 +294,19 @@ Sections:
                         <div class="grid grid-cols-2 gap-6">
                             <div class="text-center p-6 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl">
                                 <div class="text-4xl font-bold gradient-text mb-2">10+</div>
-                                <div class="text-gray-600 text-sm">Années d'expérience</div>
+                                <div class="text-gray-600 text-sm">{{ t('landing.about.stat_experience') }}</div>
                             </div>
                             <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl">
                                 <div class="text-3xl font-bold text-green-600 mb-2">0% IA</div>
-                                <div class="text-gray-600 text-sm">100% humain, sans plagiat</div>
+                                <div class="text-gray-600 text-sm">{{ t('landing.about.stat_human') }}</div>
                             </div>
                             <div class="text-center p-6 bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl">
                                 <div class="text-4xl font-bold text-amber-600 mb-2">48h</div>
-                                <div class="text-gray-600 text-sm">Délai minimum</div>
+                                <div class="text-gray-600 text-sm">{{ t('landing.about.stat_delay') }}</div>
                             </div>
                             <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl">
                                 <div class="text-4xl font-bold text-blue-600 mb-2">98%</div>
-                                <div class="text-gray-600 text-sm">Taux de satisfaction</div>
+                                <div class="text-gray-600 text-sm">{{ t('landing.about.stat_satisfaction') }}</div>
                             </div>
                         </div>
                     </div>
@@ -307,17 +318,17 @@ Sections:
     <section class="py-24 gradient-bg">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-                Prêt à démarrer votre projet?
+                {{ t('landing.cta.title') }}
             </h2>
             <p class="text-gray-300 text-lg mb-8">
-                Rejoignez des centaines de chercheurs qui nous font confiance pour leurs travaux académiques.
+                {{ t('landing.cta.description') }}
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ url_for('auth.register') }}" class="px-8 py-4 bg-white text-primary-700 rounded-full font-semibold hover:shadow-2xl transition-all transform hover:-translate-y-1">
-                    Créer un compte gratuit
+                    {{ t('landing.cta.btn_create') }}
                 </a>
                 <a href="#services" class="px-8 py-4 glass text-white rounded-full font-semibold hover:bg-white/20 transition-all">
-                    En savoir plus
+                    {{ t('landing.cta.btn_learn') }}
                 </a>
             </div>
         </div>
@@ -334,20 +345,20 @@ Sections:
                         <span class="text-2xl font-bold">TheDraftClinic</span>
                     </div>
                     <p class="text-gray-400 mb-6 max-w-md">
-                        Votre partenaire de confiance pour tous vos projets de rédaction académique. Excellence, rigueur et confidentialité garanties.
+                        {{ t('landing.footer.description') }}
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-lg mb-4">Services</h4>
+                    <h4 class="font-semibold text-lg mb-4">{{ t('landing.footer.services_title') }}</h4>
                     <ul class="space-y-3 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Thèses & Mémoires</a></li>
-                        <li><a href="#" class="hover:text-white transition">Articles de recherche</a></li>
-                        <li><a href="#" class="hover:text-white transition">Relecture & Correction</a></li>
-                        <li><a href="#" class="hover:text-white transition">Consultation</a></li>
+                        <li><a href="#" class="hover:text-white transition">{{ t('landing.footer.services_thesis') }}</a></li>
+                        <li><a href="#" class="hover:text-white transition">{{ t('landing.footer.services_articles') }}</a></li>
+                        <li><a href="#" class="hover:text-white transition">{{ t('landing.footer.services_proofreading') }}</a></li>
+                        <li><a href="#" class="hover:text-white transition">{{ t('landing.footer.services_consultation') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-lg mb-4">Contact</h4>
+                    <h4 class="font-semibold text-lg mb-4">{{ t('landing.footer.contact_title') }}</h4>
                     <ul class="space-y-3 text-gray-400">
                         <li>contact@thedraftclinic.com</li>
                         <li>+33 1 23 45 67 89</li>
@@ -355,7 +366,7 @@ Sections:
                 </div>
             </div>
             <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-500">
-                <p>&copy; 2024 TheDraftClinic. Tous droits réservés.</p>
+                <p>&copy; 2024 TheDraftClinic. {{ t('site.copyright') }}</p>
             </div>
         </div>
     </footer>

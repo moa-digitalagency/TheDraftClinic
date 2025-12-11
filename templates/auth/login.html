@@ -7,18 +7,11 @@ Developed by: Aisance KALONJI
 Contact: moa@myoneart.com
 Website: www.myoneart.com
 ================================================================================
-Ce template affiche le formulaire de connexion utilisateur.
-Fonctionnalités:
-- Formulaire email et mot de passe
-- Messages d'erreur et de succès
-- Lien vers l'inscription
-- Protection CSRF
-================================================================================
 -->
 
 {% extends 'layouts/base.html' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}{{ t('auth.login.title') }}{% endblock %}
 
 {% block body %}
 <div class="min-h-screen gradient-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -39,8 +32,14 @@ Fonctionnalités:
         
         <div class="glass-card rounded-3xl p-8 shadow-2xl">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-slate-900">Connexion</h2>
-                <p class="text-gray-600 mt-2">Accédez à votre espace personnel</p>
+                <h2 class="text-2xl font-bold text-slate-900">{{ t('auth.login.title') }}</h2>
+                <p class="text-gray-600 mt-2">{{ t('auth.login.subtitle') }}</p>
+            </div>
+            
+            <!-- Language Selector -->
+            <div class="flex justify-center space-x-2 mb-6">
+                <a href="?lang=fr" class="px-3 py-1 text-sm rounded {% if current_lang == 'fr' %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">{{ t('language.fr') }}</a>
+                <a href="?lang=en" class="px-3 py-1 text-sm rounded {% if current_lang == 'en' %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">{{ t('language.en') }}</a>
             </div>
             
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -60,36 +59,36 @@ Fonctionnalités:
                 {{ form.hidden_tag() }}
                 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.login.email') }}</label>
                     <input type="email" name="email" id="email" required
                         class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                        placeholder="votre@email.com">
+                        placeholder="{{ t('auth.login.email_placeholder') }}">
                 </div>
                 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.login.password') }}</label>
                     <input type="password" name="password" id="password" required
                         class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                        placeholder="••••••••">
+                        placeholder="{{ t('auth.login.password_placeholder') }}">
                 </div>
                 
                 <div class="flex items-center justify-between">
                     <label class="flex items-center">
                         <input type="checkbox" name="remember" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
-                        <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+                        <span class="ml-2 text-sm text-gray-600">{{ t('auth.login.remember_me') }}</span>
                     </label>
                 </div>
                 
                 <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-primary-600 to-primary-800 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary-500/25 transition-all transform hover:-translate-y-0.5">
-                    Se connecter
+                    {{ t('auth.login.submit') }}
                 </button>
             </form>
             
             <div class="mt-6 text-center">
                 <p class="text-gray-600">
-                    Pas encore de compte? 
+                    {{ t('auth.login.no_account') }} 
                     <a href="{{ url_for('auth.register') }}" class="text-primary-600 hover:text-primary-700 font-medium">
-                        S'inscrire
+                        {{ t('nav.register') }}
                     </a>
                 </p>
             </div>
@@ -97,7 +96,7 @@ Fonctionnalités:
         
         <div class="text-center mt-6">
             <a href="{{ url_for('main.index') }}" class="text-white/80 hover:text-white transition">
-                &larr; Retour à l'accueil
+                &larr; {{ t('auth.login.back_home') }}
             </a>
         </div>
     </div>

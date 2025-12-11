@@ -10,12 +10,12 @@ Website: www.myoneart.com
 -->
 
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="{{ current_lang }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %}{{ site_settings.site_name if site_settings else 'TheDraftClinic' }}{% endblock %} - Services de Rédaction Académique</title>
+    <title>{% block title %}{{ site_settings.site_name if site_settings else 'TheDraftClinic' }}{% endblock %} - {{ t('site.tagline') }}</title>
     
     <!-- Favicon -->
     {% if site_settings and site_settings.favicon_filename %}
@@ -29,10 +29,10 @@ Website: www.myoneart.com
     <!-- SEO Meta Tags -->
     {% block seo %}
     {% if site_settings %}
-    <meta name="description" content="{{ site_settings.seo_description or site_settings.site_description or 'Services professionnels de rédaction académique' }}">
-    <meta name="keywords" content="{{ site_settings.seo_keywords or 'rédaction académique, thèse, mémoire, doctorat' }}">
+    <meta name="description" content="{{ site_settings.seo_description or site_settings.site_description or t('site.description') }}">
+    <meta name="keywords" content="{{ site_settings.seo_keywords or t('site.keywords') }}">
     {% else %}
-    <meta name="description" content="Services professionnels de rédaction académique">
+    <meta name="description" content="{{ t('site.description') }}">
     {% endif %}
     {% endblock %}
     

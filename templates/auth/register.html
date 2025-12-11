@@ -7,18 +7,11 @@ Developed by: Aisance KALONJI
 Contact: moa@myoneart.com
 Website: www.myoneart.com
 ================================================================================
-Ce template affiche le formulaire d'inscription utilisateur.
-Fonctionnalités:
-- Formulaire complet avec informations personnelles
-- Validation côté client et serveur
-- Lien vers la connexion
-- Protection CSRF
-================================================================================
 -->
 
 {% extends 'layouts/base.html' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}{{ t('auth.register.title') }}{% endblock %}
 
 {% block body %}
 <div class="min-h-screen gradient-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -39,8 +32,14 @@ Fonctionnalités:
         
         <div class="glass-card rounded-3xl p-8 shadow-2xl">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-slate-900">Créer un compte</h2>
-                <p class="text-gray-600 mt-2">Rejoignez notre communauté de chercheurs</p>
+                <h2 class="text-2xl font-bold text-slate-900">{{ t('auth.register.title') }}</h2>
+                <p class="text-gray-600 mt-2">{{ t('auth.register.subtitle') }}</p>
+            </div>
+            
+            <!-- Language Selector -->
+            <div class="flex justify-center space-x-2 mb-6">
+                <a href="?lang=fr" class="px-3 py-1 text-sm rounded {% if current_lang == 'fr' %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">{{ t('language.fr') }}</a>
+                <a href="?lang=en" class="px-3 py-1 text-sm rounded {% if current_lang == 'en' %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">{{ t('language.en') }}</a>
             </div>
             
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -61,93 +60,93 @@ Fonctionnalités:
                 
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.first_name') }} *</label>
                         <input type="text" name="first_name" id="first_name" required
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                            placeholder="Jean">
+                            placeholder="{{ t('auth.register.first_name_placeholder') }}">
                     </div>
                     <div>
-                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.last_name') }} *</label>
                         <input type="text" name="last_name" id="last_name" required
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                            placeholder="Dupont">
+                            placeholder="{{ t('auth.register.last_name_placeholder') }}">
                     </div>
                 </div>
                 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.email') }} *</label>
                     <input type="email" name="email" id="email" required
                         class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                        placeholder="jean.dupont@universite.fr">
+                        placeholder="{{ t('auth.register.email_placeholder') }}">
                 </div>
                 
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe *</label>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.password') }} *</label>
                         <input type="password" name="password" id="password" required minlength="6"
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                            placeholder="Min. 6 caractères">
+                            placeholder="{{ t('auth.register.password_placeholder') }}">
                     </div>
                     <div>
-                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Confirmer *</label>
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.confirm_password') }} *</label>
                         <input type="password" name="confirm_password" id="confirm_password" required
                             class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                            placeholder="Répéter le mot de passe">
+                            placeholder="{{ t('auth.register.confirm_password_placeholder') }}">
                     </div>
                 </div>
                 
                 <div class="border-t border-gray-200 pt-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informations académiques (optionnel)</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ t('auth.register.academic_info') }} ({{ t('common.optional') }})</h3>
                     
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.phone') }}</label>
                             <input type="tel" name="phone" id="phone"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                                placeholder="+33 6 12 34 56 78">
+                                placeholder="{{ t('auth.register.phone_placeholder') }}">
                         </div>
                         <div>
-                            <label for="academic_level" class="block text-sm font-medium text-gray-700 mb-2">Niveau académique</label>
+                            <label for="academic_level" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.academic_level') }}</label>
                             <select name="academic_level" id="academic_level"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
-                                <option value="">Sélectionner...</option>
-                                <option value="licence">Licence</option>
-                                <option value="master">Master</option>
-                                <option value="doctorat">Doctorat</option>
-                                <option value="post_doc">Post-doctorat</option>
-                                <option value="chercheur">Chercheur</option>
-                                <option value="professeur">Professeur</option>
-                                <option value="autre">Autre</option>
+                                <option value="">{{ t('common.select') }}</option>
+                                <option value="licence">{{ t('auth.academic_levels.licence') }}</option>
+                                <option value="master">{{ t('auth.academic_levels.master') }}</option>
+                                <option value="doctorat">{{ t('auth.academic_levels.doctorat') }}</option>
+                                <option value="post_doc">{{ t('auth.academic_levels.post_doc') }}</option>
+                                <option value="chercheur">{{ t('auth.academic_levels.chercheur') }}</option>
+                                <option value="professeur">{{ t('auth.academic_levels.professeur') }}</option>
+                                <option value="autre">{{ t('auth.academic_levels.autre') }}</option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="grid md:grid-cols-2 gap-6 mt-6">
                         <div>
-                            <label for="institution" class="block text-sm font-medium text-gray-700 mb-2">Établissement</label>
+                            <label for="institution" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.institution') }}</label>
                             <input type="text" name="institution" id="institution"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                                placeholder="Université de Paris">
+                                placeholder="{{ t('auth.register.institution_placeholder') }}">
                         </div>
                         <div>
-                            <label for="field_of_study" class="block text-sm font-medium text-gray-700 mb-2">Domaine d'étude</label>
+                            <label for="field_of_study" class="block text-sm font-medium text-gray-700 mb-2">{{ t('auth.register.field_of_study') }}</label>
                             <input type="text" name="field_of_study" id="field_of_study"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                                placeholder="Sciences sociales">
+                                placeholder="{{ t('auth.register.field_of_study_placeholder') }}">
                         </div>
                     </div>
                 </div>
                 
                 <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-primary-600 to-primary-800 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary-500/25 transition-all transform hover:-translate-y-0.5">
-                    Créer mon compte
+                    {{ t('auth.register.submit') }}
                 </button>
             </form>
             
             <div class="mt-6 text-center">
                 <p class="text-gray-600">
-                    Déjà un compte? 
+                    {{ t('auth.register.has_account') }} 
                     <a href="{{ url_for('auth.login') }}" class="text-primary-600 hover:text-primary-700 font-medium">
-                        Se connecter
+                        {{ t('nav.login') }}
                     </a>
                 </p>
             </div>
@@ -155,7 +154,7 @@ Fonctionnalités:
         
         <div class="text-center mt-6">
             <a href="{{ url_for('main.index') }}" class="text-white/80 hover:text-white transition">
-                &larr; Retour à l'accueil
+                &larr; {{ t('auth.register.back_home') }}
             </a>
         </div>
     </div>

@@ -302,6 +302,13 @@ def create_app():
     register_error_handlers(app)
     
     # --------------------------------------------------------------------------
+    # INITIALISATION DU SYSTEME DE TRADUCTION (i18n)
+    # --------------------------------------------------------------------------
+    
+    from utils.i18n import init_i18n
+    init_i18n(app)
+    
+    # --------------------------------------------------------------------------
     # CONTEXT PROCESSORS (Variables globales pour templates)
     # --------------------------------------------------------------------------
     

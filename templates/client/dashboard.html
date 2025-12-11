@@ -7,18 +7,11 @@ Developed by: Aisance KALONJI
 Contact: moa@myoneart.com
 Website: www.myoneart.com
 ================================================================================
-Ce template affiche le tableau de bord principal du client.
-Fonctionnalités:
-- Statistiques personnelles (demandes, en cours, terminées)
-- Liste de toutes les demandes du client
-- Bouton de création de nouvelle demande
-- Navigation vers le profil et déconnexion
-================================================================================
 -->
 
 {% extends 'layouts/base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}{{ t('client.dashboard.title') }}{% endblock %}
 
 {% block body %}
 <div class="min-h-screen bg-slate-50">
@@ -33,13 +26,18 @@ Fonctionnalités:
                 </div>
                 
                 <div class="flex items-center space-x-4">
+                    <!-- Language Selector -->
+                    <div class="flex space-x-1 text-sm">
+                        <a href="?lang=fr" class="px-2 py-1 rounded {% if current_lang == 'fr' %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">FR</a>
+                        <a href="?lang=en" class="px-2 py-1 rounded {% if current_lang == 'en' %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">EN</a>
+                    </div>
                     <span class="text-gray-600">{{ current_user.full_name }}</span>
-                    <a href="{{ url_for('client.profile') }}" class="text-gray-500 hover:text-primary-600">
+                    <a href="{{ url_for('client.profile') }}" class="text-gray-500 hover:text-primary-600" title="{{ t('nav.profile') }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                     </a>
-                    <a href="{{ url_for('auth.logout') }}" class="text-gray-500 hover:text-red-600">
+                    <a href="{{ url_for('auth.logout') }}" class="text-gray-500 hover:text-red-600" title="{{ t('nav.logout') }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
@@ -65,39 +63,39 @@ Fonctionnalités:
         
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">Bienvenue, {{ current_user.first_name }}!</h1>
-                <p class="text-gray-600 mt-1">Gérez vos demandes de services académiques</p>
+                <h1 class="text-2xl font-bold text-slate-900">{{ t('client.dashboard.welcome') }}, {{ current_user.first_name }}!</h1>
+                <p class="text-gray-600 mt-1">{{ t('client.dashboard.title') }}</p>
             </div>
             <a href="{{ url_for('client.new_request') }}" class="mt-4 md:mt-0 inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium rounded-xl hover:shadow-lg transition-all">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
-                Nouvelle demande
+                {{ t('client.dashboard.new_request') }}
             </a>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div class="text-3xl font-bold gradient-text">{{ stats.total }}</div>
-                <div class="text-gray-600 text-sm mt-1">Total demandes</div>
+                <div class="text-gray-600 text-sm mt-1">{{ t('client.dashboard.stats.total') }}</div>
             </div>
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div class="text-3xl font-bold text-amber-600">{{ stats.pending_quote }}</div>
-                <div class="text-gray-600 text-sm mt-1">En attente</div>
+                <div class="text-gray-600 text-sm mt-1">{{ t('client.dashboard.stats.pending') }}</div>
             </div>
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div class="text-3xl font-bold text-blue-600">{{ stats.in_progress }}</div>
-                <div class="text-gray-600 text-sm mt-1">En cours</div>
+                <div class="text-gray-600 text-sm mt-1">{{ t('client.dashboard.stats.in_progress') }}</div>
             </div>
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div class="text-3xl font-bold text-green-600">{{ stats.completed }}</div>
-                <div class="text-gray-600 text-sm mt-1">Terminées</div>
+                <div class="text-gray-600 text-sm mt-1">{{ t('client.dashboard.stats.completed') }}</div>
             </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100">
-                <h2 class="text-lg font-semibold text-slate-900">Mes demandes</h2>
+                <h2 class="text-lg font-semibold text-slate-900">{{ t('client.dashboard.my_requests') }}</h2>
             </div>
             
             {% if requests %}
@@ -108,19 +106,19 @@ Fonctionnalités:
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-2">
                                 <span class="px-3 py-1 rounded-full text-xs font-medium status-{{ request.status }}">
-                                    {{ request.get_status_display() }}
+                                    {{ t('status.' + request.status) if t('status.' + request.status) != 'status.' + request.status else request.get_status_display() }}
                                 </span>
                                 <span class="text-gray-400 text-sm">#{{ request.id }}</span>
                             </div>
                             <h3 class="font-semibold text-slate-900">{{ request.title }}</h3>
-                            <p class="text-gray-600 text-sm mt-1">{{ request.get_service_display() }}</p>
+                            <p class="text-gray-600 text-sm mt-1">{{ t('services.' + request.service_type) if t('services.' + request.service_type) != 'services.' + request.service_type else request.get_service_display() }}</p>
                         </div>
                         
                         <div class="flex items-center gap-6 text-sm">
                             {% if request.progress_percentage > 0 %}
                             <div class="w-32">
                                 <div class="flex justify-between text-xs mb-1">
-                                    <span class="text-gray-500">Progression</span>
+                                    <span class="text-gray-500">{{ t('common.progress') }}</span>
                                     <span class="font-medium">{{ request.progress_percentage }}%</span>
                                 </div>
                                 <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -137,7 +135,7 @@ Fonctionnalités:
                             {% endif %}
                             
                             <div class="text-gray-500">
-                                <span class="text-xs">Créée le:</span>
+                                <span class="text-xs">{{ t('common.created_at') }}:</span>
                                 <div class="font-medium">{{ request.created_at.strftime('%d/%m/%Y') }}</div>
                             </div>
                             
@@ -156,13 +154,13 @@ Fonctionnalités:
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune demande</h3>
-                <p class="text-gray-500 mb-6">Commencez par créer votre première demande de service.</p>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">{{ t('client.dashboard.no_requests') }}</h3>
+                <p class="text-gray-500 mb-6">{{ t('client.dashboard.create_first') }}</p>
                 <a href="{{ url_for('client.new_request') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-800 text-white font-medium rounded-xl hover:shadow-lg transition-all">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
-                    Créer une demande
+                    {{ t('client.dashboard.new_request') }}
                 </a>
             </div>
             {% endif %}
