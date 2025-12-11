@@ -119,7 +119,8 @@
       "password_too_short": "Password must be at least 6 characters.",
       "login_required": "Please log in to access this page.",
       "admin_required": "Access restricted to administrators.",
-      "super_admin_required": "This feature is reserved for the super administrator."
+      "super_admin_required": "This feature is reserved for the super administrator.",
+      "account_disabled": "Your account has been disabled. Contact the administrator."
     }
   },
   "landing": {
@@ -427,7 +428,9 @@
       "title": "Server error",
       "message": "An internal error has occurred. Please try again later."
     },
-    "back_home": "Back to home"
+    "back_home": "Back to home",
+    "reload": "Reload",
+    "previous_page": "Previous page"
   },
   "activity": {
     "comment": "Comment added",

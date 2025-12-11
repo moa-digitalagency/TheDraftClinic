@@ -56,7 +56,7 @@ def login():
             if user and user.check_password(form.password.data):
                 if not user.is_active:
                     logger.warning(f"Tentative de connexion sur compte desactive: {email}")
-                    flash(t('auth.messages.login_required'), 'error')
+                    flash(t('auth.messages.account_disabled'), 'error')
                     return render_template('auth/login.html', form=form)
                 
                 login_user(user, remember=form.remember.data)
