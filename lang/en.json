@@ -331,6 +331,7 @@
     },
     "dashboard": {
       "title": "Administrator Dashboard",
+      "overview": "Platform overview",
       "stats": {
         "total_requests": "Total requests",
         "pending": "Pending",
@@ -441,6 +442,51 @@
       "title": "Statistics",
       "activity_log": "Activity log",
       "no_activity": "No recent activity."
+    },
+    "payments": {
+      "title": "Payment management",
+      "history": "Payment history",
+      "pending": "Pending payments",
+      "validated": "Validated payments",
+      "rejected": "Rejected payments",
+      "no_pending": "No pending payments",
+      "no_payments": "No payments found",
+      "validate": "Validate",
+      "reject": "Reject",
+      "amount": "Amount",
+      "client": "Client",
+      "request": "Request",
+      "date": "Date",
+      "status": "Status",
+      "proof": "Proof",
+      "view_proof": "View proof",
+      "rejection_reason": "Rejection reason",
+      "messages": {
+        "validated": "Payment validated successfully.",
+        "rejected": "Payment rejected."
+      }
+    },
+    "languages": {
+      "title": "Language management",
+      "available": "Available languages",
+      "add_language": "Add language",
+      "edit_language": "Edit language",
+      "download": "Download",
+      "upload": "Upload",
+      "upload_json": "Upload JSON file",
+      "download_json": "Download JSON file",
+      "language_code": "Language code",
+      "language_name": "Language name",
+      "keys_count": "Number of keys",
+      "last_modified": "Last modified",
+      "edit_translations": "Edit translations",
+      "save_translations": "Save translations",
+      "messages": {
+        "uploaded": "Language file uploaded successfully.",
+        "updated": "Translations updated.",
+        "deleted": "Language deleted.",
+        "invalid_json": "The JSON file is invalid."
+      }
     }
   },
   "errors": {

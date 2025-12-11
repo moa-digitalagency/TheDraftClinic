@@ -19,29 +19,69 @@ Fonctionnalités:
 
 import os
 import json
+import glob
 from flask import session, request, g
 from functools import wraps
 
-LANGUAGES = ['fr', 'en']
-DEFAULT_LANGUAGE = 'fr'
+LANGUAGES = []
+DEFAULT_LANGUAGE = 'en'
 TRANSLATIONS = {}
+
+
+def discover_languages():
+    """
+    Decouvre dynamiquement les fichiers de langue disponibles.
+    Retourne une liste de codes de langue (ex: ['fr', 'en', 'es']).
+    """
+    global LANGUAGES
+    lang_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lang')
+    lang_files = glob.glob(os.path.join(lang_dir, '*.json'))
+    LANGUAGES = [os.path.splitext(os.path.basename(f))[0] for f in lang_files]
+    if 'fr' in LANGUAGES and 'en' in LANGUAGES:
+        LANGUAGES = ['fr', 'en'] + [l for l in LANGUAGES if l not in ['fr', 'en']]
+    return LANGUAGES
 
 
 def load_translations():
     """
     Charge tous les fichiers de traduction JSON depuis le dossier lang/.
+    Decouvre automatiquement les langues disponibles.
     Cette fonction doit etre appelee au demarrage de l'application.
     """
     global TRANSLATIONS
+    discover_languages()
+    
     lang_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'lang')
     
     for lang in LANGUAGES:
         lang_file = os.path.join(lang_dir, f'{lang}.json')
         if os.path.exists(lang_file):
-            with open(lang_file, 'r', encoding='utf-8') as f:
-                TRANSLATIONS[lang] = json.load(f)
+            try:
+                with open(lang_file, 'r', encoding='utf-8') as f:
+                    TRANSLATIONS[lang] = json.load(f)
+            except json.JSONDecodeError:
+                TRANSLATIONS[lang] = {}
         else:
             TRANSLATIONS[lang] = {}
+
+
+def reload_translations():
+    """
+    Recharge les traductions depuis les fichiers.
+    Utile apres modification des fichiers de langue via l'admin.
+    Decouvre egalement les nouvelles langues ajoutees.
+    """
+    load_translations()
+
+
+def get_available_languages():
+    """
+    Retourne la liste des langues disponibles.
+    Utile pour les templates.
+    """
+    if not LANGUAGES:
+        discover_languages()
+    return LANGUAGES
 
 
 def get_locale():
@@ -50,24 +90,30 @@ def get_locale():
     Ordre de priorite:
     1. Session utilisateur
     2. Parametre URL (?lang=xx)
-    3. Preference navigateur
-    4. Langue par defaut
+    3. Preference navigateur (FR = fr, autres = en)
+    4. Langue par defaut (en pour non-francophones)
     """
-    if 'lang' in session and session['lang'] in LANGUAGES:
+    available = get_available_languages()
+    
+    if 'lang' in session and session['lang'] in available:
         return session['lang']
     
     if request and 'lang' in request.args:
         lang = request.args.get('lang')
-        if lang in LANGUAGES:
+        if lang in available:
             session['lang'] = lang
             return lang
     
     if request and request.accept_languages:
-        best = request.accept_languages.best_match(LANGUAGES)
-        if best:
-            return best
+        for lang_code, quality in request.accept_languages:
+            if lang_code.lower().startswith('fr') and 'fr' in available:
+                session['lang'] = 'fr'
+                return 'fr'
+        if 'en' in available:
+            session['lang'] = 'en'
+            return 'en'
     
-    return DEFAULT_LANGUAGE
+    return DEFAULT_LANGUAGE if DEFAULT_LANGUAGE in available else (available[0] if available else 'en')
 
 
 def set_locale(lang):
@@ -75,9 +121,10 @@ def set_locale(lang):
     Definit la langue courante dans la session.
     
     Args:
-        lang: Code de langue ('fr' ou 'en')
+        lang: Code de langue (ex: 'fr', 'en', 'es')
     """
-    if lang in LANGUAGES:
+    available = get_available_languages()
+    if lang in available:
         session['lang'] = lang
         return True
     return False

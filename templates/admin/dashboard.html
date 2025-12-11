@@ -1,12 +1,12 @@
 {% extends 'layouts/admin_base.html' %}
 
-{% block title %}Admin - Dashboard{% endblock %}
-{% block page_title %}Tableau de bord{% endblock %}
+{% block title %}{{ t('nav.admin') }} - {{ t('nav.dashboard') }}{% endblock %}
+{% block page_title %}{{ t('nav.dashboard') }}{% endblock %}
 
 {% block admin_content %}
 <div class="mb-8">
-    <h1 class="text-2xl font-bold text-white">Tableau de bord</h1>
-    <p class="text-gray-400 mt-1">Vue d'ensemble de la plateforme</p>
+    <h1 class="text-2xl font-bold text-white">{{ t('admin.dashboard.title') }}</h1>
+    <p class="text-gray-400 mt-1">{{ t('admin.dashboard.overview') if t('admin.dashboard.overview') != 'admin.dashboard.overview' else 'Vue d\'ensemble de la plateforme' }}</p>
 </div>
 
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="text-3xl font-bold text-white">{{ stats.total_requests }}</div>
-        <div class="text-gray-400 text-sm mt-1">Total demandes</div>
+        <div class="text-gray-400 text-sm mt-1">{{ t('admin.dashboard.stats.total_requests') }}</div>
     </div>
     
     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-amber-700 transition-colors">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="text-3xl font-bold text-amber-400">{{ stats.pending_requests }}</div>
-        <div class="text-gray-400 text-sm mt-1">En attente</div>
+        <div class="text-gray-400 text-sm mt-1">{{ t('admin.dashboard.stats.pending') }}</div>
     </div>
     
     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-blue-700 transition-colors">
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="text-3xl font-bold text-blue-400">{{ stats.in_progress }}</div>
-        <div class="text-gray-400 text-sm mt-1">En cours</div>
+        <div class="text-gray-400 text-sm mt-1">{{ t('admin.dashboard.stats.in_progress') }}</div>
     </div>
     
     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-red-700 transition-colors">
@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="text-3xl font-bold text-red-400">{{ stats.pending_payments }}</div>
-        <div class="text-gray-400 text-sm mt-1">Paiements</div>
+        <div class="text-gray-400 text-sm mt-1">{{ t('admin.dashboard.stats.payments_pending') }}</div>
     </div>
     
     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-green-700 transition-colors">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="text-3xl font-bold text-green-400">{{ stats.total_users }}</div>
-        <div class="text-gray-400 text-sm mt-1">Utilisateurs</div>
+        <div class="text-gray-400 text-sm mt-1">{{ t('admin.dashboard.stats.users') }}</div>
     </div>
 </div>
 
@@ -78,10 +78,10 @@
                 <svg class="w-5 h-5 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                Demandes recentes
+                {{ t('admin.dashboard.recent_requests') }}
             </h2>
             <a href="{{ url_for('admin.requests_list') }}" class="text-primary-400 text-sm hover:text-primary-300 flex items-center">
-                Voir tout
+                {{ t('common.view') }}
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -120,7 +120,7 @@
             <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
-            Aucune demande recente
+            {{ t('admin.requests.no_requests') }}
         </div>
         {% endif %}
     </div>
@@ -131,7 +131,7 @@
                 <svg class="w-5 h-5 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                 </svg>
-                Paiements a verifier
+                {{ t('admin.dashboard.pending_payments') }}
             </h2>
         </div>
         
@@ -145,7 +145,7 @@
                         <p class="text-gray-400 text-sm">{{ payment.request.user.full_name }}</p>
                     </div>
                     <div class="text-right">
-                        <span class="px-2 py-1 bg-amber-900/50 text-amber-300 rounded text-xs font-medium">En attente</span>
+                        <span class="px-2 py-1 bg-amber-900/50 text-amber-300 rounded text-xs font-medium">{{ t('status.pending') }}</span>
                         <p class="text-gray-500 text-xs mt-1">{{ payment.created_at.strftime('%d/%m/%Y') }}</p>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
             <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            Aucun paiement en attente
+            {{ t('admin.payments.no_pending') if t('admin.payments.no_pending') != 'admin.payments.no_pending' else 'Aucun paiement en attente' }}
         </div>
         {% endif %}
     </div>
@@ -169,7 +169,7 @@
             <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            Activite recente
+            {{ t('admin.dashboard.recent_activity') }}
         </h2>
     </div>
     
@@ -207,7 +207,7 @@
     </div>
     {% else %}
     <div class="p-8 text-center text-gray-500">
-        Aucune activite recente
+        {{ t('admin.stats.no_activity') }}
     </div>
     {% endif %}
 </div>

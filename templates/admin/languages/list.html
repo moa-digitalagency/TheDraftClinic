@@ -1,0 +1,55 @@
+{% extends 'layouts/admin_base.html' %}
+
+{% block title %}{{ t('nav.admin') }} - {{ t('admin.languages.title') }}{% endblock %}
+{% block page_title %}{{ t('admin.languages.title') }}{% endblock %}
+
+{% block admin_content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-white">{{ t('admin.languages.title') }}</h1>
+    <p class="text-gray-400 mt-1">{{ t('admin.languages.available') }}</p>
+</div>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for lang in languages %}
+    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden hover:border-primary-600 transition-colors">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold uppercase">{{ lang.code }}</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">{{ lang.name }}</h3>
+                        <p class="text-gray-400 text-sm">{{ lang.code }}.json</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-slate-700/50 rounded-xl p-3">
+                    <p class="text-2xl font-bold text-primary-400">{{ lang.keys_count }}</p>
+                    <p class="text-gray-400 text-xs">{{ t('admin.languages.keys_count') }}</p>
+                </div>
+                <div class="bg-slate-700/50 rounded-xl p-3">
+                    <p class="text-sm font-medium text-white">{{ lang.last_modified.strftime('%d/%m/%Y') }}</p>
+                    <p class="text-gray-400 text-xs">{{ t('admin.languages.last_modified') }}</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ url_for('admin_settings.language_view', lang_code=lang.code) }}" 
+                   class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg text-sm font-medium text-center transition-colors">
+                    {{ t('admin.languages.edit_translations') }}
+                </a>
+                <a href="{{ url_for('admin_settings.language_download', lang_code=lang.code) }}" 
+                   class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

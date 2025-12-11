@@ -103,9 +103,11 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 5. Livraison - Upload des livrables avec commentaires
 6. Révisions - Gestion des demandes de révision
 7. Extensions - Demandes d'extension de délai
-8. Statistiques - Dashboard de traçabilité et stats
-9. Paramètres - Logo, favicon, SEO, informations légales
-10. Pages - Gestion des pages dynamiques (CGU, CGV, etc.)
+8. **Paiements** - Gestion centralisée des paiements (validation, historique, rejet)
+9. Statistiques - Dashboard de traçabilité et stats
+10. Paramètres - Logo, favicon, SEO, informations légales
+11. Pages - Gestion des pages dynamiques (CGU, CGV, etc.)
+12. **Langues** - Éditeur de traductions JSON (upload/edit/download)
 
 ### Super admin
 - Tous les droits admin
@@ -126,14 +128,23 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 ### Détection de langue
 1. Session utilisateur (priorité haute)
 2. Paramètre URL (`?lang=fr` ou `?lang=en`)
-3. Préférence navigateur (Accept-Language header)
-4. Langue par défaut : Français
+3. Préférence navigateur : **Français = FR, autres langues = EN**
+4. Langue par défaut : Anglais (pour les non-francophones)
 
 ### Fonctionnalités
 - Fonction `t()` disponible dans tous les templates
-- Sélecteur de langue flottant sur le côté gauche de l'écran
-- Fallback vers l'anglais si la clé de traduction n'existe pas
+- **Sélecteur de langue flottant en bas à gauche** avec design moderne (globe icon + dropdown)
+- **Détection dynamique des langues** - nouveaux fichiers JSON automatiquement reconnus
+- Fallback vers la clé si la traduction n'existe pas
 - Support des variables dans les traductions : `t('welcome', name='Jean')`
+- Fonction `reload_translations()` pour recharger après modification + découvrir nouvelles langues
+- Support des drapeaux pour les langues courantes (FR, EN, ES, DE, IT, PT, NL, AR, ZH, JA) avec fallback globe
+
+### Gestion des langues (Admin)
+- Menu dédié dans le panneau admin pour gérer les fichiers de langue
+- Éditeur JSON intégré avec validation en temps réel
+- Import/export de fichiers JSON
+- Téléchargement des fichiers de traduction
 
 ### Structure des clés
 - `nav.*` : Navigation

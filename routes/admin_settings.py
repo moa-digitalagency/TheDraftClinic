@@ -374,3 +374,201 @@ def statistics():
         stats=stats,
         recent_activities=recent_activities
     )
+
+
+# ==============================================================================
+# GESTION DES PAIEMENTS
+# ==============================================================================
+
+@bp.route('/payments')
+@login_required
+@admin_required
+def payments_list():
+    """Liste tous les paiements avec filtrage par statut."""
+    from models.payment import Payment
+    
+    status_filter = request.args.get('status', 'all')
+    
+    query = Payment.query
+    if status_filter == 'pending':
+        query = query.filter_by(status='pending')
+    elif status_filter == 'verified':
+        query = query.filter_by(status='verified')
+    elif status_filter == 'rejected':
+        query = query.filter_by(status='rejected')
+    
+    payments = query.order_by(Payment.created_at.desc()).all()
+    
+    pending_count = Payment.query.filter_by(status='pending').count()
+    verified_count = Payment.query.filter_by(status='verified').count()
+    rejected_count = Payment.query.filter_by(status='rejected').count()
+    
+    return render_template(
+        'admin/payments/list.html',
+        payments=payments,
+        current_filter=status_filter,
+        pending_count=pending_count,
+        verified_count=verified_count,
+        rejected_count=rejected_count
+    )
+
+
+# ==============================================================================
+# GESTION DES LANGUES
+# ==============================================================================
+
+@bp.route('/languages')
+@login_required
+@admin_required
+def languages_list():
+    """Liste toutes les langues disponibles."""
+    import json
+    from pathlib import Path
+    
+    lang_dir = Path('lang')
+    languages = []
+    
+    for lang_file in lang_dir.glob('*.json'):
+        lang_code = lang_file.stem
+        try:
+            with open(lang_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            def count_keys(obj, count=0):
+                for key, value in obj.items():
+                    if isinstance(value, dict):
+                        count = count_keys(value, count)
+                    else:
+                        count += 1
+                return count
+            
+            keys_count = count_keys(data)
+            mod_time = datetime.fromtimestamp(lang_file.stat().st_mtime)
+            
+            languages.append({
+                'code': lang_code,
+                'name': data.get('language', {}).get(lang_code, lang_code.upper()),
+                'keys_count': keys_count,
+                'last_modified': mod_time
+            })
+        except Exception as e:
+            logger.error(f"Erreur lecture fichier langue {lang_code}: {e}")
+    
+    return render_template('admin/languages/list.html', languages=languages)
+
+
+@bp.route('/languages/<lang_code>')
+@login_required
+@admin_required
+def language_view(lang_code):
+    """Affiche et permet d'éditer les traductions d'une langue."""
+    import json
+    from pathlib import Path
+    
+    lang_file = Path(f'lang/{lang_code}.json')
+    if not lang_file.exists():
+        flash('Fichier de langue introuvable.', 'error')
+        return redirect(url_for('admin_settings.languages_list'))
+    
+    try:
+        with open(lang_file, 'r', encoding='utf-8') as f:
+            translations = json.load(f)
+    except Exception as e:
+        flash('Erreur lors de la lecture du fichier.', 'error')
+        return redirect(url_for('admin_settings.languages_list'))
+    
+    return render_template(
+        'admin/languages/edit.html',
+        lang_code=lang_code,
+        translations=translations,
+        translations_json=json.dumps(translations, indent=2, ensure_ascii=False)
+    )
+
+
+@bp.route('/languages/<lang_code>/save', methods=['POST'])
+@login_required
+@admin_required
+def language_save(lang_code):
+    """Sauvegarde les modifications de traduction."""
+    import json
+    from pathlib import Path
+    
+    lang_file = Path(f'lang/{lang_code}.json')
+    
+    try:
+        json_content = request.form.get('translations_json', '')
+        translations = json.loads(json_content)
+        
+        with open(lang_file, 'w', encoding='utf-8') as f:
+            json.dump(translations, f, indent=2, ensure_ascii=False)
+        
+        from utils.i18n import reload_translations
+        reload_translations()
+        
+        flash('Traductions mises à jour avec succès.', 'success')
+    except json.JSONDecodeError:
+        flash('Le JSON est invalide.', 'error')
+    except Exception as e:
+        logger.error(f"Erreur sauvegarde langue {lang_code}: {e}")
+        flash('Une erreur est survenue.', 'error')
+    
+    return redirect(url_for('admin_settings.language_view', lang_code=lang_code))
+
+
+@bp.route('/languages/<lang_code>/download')
+@login_required
+@admin_required
+def language_download(lang_code):
+    """Télécharge le fichier JSON d'une langue."""
+    from flask import send_file
+    from pathlib import Path
+    
+    lang_file = Path(f'lang/{lang_code}.json')
+    if not lang_file.exists():
+        flash('Fichier introuvable.', 'error')
+        return redirect(url_for('admin_settings.languages_list'))
+    
+    return send_file(
+        lang_file,
+        as_attachment=True,
+        download_name=f'{lang_code}.json',
+        mimetype='application/json'
+    )
+
+
+@bp.route('/languages/<lang_code>/upload', methods=['POST'])
+@login_required
+@admin_required
+def language_upload(lang_code):
+    """Importe un fichier JSON pour une langue."""
+    import json
+    from pathlib import Path
+    
+    if 'file' not in request.files:
+        flash('Aucun fichier fourni.', 'error')
+        return redirect(url_for('admin_settings.language_view', lang_code=lang_code))
+    
+    file = request.files['file']
+    if not file.filename.endswith('.json'):
+        flash('Le fichier doit être au format JSON.', 'error')
+        return redirect(url_for('admin_settings.language_view', lang_code=lang_code))
+    
+    try:
+        content = file.read().decode('utf-8')
+        translations = json.loads(content)
+        
+        lang_file = Path(f'lang/{lang_code}.json')
+        with open(lang_file, 'w', encoding='utf-8') as f:
+            json.dump(translations, f, indent=2, ensure_ascii=False)
+        
+        from utils.i18n import reload_translations
+        reload_translations()
+        
+        flash('Fichier importé avec succès.', 'success')
+    except json.JSONDecodeError:
+        flash('Le JSON est invalide.', 'error')
+    except Exception as e:
+        logger.error(f"Erreur import langue {lang_code}: {e}")
+        flash('Une erreur est survenue.', 'error')
+    
+    return redirect(url_for('admin_settings.language_view', lang_code=lang_code))

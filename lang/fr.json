@@ -331,6 +331,7 @@
     },
     "dashboard": {
       "title": "Tableau de bord administrateur",
+      "overview": "Vue d'ensemble de la plateforme",
       "stats": {
         "total_requests": "Total demandes",
         "pending": "En attente",
@@ -441,6 +442,51 @@
       "title": "Statistiques",
       "activity_log": "Historique des activités",
       "no_activity": "Aucune activité récente."
+    },
+    "payments": {
+      "title": "Gestion des paiements",
+      "history": "Historique des paiements",
+      "pending": "Paiements en attente",
+      "validated": "Paiements validés",
+      "rejected": "Paiements rejetés",
+      "no_pending": "Aucun paiement en attente",
+      "no_payments": "Aucun paiement trouvé",
+      "validate": "Valider",
+      "reject": "Rejeter",
+      "amount": "Montant",
+      "client": "Client",
+      "request": "Demande",
+      "date": "Date",
+      "status": "Statut",
+      "proof": "Justificatif",
+      "view_proof": "Voir le justificatif",
+      "rejection_reason": "Raison du rejet",
+      "messages": {
+        "validated": "Paiement validé avec succès.",
+        "rejected": "Paiement rejeté."
+      }
+    },
+    "languages": {
+      "title": "Gestion des langues",
+      "available": "Langues disponibles",
+      "add_language": "Ajouter une langue",
+      "edit_language": "Modifier la langue",
+      "download": "Télécharger",
+      "upload": "Importer",
+      "upload_json": "Importer un fichier JSON",
+      "download_json": "Télécharger le fichier JSON",
+      "language_code": "Code langue",
+      "language_name": "Nom de la langue",
+      "keys_count": "Nombre de clés",
+      "last_modified": "Dernière modification",
+      "edit_translations": "Modifier les traductions",
+      "save_translations": "Enregistrer les traductions",
+      "messages": {
+        "uploaded": "Fichier de langue importé avec succès.",
+        "updated": "Traductions mises à jour.",
+        "deleted": "Langue supprimée.",
+        "invalid_json": "Le fichier JSON est invalide."
+      }
     }
   },
   "errors": {

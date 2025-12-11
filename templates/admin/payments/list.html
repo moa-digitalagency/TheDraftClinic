@@ -1,0 +1,204 @@
+{% extends 'layouts/admin_base.html' %}
+
+{% block title %}{{ t('nav.admin') }} - {{ t('admin.payments.title') }}{% endblock %}
+{% block page_title %}{{ t('admin.payments.title') }}{% endblock %}
+
+{% block admin_content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-white">{{ t('admin.payments.title') }}</h1>
+    <p class="text-gray-400 mt-1">{{ t('admin.payments.history') }}</p>
+</div>
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+    <a href="{{ url_for('admin_settings.payments_list', status='pending') }}" 
+       class="bg-slate-800 rounded-xl p-4 border {% if current_filter == 'pending' %}border-amber-600{% else %}border-slate-700 hover:border-amber-700{% endif %} transition-colors">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-amber-400 text-2xl font-bold">{{ pending_count }}</p>
+                <p class="text-gray-400 text-sm">{{ t('admin.payments.pending') }}</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-amber-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('admin_settings.payments_list', status='verified') }}" 
+       class="bg-slate-800 rounded-xl p-4 border {% if current_filter == 'verified' %}border-green-600{% else %}border-slate-700 hover:border-green-700{% endif %} transition-colors">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-green-400 text-2xl font-bold">{{ verified_count }}</p>
+                <p class="text-gray-400 text-sm">{{ t('admin.payments.validated') }}</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-green-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('admin_settings.payments_list', status='rejected') }}" 
+       class="bg-slate-800 rounded-xl p-4 border {% if current_filter == 'rejected' %}border-red-600{% else %}border-slate-700 hover:border-red-700{% endif %} transition-colors">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-red-400 text-2xl font-bold">{{ rejected_count }}</p>
+                <p class="text-gray-400 text-sm">{{ t('admin.payments.rejected') }}</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-red-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+</div>
+
+<div class="flex items-center gap-2 mb-6">
+    <a href="{{ url_for('admin_settings.payments_list') }}" 
+       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              {% if current_filter == 'all' %}bg-primary-600 text-white{% else %}bg-slate-700 text-gray-300 hover:bg-slate-600{% endif %}">
+        {{ t('common.all') }}
+    </a>
+    <a href="{{ url_for('admin_settings.payments_list', status='pending') }}" 
+       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              {% if current_filter == 'pending' %}bg-amber-600 text-white{% else %}bg-slate-700 text-gray-300 hover:bg-slate-600{% endif %}">
+        {{ t('status.pending') }}
+    </a>
+    <a href="{{ url_for('admin_settings.payments_list', status='verified') }}" 
+       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              {% if current_filter == 'verified' %}bg-green-600 text-white{% else %}bg-slate-700 text-gray-300 hover:bg-slate-600{% endif %}">
+        {{ t('status.verified') }}
+    </a>
+    <a href="{{ url_for('admin_settings.payments_list', status='rejected') }}" 
+       class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              {% if current_filter == 'rejected' %}bg-red-600 text-white{% else %}bg-slate-700 text-gray-300 hover:bg-slate-600{% endif %}">
+        {{ t('status.rejected') }}
+    </a>
+</div>
+
+<div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+    {% if payments %}
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-900/50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ t('admin.payments.client') }}</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ t('admin.payments.request') }}</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ t('admin.payments.amount') }}</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ t('admin.payments.date') }}</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ t('admin.payments.status') }}</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700">
+                {% for payment in payments %}
+                <tr class="hover:bg-slate-700/30 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center text-white text-xs font-bold">
+                                {{ payment.request.user.first_name[0] if payment.request.user.first_name else 'C' }}
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-white font-medium">{{ payment.request.user.full_name }}</p>
+                                <p class="text-gray-400 text-sm">{{ payment.request.user.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="{{ url_for('admin.view_request', request_id=payment.request_id) }}" class="text-primary-400 hover:text-primary-300">
+                            #{{ payment.request_id }} - {{ payment.request.title|truncate(30) }}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-white font-semibold">{{ "%.2f"|format(payment.amount) }} EUR</span>
+                    </td>
+                    <td class="px-6 py-4 text-gray-400">
+                        {{ payment.created_at.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if payment.status == 'pending' %}
+                        <span class="px-2 py-1 bg-amber-900/50 text-amber-300 rounded text-xs font-medium">{{ t('status.pending') }}</span>
+                        {% elif payment.status == 'verified' %}
+                        <span class="px-2 py-1 bg-green-900/50 text-green-300 rounded text-xs font-medium">{{ t('status.verified') }}</span>
+                        {% elif payment.status == 'rejected' %}
+                        <span class="px-2 py-1 bg-red-900/50 text-red-300 rounded text-xs font-medium">{{ t('status.rejected') }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            {% if payment.proof_filename %}
+                            <a href="{{ url_for('static', filename='uploads/' + payment.proof_filename) }}" target="_blank" 
+                               class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-gray-300 rounded-lg text-sm transition-colors">
+                                {{ t('admin.payments.view_proof') }}
+                            </a>
+                            {% endif %}
+                            {% if payment.status == 'pending' %}
+                            <form action="{{ url_for('admin.verify_payment', payment_id=payment.id) }}" method="POST" class="inline">
+                                <input type="hidden" name="action" value="approve">
+                                <button type="submit" class="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm transition-colors">
+                                    {{ t('admin.payments.validate') }}
+                                </button>
+                            </form>
+                            <button onclick="showRejectModal({{ payment.id }})" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm transition-colors">
+                                {{ t('admin.payments.reject') }}
+                            </button>
+                            {% endif %}
+                            <a href="{{ url_for('admin.view_request', request_id=payment.request_id) }}" 
+                               class="px-3 py-1.5 bg-primary-600 hover:bg-primary-500 text-white rounded-lg text-sm transition-colors">
+                                {{ t('common.view') }}
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-12 text-center">
+        <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+        </svg>
+        <p class="text-gray-400">{{ t('admin.payments.no_payments') }}</p>
+    </div>
+    {% endif %}
+</div>
+
+<div id="reject-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+    <div class="bg-slate-800 rounded-2xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-lg font-bold text-white mb-4">{{ t('admin.payments.reject') }}</h3>
+        <form id="reject-form" method="POST">
+            <input type="hidden" name="action" value="reject">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-300 mb-2">{{ t('admin.payments.rejection_reason') }}</label>
+                <textarea name="rejection_reason" rows="3" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-primary-500" required></textarea>
+            </div>
+            <div class="flex gap-3 justify-end">
+                <button type="button" onclick="hideRejectModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+                    {{ t('common.cancel') }}
+                </button>
+                <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors">
+                    {{ t('admin.payments.reject') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showRejectModal(paymentId) {
+    const modal = document.getElementById('reject-modal');
+    const form = document.getElementById('reject-form');
+    form.action = "{{ url_for('admin.verify_payment', payment_id=0) }}".replace('0', paymentId);
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function hideRejectModal() {
+    const modal = document.getElementById('reject-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+</script>
+{% endblock %}
