@@ -1,0 +1,447 @@
+{
+  "site": {
+    "name": "TheDraftClinic",
+    "tagline": "Services de Rédaction Académique",
+    "description": "Services professionnels de rédaction académique",
+    "keywords": "rédaction académique, thèse, mémoire, doctorat",
+    "copyright": "Tous droits réservés."
+  },
+  "nav": {
+    "services": "Services",
+    "process": "Processus",
+    "about": "À propos",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion",
+    "dashboard": "Tableau de bord",
+    "profile": "Profil",
+    "my_requests": "Mes demandes",
+    "new_request": "Nouvelle demande",
+    "admin": "Administration",
+    "settings": "Paramètres",
+    "users": "Utilisateurs",
+    "pages": "Pages",
+    "statistics": "Statistiques",
+    "admins": "Administrateurs"
+  },
+  "common": {
+    "submit": "Envoyer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "all": "Tous",
+    "yes": "Oui",
+    "no": "Non",
+    "loading": "Chargement...",
+    "actions": "Actions",
+    "details": "Détails",
+    "download": "Télécharger",
+    "upload": "Uploader",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "required": "Requis",
+    "optional": "Optionnel",
+    "select": "Sélectionner...",
+    "none": "Aucun",
+    "date": "Date",
+    "status": "Statut",
+    "progress": "Progression",
+    "amount": "Montant",
+    "total": "Total",
+    "created_at": "Créé le",
+    "updated_at": "Modifié le",
+    "by": "par",
+    "or": "ou",
+    "and": "et"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Accédez à votre espace personnel",
+      "email": "Email",
+      "email_placeholder": "votre@email.com",
+      "password": "Mot de passe",
+      "password_placeholder": "••••••••",
+      "remember_me": "Se souvenir de moi",
+      "submit": "Se connecter",
+      "no_account": "Pas encore de compte?",
+      "back_home": "Retour à l'accueil"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Rejoignez notre communauté de chercheurs",
+      "first_name": "Prénom",
+      "first_name_placeholder": "Jean",
+      "last_name": "Nom",
+      "last_name_placeholder": "Dupont",
+      "email": "Email",
+      "email_placeholder": "jean.dupont@universite.fr",
+      "password": "Mot de passe",
+      "password_placeholder": "Min. 6 caractères",
+      "confirm_password": "Confirmer",
+      "confirm_password_placeholder": "Répéter le mot de passe",
+      "phone": "Téléphone",
+      "phone_placeholder": "+33 6 12 34 56 78",
+      "academic_info": "Informations académiques",
+      "academic_level": "Niveau académique",
+      "institution": "Établissement",
+      "institution_placeholder": "Université de Paris",
+      "field_of_study": "Domaine d'étude",
+      "field_of_study_placeholder": "Sciences sociales",
+      "submit": "Créer mon compte",
+      "has_account": "Déjà un compte?",
+      "back_home": "Retour à l'accueil"
+    },
+    "academic_levels": {
+      "licence": "Licence",
+      "master": "Master",
+      "doctorat": "Doctorat",
+      "post_doc": "Post-doctorat",
+      "chercheur": "Chercheur",
+      "professeur": "Professeur",
+      "autre": "Autre"
+    },
+    "messages": {
+      "login_success": "Connexion réussie. Bienvenue!",
+      "login_error": "Email ou mot de passe incorrect.",
+      "logout_success": "Vous avez été déconnecté.",
+      "register_success": "Compte créé avec succès. Vous pouvez maintenant vous connecter.",
+      "register_error": "Une erreur est survenue lors de l'inscription.",
+      "email_exists": "Cet email est déjà utilisé.",
+      "password_mismatch": "Les mots de passe ne correspondent pas.",
+      "password_too_short": "Le mot de passe doit contenir au moins 6 caractères.",
+      "login_required": "Veuillez vous connecter pour accéder à cette page.",
+      "admin_required": "Accès réservé aux administrateurs.",
+      "super_admin_required": "Cette fonctionnalité est réservée au super administrateur."
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge_certified": "Rédaction 100% humaine - Certifiée sans IA et sans plagiat",
+      "badge_services": "Services professionnels de rédaction académique",
+      "title_part1": "Donnez vie à vos",
+      "title_part2": "recherches académiques",
+      "description": "TheDraftClinic accompagne doctorants et chercheurs dans la rédaction de thèses, mémoires, articles et tous types de documents académiques avec excellence et rigueur.",
+      "cta_start": "Commencer maintenant",
+      "cta_discover": "Découvrir nos services",
+      "stats_projects": "Projets livrés",
+      "stats_satisfaction": "Satisfaction",
+      "stats_support": "Support",
+      "card_thesis": "Thèse de Doctorat",
+      "card_in_progress": "En cours de rédaction",
+      "card_no_ai": "100% Sans IA & Sans Plagiat"
+    },
+    "services": {
+      "title": "Nos Services",
+      "heading_part1": "Solutions complètes pour vos",
+      "heading_part2": "travaux académiques",
+      "description": "De la thèse de doctorat aux articles de recherche, nous vous accompagnons à chaque étape de votre parcours académique.",
+      "item_description": "Service professionnel adapté à vos besoins spécifiques avec suivi personnalisé."
+    },
+    "process": {
+      "title": "Comment ça marche",
+      "heading_part1": "Un processus",
+      "heading_part2": "simple et transparent",
+      "step1_title": "Soumettez votre demande",
+      "step1_description": "Décrivez votre projet et uploadez vos documents sur notre plateforme sécurisée.",
+      "step2_title": "Recevez un devis",
+      "step2_description": "Notre équipe examine votre demande et vous envoie un devis personnalisé.",
+      "step3_title": "Validez et payez",
+      "step3_description": "Acceptez le devis et versez un acompte pour démarrer le travail.",
+      "step4_title": "Suivez et recevez",
+      "step4_description": "Suivez la progression en temps réel et recevez votre travail finalisé."
+    },
+    "about": {
+      "title": "À propos",
+      "heading_part1": "Expertise académique au service de",
+      "heading_part2": "votre réussite",
+      "description": "TheDraftClinic réunit une équipe de professionnels expérimentés dans le domaine académique. Nos rédacteurs et éditeurs, titulaires de doctorats et experts dans leurs domaines, s'engagent à vous fournir un travail de qualité exceptionnelle.",
+      "feature1": "Rédaction 100% humaine - Certifiée sans IA et sans plagiat",
+      "feature2": "Équipe d'experts titulaires de doctorats",
+      "feature3": "Confidentialité et sécurité garanties (RGPD)",
+      "feature4": "Respect strict des délais",
+      "feature5": "Support personnalisé tout au long du projet",
+      "stat_experience": "Années d'expérience",
+      "stat_human": "100% humain, sans plagiat",
+      "stat_delay": "Délai minimum",
+      "stat_satisfaction": "Taux de satisfaction"
+    },
+    "cta": {
+      "title": "Prêt à démarrer votre projet?",
+      "description": "Rejoignez des centaines de chercheurs qui nous font confiance pour leurs travaux académiques.",
+      "btn_create": "Créer un compte gratuit",
+      "btn_learn": "En savoir plus"
+    },
+    "footer": {
+      "description": "Votre partenaire de confiance pour tous vos projets de rédaction académique. Excellence, rigueur et confidentialité garanties.",
+      "services_title": "Services",
+      "services_thesis": "Thèses & Mémoires",
+      "services_articles": "Articles de recherche",
+      "services_proofreading": "Relecture & Correction",
+      "services_consultation": "Consultation",
+      "contact_title": "Contact"
+    }
+  },
+  "services": {
+    "thesis": "Thèse de doctorat",
+    "dissertation": "Mémoire de master",
+    "research_proposal": "Proposition de recherche",
+    "academic_proposal": "Proposition académique",
+    "book_chapter": "Chapitre de livre",
+    "research_paper": "Article de recherche",
+    "literature_review": "Revue de littérature",
+    "proofreading": "Relecture et correction",
+    "editing": "Édition académique",
+    "formatting": "Mise en forme",
+    "consultation": "Consultation académique",
+    "cv_resume": "CV/Résumé académique",
+    "personal_statement": "Lettre de motivation",
+    "grant_proposal": "Proposition de subvention",
+    "poster_review": "Révision de poster"
+  },
+  "status": {
+    "submitted": "Soumise",
+    "under_review": "En examen",
+    "quote_sent": "Devis envoyé",
+    "quote_accepted": "Devis accepté",
+    "awaiting_deposit": "Attente acompte",
+    "deposit_pending": "Vérification acompte",
+    "in_progress": "En cours",
+    "revision": "En révision",
+    "awaiting_final": "Attente solde",
+    "completed": "Terminée",
+    "delivered": "Livrée",
+    "cancelled": "Annulée",
+    "pending": "En attente",
+    "approved": "Approuvé",
+    "rejected": "Rejeté"
+  },
+  "client": {
+    "dashboard": {
+      "title": "Mon tableau de bord",
+      "welcome": "Bienvenue",
+      "new_request": "Nouvelle demande",
+      "my_requests": "Mes demandes",
+      "no_requests": "Vous n'avez pas encore de demande.",
+      "create_first": "Créer ma première demande",
+      "stats": {
+        "total": "Total demandes",
+        "in_progress": "En cours",
+        "completed": "Terminées",
+        "pending": "En attente"
+      }
+    },
+    "request": {
+      "new_title": "Nouvelle demande",
+      "details_title": "Détails de la demande",
+      "service_type": "Type de service",
+      "title": "Titre du projet",
+      "title_placeholder": "Ex: Thèse sur l'impact du changement climatique",
+      "description": "Description détaillée",
+      "description_placeholder": "Décrivez votre projet en détail...",
+      "deadline": "Date limite souhaitée",
+      "documents": "Documents de référence",
+      "documents_help": "Uploadez vos documents (PDF, Word, etc.)",
+      "additional_info": "Informations complémentaires",
+      "submit": "Soumettre la demande",
+      "quote": {
+        "title": "Devis",
+        "amount": "Montant total",
+        "deposit": "Acompte requis",
+        "accept": "Accepter le devis",
+        "message": "Message du rédacteur"
+      },
+      "payment": {
+        "title": "Paiement",
+        "proof": "Preuve de paiement",
+        "submit": "Soumettre le paiement",
+        "waiting": "En attente de vérification"
+      },
+      "revision": {
+        "title": "Demander une révision",
+        "description": "Décrivez les modifications souhaitées",
+        "submit": "Envoyer la demande"
+      },
+      "messages": {
+        "created": "Votre demande a été soumise avec succès.",
+        "quote_accepted": "Devis accepté. Veuillez soumettre votre paiement.",
+        "payment_submitted": "Paiement soumis. En attente de vérification.",
+        "revision_requested": "Demande de révision envoyée."
+      }
+    },
+    "profile": {
+      "title": "Mon profil",
+      "personal_info": "Informations personnelles",
+      "academic_info": "Informations académiques",
+      "change_password": "Changer le mot de passe",
+      "current_password": "Mot de passe actuel",
+      "new_password": "Nouveau mot de passe",
+      "update": "Mettre à jour",
+      "messages": {
+        "updated": "Profil mis à jour avec succès.",
+        "password_changed": "Mot de passe modifié avec succès.",
+        "password_error": "Mot de passe actuel incorrect."
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Tableau de bord administrateur",
+      "stats": {
+        "total_requests": "Total demandes",
+        "pending": "En attente",
+        "in_progress": "En cours",
+        "payments_pending": "Paiements en attente",
+        "users": "Utilisateurs"
+      },
+      "recent_requests": "Demandes récentes",
+      "pending_payments": "Paiements à vérifier",
+      "recent_activity": "Activité récente"
+    },
+    "requests": {
+      "title": "Gestion des demandes",
+      "filter_status": "Filtrer par statut",
+      "no_requests": "Aucune demande trouvée.",
+      "view": "Voir",
+      "client": "Client"
+    },
+    "request": {
+      "send_quote": "Envoyer un devis",
+      "quote_amount": "Montant total",
+      "deposit_amount": "Acompte requis",
+      "quote_message": "Message (optionnel)",
+      "update_status": "Mettre à jour le statut",
+      "update_progress": "Progression (%)",
+      "admin_notes": "Notes admin",
+      "upload_deliverable": "Uploader un livrable",
+      "delivery_comment": "Commentaire de livraison",
+      "verify_payment": "Vérifier le paiement",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "add_comment": "Ajouter un commentaire",
+      "messages": {
+        "quote_sent": "Devis envoyé au client.",
+        "status_updated": "Statut mis à jour.",
+        "deliverable_uploaded": "Livrable uploadé avec succès.",
+        "payment_approved": "Paiement approuvé.",
+        "payment_rejected": "Paiement rejeté.",
+        "comment_added": "Commentaire ajouté."
+      }
+    },
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "no_users": "Aucun utilisateur trouvé.",
+      "view": "Voir le profil",
+      "requests_count": "Demandes",
+      "registered_at": "Inscrit le"
+    },
+    "admins": {
+      "title": "Gestion des administrateurs",
+      "new_admin": "Nouvel administrateur",
+      "role": "Rôle",
+      "super_admin": "Super administrateur",
+      "admin": "Administrateur",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "deactivate": "Désactiver",
+      "activate": "Activer",
+      "reset_password": "Réinitialiser le mot de passe",
+      "messages": {
+        "created": "Administrateur créé avec succès.",
+        "updated": "Administrateur mis à jour.",
+        "deactivated": "Compte désactivé.",
+        "activated": "Compte activé.",
+        "password_reset": "Mot de passe réinitialisé."
+      }
+    },
+    "settings": {
+      "title": "Paramètres",
+      "general": "Paramètres généraux",
+      "branding": "Logo et favicon",
+      "seo": "SEO et OpenGraph",
+      "legal": "Informations légales",
+      "advanced": "Paramètres avancés",
+      "site_name": "Nom du site",
+      "site_description": "Description",
+      "timezone": "Fuseau horaire",
+      "country": "Pays",
+      "language": "Langue par défaut",
+      "currency": "Devise",
+      "logo": "Logo",
+      "favicon": "Favicon",
+      "messages": {
+        "saved": "Paramètres enregistrés."
+      }
+    },
+    "pages": {
+      "title": "Gestion des pages",
+      "new_page": "Nouvelle page",
+      "page_title": "Titre de la page",
+      "page_type": "Type de page",
+      "content": "Contenu",
+      "format": "Format",
+      "html": "HTML",
+      "markdown": "Markdown",
+      "published": "Publiée",
+      "show_footer": "Afficher dans le footer",
+      "show_nav": "Afficher dans la navigation",
+      "seo_title": "Titre SEO",
+      "seo_description": "Description SEO",
+      "messages": {
+        "created": "Page créée avec succès.",
+        "updated": "Page mise à jour.",
+        "deleted": "Page supprimée."
+      }
+    },
+    "stats": {
+      "title": "Statistiques",
+      "activity_log": "Historique des activités",
+      "no_activity": "Aucune activité récente."
+    }
+  },
+  "errors": {
+    "400": {
+      "title": "Requête invalide",
+      "message": "La requête envoyée n'est pas valide."
+    },
+    "401": {
+      "title": "Non authentifié",
+      "message": "Veuillez vous connecter pour accéder à cette page."
+    },
+    "403": {
+      "title": "Accès refusé",
+      "message": "Vous n'avez pas les permissions nécessaires pour accéder à cette page."
+    },
+    "404": {
+      "title": "Page non trouvée",
+      "message": "La page que vous recherchez n'existe pas ou a été déplacée."
+    },
+    "500": {
+      "title": "Erreur serveur",
+      "message": "Une erreur interne est survenue. Veuillez réessayer plus tard."
+    },
+    "back_home": "Retour à l'accueil"
+  },
+  "activity": {
+    "comment": "Commentaire ajouté",
+    "delivery": "Livrable uploadé",
+    "status_change": "Statut modifié",
+    "payment": "Paiement vérifié",
+    "download": "Document téléchargé",
+    "revision": "Révision demandée",
+    "quote_sent": "Devis envoyé",
+    "quote_accepted": "Devis accepté"
+  },
+  "language": {
+    "select": "Langue",
+    "fr": "Français",
+    "en": "English"
+  }
+}

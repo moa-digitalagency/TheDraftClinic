@@ -1,0 +1,447 @@
+{
+  "site": {
+    "name": "TheDraftClinic",
+    "tagline": "Academic Writing Services",
+    "description": "Professional academic writing services",
+    "keywords": "academic writing, thesis, dissertation, doctorate",
+    "copyright": "All rights reserved."
+  },
+  "nav": {
+    "services": "Services",
+    "process": "Process",
+    "about": "About",
+    "login": "Login",
+    "register": "Sign up",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "my_requests": "My requests",
+    "new_request": "New request",
+    "admin": "Administration",
+    "settings": "Settings",
+    "users": "Users",
+    "pages": "Pages",
+    "statistics": "Statistics",
+    "admins": "Administrators"
+  },
+  "common": {
+    "submit": "Submit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "actions": "Actions",
+    "details": "Details",
+    "download": "Download",
+    "upload": "Upload",
+    "close": "Close",
+    "confirm": "Confirm",
+    "required": "Required",
+    "optional": "Optional",
+    "select": "Select...",
+    "none": "None",
+    "date": "Date",
+    "status": "Status",
+    "progress": "Progress",
+    "amount": "Amount",
+    "total": "Total",
+    "created_at": "Created on",
+    "updated_at": "Updated on",
+    "by": "by",
+    "or": "or",
+    "and": "and"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Access your personal space",
+      "email": "Email",
+      "email_placeholder": "your@email.com",
+      "password": "Password",
+      "password_placeholder": "••••••••",
+      "remember_me": "Remember me",
+      "submit": "Sign in",
+      "no_account": "Don't have an account?",
+      "back_home": "Back to home"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Join our community of researchers",
+      "first_name": "First name",
+      "first_name_placeholder": "John",
+      "last_name": "Last name",
+      "last_name_placeholder": "Doe",
+      "email": "Email",
+      "email_placeholder": "john.doe@university.edu",
+      "password": "Password",
+      "password_placeholder": "Min. 6 characters",
+      "confirm_password": "Confirm",
+      "confirm_password_placeholder": "Repeat password",
+      "phone": "Phone",
+      "phone_placeholder": "+1 555 123 4567",
+      "academic_info": "Academic information",
+      "academic_level": "Academic level",
+      "institution": "Institution",
+      "institution_placeholder": "University of Example",
+      "field_of_study": "Field of study",
+      "field_of_study_placeholder": "Social Sciences",
+      "submit": "Create my account",
+      "has_account": "Already have an account?",
+      "back_home": "Back to home"
+    },
+    "academic_levels": {
+      "licence": "Bachelor's",
+      "master": "Master's",
+      "doctorat": "Doctorate",
+      "post_doc": "Post-doctorate",
+      "chercheur": "Researcher",
+      "professeur": "Professor",
+      "autre": "Other"
+    },
+    "messages": {
+      "login_success": "Login successful. Welcome!",
+      "login_error": "Incorrect email or password.",
+      "logout_success": "You have been logged out.",
+      "register_success": "Account created successfully. You can now log in.",
+      "register_error": "An error occurred during registration.",
+      "email_exists": "This email is already in use.",
+      "password_mismatch": "Passwords do not match.",
+      "password_too_short": "Password must be at least 6 characters.",
+      "login_required": "Please log in to access this page.",
+      "admin_required": "Access restricted to administrators.",
+      "super_admin_required": "This feature is reserved for the super administrator."
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge_certified": "100% human writing - Certified AI-free and plagiarism-free",
+      "badge_services": "Professional academic writing services",
+      "title_part1": "Bring your",
+      "title_part2": "academic research to life",
+      "description": "TheDraftClinic supports doctoral candidates and researchers in writing theses, dissertations, articles and all types of academic documents with excellence and rigor.",
+      "cta_start": "Get started now",
+      "cta_discover": "Discover our services",
+      "stats_projects": "Projects delivered",
+      "stats_satisfaction": "Satisfaction",
+      "stats_support": "Support",
+      "card_thesis": "PhD Thesis",
+      "card_in_progress": "In progress",
+      "card_no_ai": "100% AI-free & Plagiarism-free"
+    },
+    "services": {
+      "title": "Our Services",
+      "heading_part1": "Complete solutions for your",
+      "heading_part2": "academic work",
+      "description": "From PhD theses to research articles, we support you at every step of your academic journey.",
+      "item_description": "Professional service tailored to your specific needs with personalized support."
+    },
+    "process": {
+      "title": "How it works",
+      "heading_part1": "A",
+      "heading_part2": "simple and transparent process",
+      "step1_title": "Submit your request",
+      "step1_description": "Describe your project and upload your documents on our secure platform.",
+      "step2_title": "Receive a quote",
+      "step2_description": "Our team reviews your request and sends you a personalized quote.",
+      "step3_title": "Validate and pay",
+      "step3_description": "Accept the quote and pay a deposit to start the work.",
+      "step4_title": "Track and receive",
+      "step4_description": "Track progress in real-time and receive your finalized work."
+    },
+    "about": {
+      "title": "About",
+      "heading_part1": "Academic expertise at the service of",
+      "heading_part2": "your success",
+      "description": "TheDraftClinic brings together a team of experienced professionals in the academic field. Our writers and editors, holders of doctorates and experts in their fields, are committed to providing you with work of exceptional quality.",
+      "feature1": "100% human writing - Certified AI-free and plagiarism-free",
+      "feature2": "Team of doctorate-holding experts",
+      "feature3": "Guaranteed confidentiality and security (GDPR)",
+      "feature4": "Strict adherence to deadlines",
+      "feature5": "Personalized support throughout the project",
+      "stat_experience": "Years of experience",
+      "stat_human": "100% human, plagiarism-free",
+      "stat_delay": "Minimum delay",
+      "stat_satisfaction": "Satisfaction rate"
+    },
+    "cta": {
+      "title": "Ready to start your project?",
+      "description": "Join hundreds of researchers who trust us with their academic work.",
+      "btn_create": "Create a free account",
+      "btn_learn": "Learn more"
+    },
+    "footer": {
+      "description": "Your trusted partner for all your academic writing projects. Excellence, rigor and confidentiality guaranteed.",
+      "services_title": "Services",
+      "services_thesis": "Theses & Dissertations",
+      "services_articles": "Research articles",
+      "services_proofreading": "Proofreading & Editing",
+      "services_consultation": "Consultation",
+      "contact_title": "Contact"
+    }
+  },
+  "services": {
+    "thesis": "PhD thesis",
+    "dissertation": "Master's dissertation",
+    "research_proposal": "Research proposal",
+    "academic_proposal": "Academic proposal",
+    "book_chapter": "Book chapter",
+    "research_paper": "Research paper",
+    "literature_review": "Literature review",
+    "proofreading": "Proofreading and editing",
+    "editing": "Academic editing",
+    "formatting": "Formatting",
+    "consultation": "Academic consultation",
+    "cv_resume": "Academic CV/Resume",
+    "personal_statement": "Personal statement",
+    "grant_proposal": "Grant proposal",
+    "poster_review": "Poster review"
+  },
+  "status": {
+    "submitted": "Submitted",
+    "under_review": "Under review",
+    "quote_sent": "Quote sent",
+    "quote_accepted": "Quote accepted",
+    "awaiting_deposit": "Awaiting deposit",
+    "deposit_pending": "Deposit verification",
+    "in_progress": "In progress",
+    "revision": "In revision",
+    "awaiting_final": "Awaiting final payment",
+    "completed": "Completed",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "client": {
+    "dashboard": {
+      "title": "My Dashboard",
+      "welcome": "Welcome",
+      "new_request": "New request",
+      "my_requests": "My requests",
+      "no_requests": "You don't have any requests yet.",
+      "create_first": "Create my first request",
+      "stats": {
+        "total": "Total requests",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "pending": "Pending"
+      }
+    },
+    "request": {
+      "new_title": "New request",
+      "details_title": "Request details",
+      "service_type": "Service type",
+      "title": "Project title",
+      "title_placeholder": "Ex: Thesis on the impact of climate change",
+      "description": "Detailed description",
+      "description_placeholder": "Describe your project in detail...",
+      "deadline": "Desired deadline",
+      "documents": "Reference documents",
+      "documents_help": "Upload your documents (PDF, Word, etc.)",
+      "additional_info": "Additional information",
+      "submit": "Submit request",
+      "quote": {
+        "title": "Quote",
+        "amount": "Total amount",
+        "deposit": "Required deposit",
+        "accept": "Accept quote",
+        "message": "Writer's message"
+      },
+      "payment": {
+        "title": "Payment",
+        "proof": "Proof of payment",
+        "submit": "Submit payment",
+        "waiting": "Awaiting verification"
+      },
+      "revision": {
+        "title": "Request a revision",
+        "description": "Describe the desired changes",
+        "submit": "Send request"
+      },
+      "messages": {
+        "created": "Your request has been submitted successfully.",
+        "quote_accepted": "Quote accepted. Please submit your payment.",
+        "payment_submitted": "Payment submitted. Awaiting verification.",
+        "revision_requested": "Revision request sent."
+      }
+    },
+    "profile": {
+      "title": "My profile",
+      "personal_info": "Personal information",
+      "academic_info": "Academic information",
+      "change_password": "Change password",
+      "current_password": "Current password",
+      "new_password": "New password",
+      "update": "Update",
+      "messages": {
+        "updated": "Profile updated successfully.",
+        "password_changed": "Password changed successfully.",
+        "password_error": "Incorrect current password."
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Administrator Dashboard",
+      "stats": {
+        "total_requests": "Total requests",
+        "pending": "Pending",
+        "in_progress": "In progress",
+        "payments_pending": "Pending payments",
+        "users": "Users"
+      },
+      "recent_requests": "Recent requests",
+      "pending_payments": "Payments to verify",
+      "recent_activity": "Recent activity"
+    },
+    "requests": {
+      "title": "Request management",
+      "filter_status": "Filter by status",
+      "no_requests": "No requests found.",
+      "view": "View",
+      "client": "Client"
+    },
+    "request": {
+      "send_quote": "Send a quote",
+      "quote_amount": "Total amount",
+      "deposit_amount": "Required deposit",
+      "quote_message": "Message (optional)",
+      "update_status": "Update status",
+      "update_progress": "Progress (%)",
+      "admin_notes": "Admin notes",
+      "upload_deliverable": "Upload a deliverable",
+      "delivery_comment": "Delivery comment",
+      "verify_payment": "Verify payment",
+      "approve": "Approve",
+      "reject": "Reject",
+      "add_comment": "Add a comment",
+      "messages": {
+        "quote_sent": "Quote sent to client.",
+        "status_updated": "Status updated.",
+        "deliverable_uploaded": "Deliverable uploaded successfully.",
+        "payment_approved": "Payment approved.",
+        "payment_rejected": "Payment rejected.",
+        "comment_added": "Comment added."
+      }
+    },
+    "users": {
+      "title": "User management",
+      "no_users": "No users found.",
+      "view": "View profile",
+      "requests_count": "Requests",
+      "registered_at": "Registered on"
+    },
+    "admins": {
+      "title": "Administrator management",
+      "new_admin": "New administrator",
+      "role": "Role",
+      "super_admin": "Super administrator",
+      "admin": "Administrator",
+      "active": "Active",
+      "inactive": "Inactive",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "reset_password": "Reset password",
+      "messages": {
+        "created": "Administrator created successfully.",
+        "updated": "Administrator updated.",
+        "deactivated": "Account deactivated.",
+        "activated": "Account activated.",
+        "password_reset": "Password reset."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "general": "General settings",
+      "branding": "Logo and favicon",
+      "seo": "SEO and OpenGraph",
+      "legal": "Legal information",
+      "advanced": "Advanced settings",
+      "site_name": "Site name",
+      "site_description": "Description",
+      "timezone": "Timezone",
+      "country": "Country",
+      "language": "Default language",
+      "currency": "Currency",
+      "logo": "Logo",
+      "favicon": "Favicon",
+      "messages": {
+        "saved": "Settings saved."
+      }
+    },
+    "pages": {
+      "title": "Page management",
+      "new_page": "New page",
+      "page_title": "Page title",
+      "page_type": "Page type",
+      "content": "Content",
+      "format": "Format",
+      "html": "HTML",
+      "markdown": "Markdown",
+      "published": "Published",
+      "show_footer": "Show in footer",
+      "show_nav": "Show in navigation",
+      "seo_title": "SEO title",
+      "seo_description": "SEO description",
+      "messages": {
+        "created": "Page created successfully.",
+        "updated": "Page updated.",
+        "deleted": "Page deleted."
+      }
+    },
+    "stats": {
+      "title": "Statistics",
+      "activity_log": "Activity log",
+      "no_activity": "No recent activity."
+    }
+  },
+  "errors": {
+    "400": {
+      "title": "Bad request",
+      "message": "The request sent is not valid."
+    },
+    "401": {
+      "title": "Not authenticated",
+      "message": "Please log in to access this page."
+    },
+    "403": {
+      "title": "Access denied",
+      "message": "You do not have the necessary permissions to access this page."
+    },
+    "404": {
+      "title": "Page not found",
+      "message": "The page you are looking for does not exist or has been moved."
+    },
+    "500": {
+      "title": "Server error",
+      "message": "An internal error has occurred. Please try again later."
+    },
+    "back_home": "Back to home"
+  },
+  "activity": {
+    "comment": "Comment added",
+    "delivery": "Deliverable uploaded",
+    "status_change": "Status changed",
+    "payment": "Payment verified",
+    "download": "Document downloaded",
+    "revision": "Revision requested",
+    "quote_sent": "Quote sent",
+    "quote_accepted": "Quote accepted"
+  },
+  "language": {
+    "select": "Language",
+    "fr": "Français",
+    "en": "English"
+  }
+}
