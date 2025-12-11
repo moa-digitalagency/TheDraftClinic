@@ -180,16 +180,28 @@
 </div>
 
 <script>
-function toggleSidebar() {
+function closeSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    
-    if (sidebar.classList.contains('-translate-x-full')) {
-        sidebar.classList.remove('-translate-x-full');
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+}
+
+function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    sidebar.classList.remove('-translate-x-full');
+    if (window.innerWidth < 1024) {
         overlay.classList.remove('hidden');
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('-translate-x-full')) {
+        openSidebar();
     } else {
-        sidebar.classList.add('-translate-x-full');
-        overlay.classList.add('hidden');
+        closeSidebar();
     }
 }
 
@@ -200,11 +212,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.addEventListener('resize', function() {
-    const sidebar = document.getElementById('sidebar');
     if (window.innerWidth >= 1024) {
-        sidebar.classList.remove('-translate-x-full');
+        document.getElementById('sidebar').classList.remove('-translate-x-full');
+        document.getElementById('sidebar-overlay').classList.add('hidden');
     } else {
-        sidebar.classList.add('-translate-x-full');
+        closeSidebar();
     }
 });
 </script>
