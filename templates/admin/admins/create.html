@@ -1,7 +1,7 @@
 {% extends 'layouts/admin_base.html' %}
 
-{% block title %}Admin - Nouvel administrateur{% endblock %}
-{% block page_title %}Nouvel administrateur{% endblock %}
+{% block title %}Admin - {{ t('admin.admins.new_admin') }}{% endblock %}
+{% block page_title %}{{ t('admin.admins.new_admin') }}{% endblock %}
 
 {% block admin_content %}
 <div class="mb-6">
@@ -9,61 +9,61 @@
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
-        Retour a la liste
+        {{ t('common.back') }}
     </a>
 </div>
 
 <div class="max-w-2xl">
     <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-        <h2 class="text-xl font-bold text-white mb-6">Creer un nouvel administrateur</h2>
+        <h2 class="text-xl font-bold text-white mb-6">{{ t('admin.admins.create_title') }}</h2>
         
         <form method="POST" action="{{ url_for('admin.create_admin') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label for="first_name" class="block text-sm font-medium text-gray-300 mb-2">Prenom</label>
+                    <label for="first_name" class="block text-sm font-medium text-gray-300 mb-2">{{ t('auth.register.first_name') }}</label>
                     <input type="text" id="first_name" name="first_name" required
                            class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                 </div>
                 <div>
-                    <label for="last_name" class="block text-sm font-medium text-gray-300 mb-2">Nom</label>
+                    <label for="last_name" class="block text-sm font-medium text-gray-300 mb-2">{{ t('auth.register.last_name') }}</label>
                     <input type="text" id="last_name" name="last_name" required
                            class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                 </div>
             </div>
             
             <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-2">{{ t('auth.login.email') }}</label>
                 <input type="email" id="email" name="email" required
                        class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
             </div>
             
             <div class="mb-4">
-                <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+                <label for="password" class="block text-sm font-medium text-gray-300 mb-2">{{ t('auth.login.password') }}</label>
                 <input type="password" id="password" name="password" required minlength="8"
                        class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                <p class="text-gray-500 text-sm mt-1">Minimum 8 caracteres</p>
+                <p class="text-gray-500 text-sm mt-1">{{ t('admin.admins.password_min') }}</p>
             </div>
             
             <div class="mb-6">
-                <label for="admin_role" class="block text-sm font-medium text-gray-300 mb-2">Role</label>
+                <label for="admin_role" class="block text-sm font-medium text-gray-300 mb-2">{{ t('admin.admins.role') }}</label>
                 <select id="admin_role" name="admin_role"
                         class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                    <option value="admin">Administrateur</option>
-                    <option value="super_admin">Super Administrateur</option>
+                    <option value="admin">{{ t('admin.admins.admin') }}</option>
+                    <option value="super_admin">{{ t('admin.admins.super_admin') }}</option>
                 </select>
-                <p class="text-gray-500 text-sm mt-1">Le super administrateur peut gerer les autres admins</p>
+                <p class="text-gray-500 text-sm mt-1">{{ t('admin.admins.super_admin_desc') }}</p>
             </div>
             
             <div class="flex items-center gap-4">
                 <button type="submit" 
                         class="px-6 py-3 gradient-bg text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
-                    Creer l'administrateur
+                    {{ t('admin.admins.create_btn') }}
                 </button>
                 <a href="{{ url_for('admin.list_admins') }}" 
                    class="px-6 py-3 bg-slate-700 text-gray-300 rounded-lg font-medium hover:bg-slate-600 transition-colors">
-                    Annuler
+                    {{ t('common.cancel') }}
                 </a>
             </div>
         </form>
