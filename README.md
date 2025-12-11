@@ -1,6 +1,6 @@
 # TheDraftClinic
 
-> Plateforme de services de redaction academique
+> Plateforme de services de rédaction académique
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.0-green?logo=flask)
@@ -9,302 +9,302 @@
 
 ---
 
-## a propos
+## À propos
 
-TheDraftClinic est une plateforme web professionnelle destinee aux doctorants et chercheurs souhaitant confier leurs projets de redaction academique. Que ce soit pour des theses, memoires, propositions de recherche, articles scientifiques ou chapitres d'ouvrage, notre plateforme offre une solution complete et securisee.
+TheDraftClinic est une plateforme web professionnelle destinée aux doctorants et chercheurs souhaitant confier leurs projets de rédaction académique. Que ce soit pour des thèses, mémoires, propositions de recherche, articles scientifiques ou chapitres d'ouvrage, notre plateforme offre une solution complète et sécurisée.
 
-### fonctionnalites principales
+### Fonctionnalités principales
 
-| fonctionnalite | description |
+| Fonctionnalité | Description |
 |----------------|-------------|
-| soumission de demandes | formulaire detaille pour soumettre des projets academiques |
-| systeme de devis | reception et acceptation de devis personnalises |
-| gestion des paiements | upload de preuves de paiement avec verification admin |
-| tableau de bord | suivi en temps reel de l'avancement des projets |
-| gestion utilisateurs | inscription, connexion et gestion de profil |
-| panel administrateur | interface complete pour la gestion des demandes |
-| tracabilite complete | historique de toutes les actions (livraisons, telechargements, revisions) |
-| systeme de revisions | demandes de modifications avec fichiers joints |
-| extensions de delai | demandes et validation des extensions de deadline |
-| parametres du site | logo, favicon, seo, informations legales |
-| pages dynamiques | cgu, cgv, politique de confidentialite personnalisables |
-| statistiques | dashboard de stats avec metriques de performance |
+| Soumission de demandes | Formulaire détaillé pour soumettre des projets académiques |
+| Système de devis | Réception et acceptation de devis personnalisés |
+| Gestion des paiements | Upload de preuves de paiement avec vérification admin |
+| Tableau de bord | Suivi en temps réel de l'avancement des projets |
+| Gestion utilisateurs | Inscription, connexion et gestion de profil |
+| Panel administrateur | Interface complète pour la gestion des demandes |
+| Traçabilité complète | Historique de toutes les actions (livraisons, téléchargements, révisions) |
+| Système de révisions | Demandes de modifications avec fichiers joints |
+| Extensions de délai | Demandes et validation des extensions de deadline |
+| Paramètres du site | Logo, favicon, SEO, informations légales |
+| Pages dynamiques | CGU, CGV, politique de confidentialité personnalisables |
+| Statistiques | Dashboard de stats avec métriques de performance |
 
 ---
 
-## technologies utilisees
+## Technologies utilisées
 
-### backend
-- Python 3.11 - langage de programmation principal
-- Flask - framework web leger et puissant
-- SQLAlchemy - orm pour la gestion de base de donnees
-- Flask-Login - gestion de l'authentification
-- Flask-WTF - protection csrf et validation de formulaires
-- Gunicorn - serveur wsgi pour la production
+### Backend
+- Python 3.11 - Langage de programmation principal
+- Flask - Framework web léger et puissant
+- SQLAlchemy - ORM pour la gestion de base de données
+- Flask-Login - Gestion de l'authentification
+- Flask-WTF - Protection CSRF et validation de formulaires
+- Gunicorn - Serveur WSGI pour la production
 
-### frontend
-- TailwindCSS - framework css utilitaire (via cdn)
-- Jinja2 - moteur de templates
-- JavaScript - interactions cote client
+### Frontend
+- TailwindCSS - Framework CSS utilitaire (via CDN)
+- Jinja2 - Moteur de templates
+- JavaScript - Interactions côté client
 
-### base de donnees
-- PostgreSQL - base de donnees relationnelle robuste
+### Base de données
+- PostgreSQL - Base de données relationnelle robuste
 
 ---
 
-## structure du projet
+## Structure du projet
 
 ```
 TheDraftClinic/
-├── app.py                   # configuration flask et initialisation
-├── main.py                  # point d'entree de l'application
-├── models/                  # modeles de donnees sqlalchemy
+├── app.py                   # Configuration Flask et initialisation
+├── main.py                  # Point d'entrée de l'application
+├── models/                  # Modèles de données SQLAlchemy
 │   ├── __init__.py
-│   ├── user.py              # modele utilisateur
-│   ├── request.py           # modele demande de service
-│   ├── document.py          # modele document
-│   ├── payment.py           # modele paiement
-│   └── activity_log.py      # modele historique d'activites
-├── routes/                  # routes/blueprints flask
+│   ├── user.py              # Modèle utilisateur
+│   ├── request.py           # Modèle demande de service
+│   ├── document.py          # Modèle document
+│   ├── payment.py           # Modèle paiement
+│   └── activity_log.py      # Modèle historique d'activités
+├── routes/                  # Routes/blueprints Flask
 │   ├── __init__.py
-│   ├── auth.py              # authentification (login, register)
-│   ├── client.py            # espace client
-│   ├── admin.py             # panel administrateur
-│   ├── admin_settings.py    # parametres admin
-│   └── main.py              # pages publiques
-├── templates/               # templates jinja2
-│   ├── admin/               # templates admin
-│   ├── auth/                # templates authentification
-│   ├── client/              # templates client
-│   ├── errors/              # pages d'erreur (404, 500, etc.)
-│   └── layouts/             # templates de base
-├── static/                  # fichiers statiques
-│   ├── css/styles.css       # styles personnalises
-│   ├── js/main.js           # javascript personnalise
-│   └── uploads/             # documents uploades
-├── services/                # services metier
-├── security/                # modules de securite
-├── utils/                   # utilitaires
-├── docs/                    # documentation
-└── README.md                # documentation principale
+│   ├── auth.py              # Authentification (login, register)
+│   ├── client.py            # Espace client
+│   ├── admin.py             # Panel administrateur
+│   ├── admin_settings.py    # Paramètres admin
+│   └── main.py              # Pages publiques
+├── templates/               # Templates Jinja2
+│   ├── admin/               # Templates admin
+│   ├── auth/                # Templates authentification
+│   ├── client/              # Templates client
+│   ├── errors/              # Pages d'erreur (404, 500, etc.)
+│   └── layouts/             # Templates de base
+├── static/                  # Fichiers statiques
+│   ├── css/styles.css       # Styles personnalisés
+│   ├── js/main.js           # JavaScript personnalisé
+│   └── uploads/             # Documents uploadés
+├── services/                # Services métier
+├── security/                # Modules de sécurité
+├── utils/                   # Utilitaires
+├── docs/                    # Documentation
+└── README.md                # Documentation principale
 ```
 
 ---
 
-## installation
+## Installation
 
-### prerequis
+### Prérequis
 - Python 3.11+
 - PostgreSQL
-- uv (gestionnaire de paquets python)
+- uv (gestionnaire de paquets Python)
 
-### etapes d'installation
+### Étapes d'installation
 
-1. cloner le repository
+1. Cloner le repository
 ```bash
 git clone https://github.com/votre-repo/thedraftclinic.git
 cd thedraftclinic
 ```
 
-2. installer les dependances
+2. Installer les dépendances
 ```bash
 uv sync
 ```
 
-3. configurer les variables d'environnement
+3. Configurer les variables d'environnement
 ```bash
-# variables requises
+# Variables requises
 DATABASE_URL=postgresql://user:password@localhost/thedraftclinic
 SESSION_SECRET=votre-cle-secrete-tres-longue-et-aleatoire
 
-# variables admin (optionnelles mais recommandees)
+# Variables admin (optionnelles mais recommandées)
 ADMIN_EMAIL=admin@thedraftclinic.com
 ADMIN_PASSWORD=MotDePasseAdmin123!
 ```
 
-4. lancer l'application
+4. Lancer l'application
 ```bash
-# developpement
+# Développement
 uv run python main.py
 
-# production
+# Production
 uv run gunicorn --bind 0.0.0.0:5000 main:app
 ```
 
 ---
 
-## variables d'environnement
+## Variables d'environnement
 
-| variable | description | requis | defaut |
+| Variable | Description | Requis | Défaut |
 |----------|-------------|--------|--------|
-| `DATABASE_URL` | url de connexion postgresql | oui | - |
-| `SESSION_SECRET` | cle secrete pour les sessions flask | oui | - |
-| `ADMIN_EMAIL` | email du compte administrateur | non | admin@thedraftclinic.com |
-| `ADMIN_PASSWORD` | mot de passe admin (creation auto) | non | - |
+| `DATABASE_URL` | URL de connexion PostgreSQL | Oui | - |
+| `SESSION_SECRET` | Clé secrète pour les sessions Flask | Oui | - |
+| `ADMIN_EMAIL` | Email du compte administrateur | Non | admin@thedraftclinic.com |
+| `ADMIN_PASSWORD` | Mot de passe admin (création auto) | Non | - |
 
 ---
 
-## types de services
+## Types de services
 
-| code | service |
+| Code | Service |
 |------|---------|
-| `thesis` | these de doctorat |
-| `dissertation` | memoire de master |
-| `research_proposal` | proposition de recherche |
-| `research_paper` | article de recherche |
-| `book_chapter` | chapitre de livre |
-| `literature_review` | revue de litterature |
-| `proofreading` | relecture et correction |
-| `editing` | edition academique |
-| `formatting` | mise en forme |
-| `consultation` | consultation academique |
-| `cv_resume` | cv/resume academique |
-| `personal_statement` | lettre de motivation |
-| `grant_proposal` | proposition de subvention |
-| `poster_review` | revision de poster |
+| `thesis` | Thèse de doctorat |
+| `dissertation` | Mémoire de master |
+| `research_proposal` | Proposition de recherche |
+| `research_paper` | Article de recherche |
+| `book_chapter` | Chapitre de livre |
+| `literature_review` | Revue de littérature |
+| `proofreading` | Relecture et correction |
+| `editing` | Édition académique |
+| `formatting` | Mise en forme |
+| `consultation` | Consultation académique |
+| `cv_resume` | CV/Résumé académique |
+| `personal_statement` | Lettre de motivation |
+| `grant_proposal` | Proposition de subvention |
+| `poster_review` | Révision de poster |
 
 ---
 
-## roles utilisateurs
+## Rôles utilisateurs
 
-### client (chercheur/doctorant)
-- creer un compte et se connecter
-- soumettre des demandes de service
-- telecharger des documents de reference
-- recevoir et accepter des devis
-- uploader des preuves de paiement
-- suivre l'avancement des projets
-- telecharger les livrables
+### Client (chercheur/doctorant)
+- Créer un compte et se connecter
+- Soumettre des demandes de service
+- Télécharger des documents de référence
+- Recevoir et accepter des devis
+- Uploader des preuves de paiement
+- Suivre l'avancement des projets
+- Télécharger les livrables
 
-### administrateur
-- voir toutes les demandes
-- envoyer des devis personnalises
-- verifier les paiements
-- mettre a jour le statut des demandes
-- uploader les livrables
-- gerer les utilisateurs
+### Administrateur
+- Voir toutes les demandes
+- Envoyer des devis personnalisés
+- Vérifier les paiements
+- Mettre à jour le statut des demandes
+- Uploader les livrables
+- Gérer les utilisateurs
 
-### super administrateur
-- tous les droits d'administrateur
-- gerer les autres administrateurs (ajouter, modifier, supprimer)
-- premier compte admin cree automatiquement
+### Super administrateur
+- Tous les droits d'administrateur
+- Gérer les autres administrateurs (ajouter, modifier, supprimer)
+- Premier compte admin créé automatiquement
 
 ---
 
-## workflow de demande
+## Workflow de demande
 
 ```
-1. soumise          <- client soumet une demande
+1. Soumise          <- Client soumet une demande
        |
-2. en examen        <- admin examine la demande
+2. En examen        <- Admin examine la demande
        |
-3. devis envoye     <- admin envoie un devis
+3. Devis envoyé     <- Admin envoie un devis
        |
-4. devis accepte    <- client accepte le devis
+4. Devis accepté    <- Client accepte le devis
        |
-5. attente acompte  <- client upload preuve de paiement
+5. Attente acompte  <- Client upload preuve de paiement
        |
-6. en cours         <- admin verifie et lance le travail
+6. En cours         <- Admin vérifie et lance le travail
        |
-7. terminee         <- travail termine
+7. Terminée         <- Travail terminé
        |
-8. livree           <- client recoit le livrable
+8. Livrée           <- Client reçoit le livrable
 ```
 
 ---
 
-## securite
+## Sécurité
 
-- mots de passe hashes avec werkzeug (bcrypt par defaut)
-- protection csrf sur tous les formulaires
-- authentification requise pour les espaces prives
-- decorateurs d'autorisation pour controle d'acces admin/client
-- upload de fichiers securise avec validation de type
-- limitation de taux sur les formulaires de connexion
-- logging complet des erreurs et actions sensibles
-- pages d'erreur personnalisees (400, 401, 403, 404, 500)
-
----
-
-## logging
-
-L'application utilise un systeme de logging robuste:
-
-- console: tous les logs en developpement
-- logs/thedraftclinic.log: log general avec rotation (10mb)
-- logs/errors.log: erreurs uniquement avec rotation
-
-format: `YYYY-MM-DD HH:MM:SS - LEVEL - module - message`
+- Mots de passe hashés avec Werkzeug (bcrypt par défaut)
+- Protection CSRF sur tous les formulaires
+- Authentification requise pour les espaces privés
+- Décorateurs d'autorisation pour contrôle d'accès admin/client
+- Upload de fichiers sécurisé avec validation de type
+- Limitation de taux sur les formulaires de connexion
+- Logging complet des erreurs et actions sensibles
+- Pages d'erreur personnalisées (400, 401, 403, 404, 500)
 
 ---
 
-## api endpoints
+## Logging
 
-### pages publiques
-- `GET /` - page d'accueil
-- `GET /services` - liste des services
-- `GET /about` - a propos
-- `GET /contact` - contact
+L'application utilise un système de logging robuste :
 
-### authentification (`/auth`)
-- `GET/POST /auth/login` - connexion
-- `GET/POST /auth/register` - inscription
-- `GET /auth/logout` - deconnexion
+- Console : tous les logs en développement
+- logs/thedraftclinic.log : log général avec rotation (10MB)
+- logs/errors.log : erreurs uniquement avec rotation
 
-### espace client (`/client`)
-- `GET /client/dashboard` - tableau de bord
-- `GET/POST /client/new-request` - nouvelle demande
-- `GET /client/request/<id>` - details d'une demande
-- `POST /client/request/<id>/accept-quote` - accepter devis
-- `POST /client/request/<id>/submit-payment` - soumettre paiement
-- `GET/POST /client/profile` - profil utilisateur
-
-### panel admin (`/admin`)
-- `GET /admin/dashboard` - tableau de bord admin
-- `GET /admin/requests` - liste des demandes
-- `GET /admin/request/<id>` - details demande
-- `POST /admin/request/<id>/send-quote` - envoyer devis
-- `POST /admin/request/<id>/update-status` - modifier statut
-- `POST /admin/request/<id>/upload-deliverable` - uploader livrable
-- `GET /admin/users` - liste utilisateurs
-- `GET /admin/user/<id>` - details utilisateur
-- `POST /admin/payment/<id>/verify` - verifier paiement
-- `GET /admin/admins` - gestion des administrateurs (super admin uniquement)
+Format : `YYYY-MM-DD HH:MM:SS - LEVEL - module - message`
 
 ---
 
-## documentation complete
+## API endpoints
 
-- [readme english](README_EN.md)
-- [guide de deploiement vps](docs/DEPLOYMENT_VPS.md)
-- [guide de deploiement aws](docs/DEPLOYMENT_AWS.md)
-- [documentation api](docs/API.md)
-- [guide du panel admin](docs/ADMIN_GUIDE.md)
+### Pages publiques
+- `GET /` - Page d'accueil
+- `GET /services` - Liste des services
+- `GET /about` - À propos
+- `GET /contact` - Contact
+
+### Authentification (`/auth`)
+- `GET/POST /auth/login` - Connexion
+- `GET/POST /auth/register` - Inscription
+- `GET /auth/logout` - Déconnexion
+
+### Espace client (`/client`)
+- `GET /client/dashboard` - Tableau de bord
+- `GET/POST /client/new-request` - Nouvelle demande
+- `GET /client/request/<id>` - Détails d'une demande
+- `POST /client/request/<id>/accept-quote` - Accepter devis
+- `POST /client/request/<id>/submit-payment` - Soumettre paiement
+- `GET/POST /client/profile` - Profil utilisateur
+
+### Panel admin (`/admin`)
+- `GET /admin/dashboard` - Tableau de bord admin
+- `GET /admin/requests` - Liste des demandes
+- `GET /admin/request/<id>` - Détails demande
+- `POST /admin/request/<id>/send-quote` - Envoyer devis
+- `POST /admin/request/<id>/update-status` - Modifier statut
+- `POST /admin/request/<id>/upload-deliverable` - Uploader livrable
+- `GET /admin/users` - Liste utilisateurs
+- `GET /admin/user/<id>` - Détails utilisateur
+- `POST /admin/payment/<id>/verify` - Vérifier paiement
+- `GET /admin/admins` - Gestion des administrateurs (super admin uniquement)
 
 ---
 
-## contact
+## Documentation complète
+
+- [README English](README_EN.md)
+- [Guide de déploiement VPS](docs/DEPLOYMENT_VPS.md)
+- [Guide de déploiement AWS](docs/DEPLOYMENT_AWS.md)
+- [Documentation API](docs/API.md)
+- [Guide du panel admin](docs/ADMIN_GUIDE.md)
+
+---
+
+## Contact
 
 ### MOA Digital Agency LLC
 
 | | |
 |---|---|
-| developpeur | Aisance KALONJI |
-| email | moa@myoneart.com |
-| site web | [www.myoneart.com](https://www.myoneart.com) |
+| Développeur | Aisance KALONJI |
+| Email | moa@myoneart.com |
+| Site web | [www.myoneart.com](https://www.myoneart.com) |
 
 ---
 
-## licence
+## Licence
 
-Copyright 2024 MOA Digital Agency LLC. Tous droits reserves.
+Copyright 2024 MOA Digital Agency LLC. Tous droits réservés.
 
 ---
 
 <div align="center">
 
-**developpe par MOA Digital Agency LLC**
+**Développé par MOA Digital Agency LLC**
 
-*donnez vie a vos projets academiques*
+*Donnez vie à vos projets académiques*
 
 </div>

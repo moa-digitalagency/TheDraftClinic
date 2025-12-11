@@ -1,16 +1,16 @@
-# architecture TheDraftClinic
+# Architecture TheDraftClinic
 
-> documentation technique de l'architecture
-
----
-
-## vue d'ensemble
-
-TheDraftClinic est une application web Flask suivant une architecture MVC (modele-vue-controleur) avec une separation claire des responsabilites.
+> Documentation technique de l'architecture
 
 ---
 
-## couches de l'application
+## Vue d'ensemble
+
+TheDraftClinic est une application web Flask suivant une architecture MVC (Modèle-Vue-Contrôleur) avec une séparation claire des responsabilités.
+
+---
+
+## Couches de l'application
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -21,109 +21,109 @@ TheDraftClinic est une application web Flask suivant une architecture MVC (model
 │             (Blueprints Flask)                   │
 ├─────────────────────────────────────────────────┤
 │                   Services                       │
-│            (Logique metier)                     │
+│            (Logique métier)                     │
 ├─────────────────────────────────────────────────┤
-│                   Modeles                        │
+│                   Modèles                        │
 │              (SQLAlchemy ORM)                   │
 ├─────────────────────────────────────────────────┤
-│                 Base de donnees                  │
+│                 Base de données                  │
 │                 (PostgreSQL)                    │
 └─────────────────────────────────────────────────┘
 ```
 
 ---
 
-## structure des dossiers
+## Structure des dossiers
 
-### `/models` - modeles de donnees
+### `/models` - Modèles de données
 
-| fichier | description |
+| Fichier | Description |
 |---------|-------------|
-| `user.py` | modele utilisateur avec authentification et roles admin |
-| `request.py` | modele demande de service |
-| `document.py` | modele document/fichier |
-| `payment.py` | modele paiement |
-| `activity_log.py` | modele historique d'activites |
-| `site_settings.py` | modele parametres du site |
-| `page.py` | modele pages dynamiques |
+| `user.py` | Modèle utilisateur avec authentification et rôles admin |
+| `request.py` | Modèle demande de service |
+| `document.py` | Modèle document/fichier |
+| `payment.py` | Modèle paiement |
+| `activity_log.py` | Modèle historique d'activités |
+| `site_settings.py` | Modèle paramètres du site |
+| `page.py` | Modèle pages dynamiques |
 
-### `/routes` - controleurs
+### `/routes` - Contrôleurs
 
-| fichier | prefix | description |
+| Fichier | Préfixe | Description |
 |---------|--------|-------------|
-| `main.py` | `/` | pages publiques |
-| `auth.py` | `/auth` | authentification |
-| `client.py` | `/client` | espace client |
-| `admin.py` | `/admin` | administration |
-| `admin_settings.py` | `/admin/settings` | parametres admin |
+| `main.py` | `/` | Pages publiques |
+| `auth.py` | `/auth` | Authentification |
+| `client.py` | `/client` | Espace client |
+| `admin.py` | `/admin` | Administration |
+| `admin_settings.py` | `/admin/settings` | Paramètres admin |
 
-### `/templates` - vues
+### `/templates` - Vues
 
-| dossier | description |
+| Dossier | Description |
 |---------|-------------|
-| `layouts/` | templates de base |
-| `admin/` | templates admin |
-| `client/` | templates client |
-| `auth/` | templates authentification |
-| `errors/` | pages d'erreur |
+| `layouts/` | Templates de base |
+| `admin/` | Templates admin |
+| `client/` | Templates client |
+| `auth/` | Templates authentification |
+| `errors/` | Pages d'erreur |
 
-### `/services` - services metier
+### `/services` - Services métier
 
-| fichier | description |
+| Fichier | Description |
 |---------|-------------|
-| `admin_service.py` | logique admin et creation super admin |
-| `file_service.py` | gestion des fichiers |
+| `admin_service.py` | Logique admin et création super admin |
+| `file_service.py` | Gestion des fichiers |
 
-### `/security` - securite
+### `/security` - Sécurité
 
-| fichier | description |
+| Fichier | Description |
 |---------|-------------|
-| `decorators.py` | decorateurs d'autorisation |
-| `validators.py` | validation des entrees |
-| `rate_limiter.py` | limitation de taux |
-| `error_handlers.py` | gestionnaires d'erreurs |
+| `decorators.py` | Décorateurs d'autorisation |
+| `validators.py` | Validation des entrées |
+| `rate_limiter.py` | Limitation de taux |
+| `error_handlers.py` | Gestionnaires d'erreurs |
 
 ---
 
-## authentification
+## Authentification
 
-### flask-login
-l'authentification utilise flask-login avec:
-- sessions securisees
-- remember me (se souvenir de moi)
-- protection des routes
+### Flask-Login
+L'authentification utilise Flask-Login avec :
+- Sessions sécurisées
+- Remember me (se souvenir de moi)
+- Protection des routes
 
-### decorateurs
+### Décorateurs
 ```python
-@login_required          # connexion requise
-@admin_required          # admin uniquement
-@super_admin_required    # super admin uniquement
-@client_required         # client uniquement
+@login_required          # Connexion requise
+@admin_required          # Admin uniquement
+@super_admin_required    # Super admin uniquement
+@client_required         # Client uniquement
 ```
 
 ---
 
-## systeme de roles admin
+## Système de rôles admin
 
-### roles disponibles
-- `super_admin` - premier compte admin, tous les droits
-- `admin` - administrateur standard
+### Rôles disponibles
+- `super_admin` - Premier compte admin, tous les droits
+- `admin` - Administrateur standard
 
-### permissions
-| action | admin | super_admin |
+### Permissions
+| Action | Admin | Super admin |
 |--------|-------|-------------|
-| gerer demandes | oui | oui |
-| gerer utilisateurs | oui | oui |
-| parametres site | oui | oui |
-| ajouter admin | non | oui |
-| modifier role admin | non | oui |
-| desactiver admin | non | oui |
+| Gérer demandes | Oui | Oui |
+| Gérer utilisateurs | Oui | Oui |
+| Paramètres site | Oui | Oui |
+| Ajouter admin | Non | Oui |
+| Modifier rôle admin | Non | Oui |
+| Désactiver admin | Non | Oui |
 
 ---
 
-## base de donnees
+## Base de données
 
-### schema relationnel
+### Schéma relationnel
 
 ```
 ┌─────────────┐     ┌──────────────────┐
@@ -143,9 +143,9 @@ l'authentification utilise flask-login avec:
                                  └─────────────┘
 ```
 
-### modeles principaux
+### Modèles principaux
 
-#### user
+#### User
 - id, email, password_hash
 - first_name, last_name
 - phone, institution
@@ -154,20 +154,20 @@ l'authentification utilise flask-login avec:
 - account_active
 - created_at, updated_at
 
-#### servicerequest
+#### ServiceRequest
 - id, user_id, title
 - service_type, description
 - status, progress_percentage
 - quote_amount, deposit_required
 - deadline, created_at
 
-#### payment
+#### Payment
 - id, request_id, amount
 - payment_method, status
 - proof_document, transaction_reference
 - created_at
 
-#### activitylog
+#### ActivityLog
 - id, request_id, user_id
 - action_type, title
 - description, metadata
@@ -175,17 +175,17 @@ l'authentification utilise flask-login avec:
 
 ---
 
-## templates
+## Templates
 
-### layouts
-l'application utilise des templates de base:
+### Layouts
+L'application utilise des templates de base :
 
-| layout | description |
+| Layout | Description |
 |--------|-------------|
-| `base.html` | layout de base commun |
-| `admin_base.html` | layout admin avec sidebar |
+| `base.html` | Layout de base commun |
+| `admin_base.html` | Layout admin avec sidebar |
 
-### heritage
+### Héritage
 ```
 base.html
 ├── layouts/auth_base.html
@@ -196,21 +196,21 @@ base.html
 
 ---
 
-## workflow des demandes
+## Workflow des demandes
 
-### statuts
-1. `submitted` - soumise
-2. `under_review` - en examen
-3. `quote_sent` - devis envoye
-4. `quote_accepted` - devis accepte
-5. `awaiting_deposit` - attente acompte
-6. `in_progress` - en cours
-7. `revision` - en revision
-8. `completed` - terminee
-9. `delivered` - livree
-10. `cancelled` - annulee
+### Statuts
+1. `submitted` - Soumise
+2. `under_review` - En examen
+3. `quote_sent` - Devis envoyé
+4. `quote_accepted` - Devis accepté
+5. `awaiting_deposit` - Attente acompte
+6. `in_progress` - En cours
+7. `revision` - En révision
+8. `completed` - Terminée
+9. `delivered` - Livrée
+10. `cancelled` - Annulée
 
-### transitions
+### Transitions
 ```
 submitted -> under_review -> quote_sent -> quote_accepted
     |                                        |
@@ -225,74 +225,74 @@ cancelled                             awaiting_deposit
 
 ---
 
-## historique d'activites
+## Historique d'activités
 
-### types d'actions
-| type | description |
+### Types d'actions
+| Type | Description |
 |------|-------------|
-| `comment` | commentaire ajoute |
-| `delivery` | livrable uploade |
-| `status_change` | changement de statut |
-| `payment` | paiement verifie |
-| `download` | document telecharge |
-| `revision` | demande de revision |
+| `comment` | Commentaire ajouté |
+| `delivery` | Livrable uploadé |
+| `status_change` | Changement de statut |
+| `payment` | Paiement vérifié |
+| `download` | Document téléchargé |
+| `revision` | Demande de révision |
 
-### couleurs
-| type | couleur |
+### Couleurs
+| Type | Couleur |
 |------|---------|
-| comment | blue |
-| delivery | green |
-| status_change | purple |
-| payment | amber |
-| download | gray |
+| comment | Bleu |
+| delivery | Vert |
+| status_change | Violet |
+| payment | Ambre |
+| download | Gris |
 
 ---
 
-## securite
+## Sécurité
 
-### protection csrf
-tous les formulaires utilisent flask-wtf pour la protection csrf.
+### Protection CSRF
+Tous les formulaires utilisent Flask-WTF pour la protection CSRF.
 
-### validation
-- validation des entrees avec wtforms
-- validation des types de fichiers
-- limitation de taille des uploads
+### Validation
+- Validation des entrées avec WTForms
+- Validation des types de fichiers
+- Limitation de taille des uploads
 
-### sessions
-- secret key obligatoire
-- sessions securisees
-- expiration configurable
+### Sessions
+- Secret key obligatoire
+- Sessions sécurisées
+- Expiration configurable
 
 ---
 
-## logging
+## Logging
 
-### configuration
+### Configuration
 ```python
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-### fichiers
-- `logs/thedraftclinic.log` - log general
-- `logs/errors.log` - erreurs uniquement
+### Fichiers
+- `logs/thedraftclinic.log` - Log général
+- `logs/errors.log` - Erreurs uniquement
 
-### rotation
-- taille max: 10mb
-- backup count: 5
+### Rotation
+- Taille max : 10MB
+- Backup count : 5
 
 ---
 
-## deploiement
+## Déploiement
 
-### variables d'environnement
-| variable | description |
+### Variables d'environnement
+| Variable | Description |
 |----------|-------------|
-| `DATABASE_URL` | url postgresql |
-| `SESSION_SECRET` | cle secrete sessions |
-| `ADMIN_EMAIL` | email admin |
-| `ADMIN_PASSWORD` | mot de passe admin |
+| `DATABASE_URL` | URL PostgreSQL |
+| `SESSION_SECRET` | Clé secrète sessions |
+| `ADMIN_EMAIL` | Email admin |
+| `ADMIN_PASSWORD` | Mot de passe admin |
 
-### production
+### Production
 ```bash
 gunicorn --bind 0.0.0.0:5000 --reuse-port main:app
 ```
@@ -301,8 +301,8 @@ gunicorn --bind 0.0.0.0:5000 --reuse-port main:app
 
 <div align="center">
 
-**TheDraftClinic - architecture**
+**TheDraftClinic - Architecture**
 
-*une base solide pour une application robuste*
+*Une base solide pour une application robuste*
 
 </div>

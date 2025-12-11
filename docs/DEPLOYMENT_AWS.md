@@ -1,14 +1,12 @@
-# guide de deploiement aws / aws deployment guide
+# Guide de déploiement AWS
 
-**par MOA Digital Agency LLC**
+**Par MOA Digital Agency LLC**
 
-Ce guide explique comment deployer TheDraftClinic sur Amazon Web Services (AWS).
-
-This guide explains how to deploy TheDraftClinic on Amazon Web Services (AWS).
+Ce guide explique comment déployer TheDraftClinic sur Amazon Web Services (AWS).
 
 ---
 
-## architecture recommandee / recommended architecture
+## Architecture recommandée
 
 ```
                     ┌─────────────┐
@@ -39,89 +37,88 @@ This guide explains how to deploy TheDraftClinic on Amazon Web Services (AWS).
        └─────────────┘
 ```
 
-## option 1: deploiement ec2 simple / simple ec2 deployment
+## Option 1 : Déploiement EC2 simple
 
-### 1.1 creer une instance ec2 / create ec2 instance
+### 1.1 Créer une instance EC2
 
-1. aller sur aws console > ec2 > launch instance
-2. choisir / choose:
-   - ami: Ubuntu Server 22.04 LTS
-   - instance type: t2.micro (free tier) ou t2.small
-   - storage: 20gb gp3
-   - security group: ssh (22), http (80), https (443)
+1. Aller sur AWS Console > EC2 > Launch Instance
+2. Choisir :
+   - AMI : Ubuntu Server 22.04 LTS
+   - Instance type : t2.micro (free tier) ou t2.small
+   - Storage : 20GB gp3
+   - Security group : SSH (22), HTTP (80), HTTPS (443)
 
-### 1.2 creer une base rds postgresql / create rds postgresql
+### 1.2 Créer une base RDS PostgreSQL
 
-1. rds > create database
-2. configuration:
-   - engine: PostgreSQL 15
-   - template: free tier (ou production)
-   - db instance: db.t3.micro
-   - storage: 20gb gp2
-   - credentials: noter le username/password
+1. RDS > Create database
+2. Configuration :
+   - Engine : PostgreSQL 15
+   - Template : Free tier (ou production)
+   - DB instance : db.t3.micro
+   - Storage : 20GB gp2
+   - Credentials : noter le username/password
 
-### 1.3 configurer le security group rds
+### 1.3 Configurer le security group RDS
 
-- autoriser le trafic entrant sur port 5432 depuis le security group de l'ec2
+Autoriser le trafic entrant sur port 5432 depuis le security group de l'EC2.
 
-### 1.4 deployer sur ec2
+### 1.4 Déployer sur EC2
 
 ```bash
-# se connecter a l'instance / connect to instance
+# Se connecter à l'instance
 ssh -i your-key.pem ubuntu@your-ec2-ip
 
-# suivre le guide vps depuis la section "configuration initiale"
-# follow vps guide from "initial setup" section
+# Suivre le guide VPS depuis la section "Configuration initiale"
 ```
 
-la seule difference: utilisez l'endpoint rds pour DATABASE_URL:
+La seule différence : utilisez l'endpoint RDS pour DATABASE_URL :
 ```env
 DATABASE_URL=postgresql://username:password@your-rds-endpoint:5432/thedraftclinic_db
 ```
 
-## option 2: deploiement avec elastic beanstalk / elastic beanstalk deployment
+## Option 2 : Déploiement avec Elastic Beanstalk
 
-### 2.1 preparation du projet
+### 2.1 Préparation du projet
 
-creer un fichier `.ebextensions/01_packages.config`:
+Créer un fichier `.ebextensions/01_packages.config` :
 ```yaml
 packages:
   yum:
     postgresql-devel: []
 ```
 
-creer un fichier `Procfile`:
+Créer un fichier `Procfile` :
 ```
 web: gunicorn --bind :8000 --workers 3 main:app
 ```
 
-creer un fichier `.platform/nginx/conf.d/client_max_body_size.conf`:
+Créer un fichier `.platform/nginx/conf.d/client_max_body_size.conf` :
 ```
 client_max_body_size 50M;
 ```
 
-### 2.2 deploiement via eb cli
+### 2.2 Déploiement via EB CLI
 
 ```bash
-# installer eb cli / install eb cli
+# Installer EB CLI
 pip install awsebcli
 
-# initialiser / initialize
+# Initialiser
 eb init -p python-3.11 thedraftclinic
 
-# creer l'environnement / create environment
+# Créer l'environnement
 eb create thedraftclinic-prod
 
-# configurer les variables / configure variables
+# Configurer les variables
 eb setenv DATABASE_URL=postgresql://... SESSION_SECRET=...
 
-# deployer / deploy
+# Déployer
 eb deploy
 ```
 
-## option 3: deploiement ecs avec fargate / ecs fargate deployment
+## Option 3 : Déploiement ECS avec Fargate
 
-### 3.1 creer le dockerfile
+### 3.1 Créer le Dockerfile
 
 ```dockerfile
 FROM python:3.11-slim
@@ -142,36 +139,36 @@ EXPOSE 5000
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "main:app"]
 ```
 
-### 3.2 creer le repository ecr
+### 3.2 Créer le repository ECR
 
 ```bash
 aws ecr create-repository --repository-name thedraftclinic
 
-# authentification
+# Authentification
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
 
-# build et push
+# Build et push
 docker build -t thedraftclinic .
 docker tag thedraftclinic:latest YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/thedraftclinic:latest
 docker push YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/thedraftclinic:latest
 ```
 
-### 3.3 creer le cluster ecs
+### 3.3 Créer le cluster ECS
 
-via aws console:
-1. ecs > create cluster > networking only (fargate)
-2. create task definition > fargate
-3. create service avec alb
+Via AWS Console :
+1. ECS > Create Cluster > Networking only (Fargate)
+2. Create Task Definition > Fargate
+3. Create Service avec ALB
 
-## configuration s3 pour les uploads
+## Configuration S3 pour les uploads
 
-### creer un bucket s3
+### Créer un bucket S3
 
 ```bash
 aws s3 mb s3://thedraftclinic-uploads --region us-east-1
 ```
 
-### configurer cors
+### Configurer CORS
 
 ```json
 [
@@ -184,30 +181,30 @@ aws s3 mb s3://thedraftclinic-uploads --region us-east-1
 ]
 ```
 
-### modifier le code pour s3
+### Modifier le code pour S3
 
-installer boto3:
+Installer boto3 :
 ```bash
 pip install boto3
 ```
 
-modifier `services/file_service.py` pour utiliser s3 au lieu du stockage local.
+Modifier `services/file_service.py` pour utiliser S3 au lieu du stockage local.
 
-## configuration cloudfront (cdn)
+## Configuration CloudFront (CDN)
 
-1. cloudfront > create distribution
-2. origin: votre alb ou s3
-3. ssl: certificate manager (acm)
-4. cache policy: optimise pour flask
+1. CloudFront > Create Distribution
+2. Origin : votre ALB ou S3
+3. SSL : Certificate Manager (ACM)
+4. Cache policy : optimisée pour Flask
 
-## monitoring avec cloudwatch
+## Monitoring avec CloudWatch
 
-### metriques a surveiller / metrics to monitor
-- ec2: cpu, memory, network
-- rds: connections, cpu, storage
-- alb: request count, latency, 5xx errors
+### Métriques à surveiller
+- EC2 : CPU, memory, network
+- RDS : connections, CPU, storage
+- ALB : request count, latency, 5xx errors
 
-### alarmes recommandees / recommended alarms
+### Alarmes recommandées
 ```bash
 aws cloudwatch put-metric-alarm \
     --alarm-name "CPU-High" \
@@ -220,40 +217,40 @@ aws cloudwatch put-metric-alarm \
     --evaluation-periods 2
 ```
 
-## couts estimes / estimated costs
+## Coûts estimés
 
-### configuration minimale (free tier)
-- ec2 t2.micro: gratuit (12 mois)
-- rds db.t3.micro: ~$15/mois
-- alb: ~$16/mois
-- total: ~$30/mois
+### Configuration minimale (Free Tier)
+- EC2 t2.micro : gratuit (12 mois)
+- RDS db.t3.micro : ~$15/mois
+- ALB : ~$16/mois
+- Total : ~$30/mois
 
-### configuration production
-- ec2 t3.small: ~$15/mois
-- rds db.t3.small: ~$30/mois
-- alb: ~$16/mois
-- cloudfront: ~$10/mois
-- s3: ~$5/mois
-- total: ~$75-100/mois
+### Configuration production
+- EC2 t3.small : ~$15/mois
+- RDS db.t3.small : ~$30/mois
+- ALB : ~$16/mois
+- CloudFront : ~$10/mois
+- S3 : ~$5/mois
+- Total : ~$75-100/mois
 
-## securite aws / aws security
+## Sécurité AWS
 
-### iam best practices
-- creer des utilisateurs iam dedies
-- utiliser des roles pour ec2/ecs
-- activer mfa sur tous les comptes
+### IAM best practices
+- Créer des utilisateurs IAM dédiés
+- Utiliser des rôles pour EC2/ECS
+- Activer MFA sur tous les comptes
 
-### secrets manager
+### Secrets Manager
 ```bash
 aws secretsmanager create-secret \
     --name thedraftclinic/prod \
     --secret-string '{"DATABASE_URL":"...","SESSION_SECRET":"..."}'
 ```
 
-### vpc configuration
-- placer rds dans un subnet prive
-- utiliser nat gateway pour l'acces sortant
-- security groups restrictifs
+### VPC configuration
+- Placer RDS dans un subnet privé
+- Utiliser NAT Gateway pour l'accès sortant
+- Security groups restrictifs
 
 ---
 

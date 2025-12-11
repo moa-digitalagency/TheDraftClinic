@@ -1,244 +1,244 @@
-# guide du panel administrateur
+# Guide du panel administrateur
 
-> TheDraftClinic - documentation admin
-
----
-
-## introduction
-
-Ce guide detaille l'utilisation du panel administrateur de TheDraftClinic. L'interface a ete redesignee avec une navigation laterale intuitive pour une meilleure ergonomie.
+> TheDraftClinic - Documentation admin
 
 ---
 
-## navigation
+## Introduction
 
-### sidebar (barre laterale)
+Ce guide détaille l'utilisation du panel administrateur de TheDraftClinic. L'interface a été redesignée avec une navigation latérale intuitive pour une meilleure ergonomie.
 
-La sidebar gauche offre un acces rapide a toutes les sections:
+---
 
-| section | description |
+## Navigation
+
+### Sidebar (barre latérale)
+
+La sidebar gauche offre un accès rapide à toutes les sections :
+
+| Section | Description |
 |---------|-------------|
-| tableau de bord | vue d'ensemble avec statistiques |
-| demandes | liste et gestion des demandes clients |
-| utilisateurs | gestion des comptes utilisateurs |
-| administrateurs | gestion des admins (super admin uniquement) |
-| pages | cgu, cgv, pages personnalisees |
-| statistiques | metriques de performance |
-| parametres | configuration du site |
+| Tableau de bord | Vue d'ensemble avec statistiques |
+| Demandes | Liste et gestion des demandes clients |
+| Utilisateurs | Gestion des comptes utilisateurs |
+| Administrateurs | Gestion des admins (super admin uniquement) |
+| Pages | CGU, CGV, pages personnalisées |
+| Statistiques | Métriques de performance |
+| Paramètres | Configuration du site |
 
 ---
 
-## tableau de bord
+## Tableau de bord
 
-Le tableau de bord affiche:
+Le tableau de bord affiche :
 
-### cartes de statistiques
-- total demandes - nombre total de demandes recues
-- en attente - demandes en attente de traitement
-- en cours - demandes en cours de traitement
-- paiements - paiements en attente de verification
-- utilisateurs - nombre total d'utilisateurs inscrits
+### Cartes de statistiques
+- Total demandes - Nombre total de demandes reçues
+- En attente - Demandes en attente de traitement
+- En cours - Demandes en cours de traitement
+- Paiements - Paiements en attente de vérification
+- Utilisateurs - Nombre total d'utilisateurs inscrits
 
-### sections
-- demandes recentes - les 6 dernieres demandes avec progression
-- paiements a verifier - paiements en attente d'approbation
-- activite recente - historique des 10 dernieres actions
-
----
-
-## gestion des demandes
-
-### liste des demandes
-
-La page affiche toutes les demandes avec:
-- id - numero unique de la demande
-- titre - titre du projet
-- client - nom et email du client
-- statut - etat actuel de la demande
-- progression - barre de progression visuelle
-- date - date de creation
-
-### filtres
-utilisez le filtre par statut pour afficher:
-- tous les statuts
-- soumises
-- en examen
-- devis envoyes
-- en cours
-- terminees
-- livrees
-
-### actions sur une demande
-
-#### envoyer un devis
-1. ouvrir la demande
-2. remplir le montant total
-3. indiquer l'acompte requis
-4. ajouter un message (optionnel)
-5. cliquer sur "envoyer le devis"
-
-#### mettre a jour le statut
-1. selectionner le nouveau statut
-2. ajuster la progression (%)
-3. ajouter des notes admin
-4. cliquer sur "mettre a jour"
-
-#### uploader un livrable
-1. selectionner le fichier
-2. ajouter un commentaire de livraison
-3. cliquer sur "uploader le livrable"
-
-#### verifier un paiement
-1. consulter le justificatif
-2. cliquer sur "approuver" ou "rejeter"
+### Sections
+- Demandes récentes - Les 6 dernières demandes avec progression
+- Paiements à vérifier - Paiements en attente d'approbation
+- Activité récente - Historique des 10 dernières actions
 
 ---
 
-## gestion des utilisateurs
+## Gestion des demandes
 
-### liste des utilisateurs
-- nom et email
-- etablissement
-- niveau academique
-- nombre de demandes
-- date d'inscription
+### Liste des demandes
 
-### profil utilisateur
-vue detaillee avec:
-- informations personnelles
-- historique des demandes
+La page affiche toutes les demandes avec :
+- ID - Numéro unique de la demande
+- Titre - Titre du projet
+- Client - Nom et email du client
+- Statut - État actuel de la demande
+- Progression - Barre de progression visuelle
+- Date - Date de création
 
----
+### Filtres
+Utilisez le filtre par statut pour afficher :
+- Tous les statuts
+- Soumises
+- En examen
+- Devis envoyés
+- En cours
+- Terminées
+- Livrées
 
-## gestion des administrateurs (super admin)
+### Actions sur une demande
 
-Accessible uniquement au super administrateur (premier compte cree).
+#### Envoyer un devis
+1. Ouvrir la demande
+2. Remplir le montant total
+3. Indiquer l'acompte requis
+4. Ajouter un message (optionnel)
+5. Cliquer sur "Envoyer le devis"
 
-### ajouter un admin
-1. aller dans "administrateurs"
-2. cliquer sur "nouvel administrateur"
-3. remplir email, nom, prenom, mot de passe
-4. valider
+#### Mettre à jour le statut
+1. Sélectionner le nouveau statut
+2. Ajuster la progression (%)
+3. Ajouter des notes admin
+4. Cliquer sur "Mettre à jour"
 
-### modifier un admin
-- changer le role (admin/super_admin)
-- activer/desactiver le compte
-- reinitialiser le mot de passe
+#### Uploader un livrable
+1. Sélectionner le fichier
+2. Ajouter un commentaire de livraison
+3. Cliquer sur "Uploader le livrable"
 
-### desactiver un admin
-- le compte reste en base mais ne peut plus se connecter
-- les actions passees restent tracees
-
----
-
-## gestion des pages
-
-### types de pages
-- cgu - conditions generales d'utilisation
-- cgv - conditions generales de vente
-- politique de confidentialite
-- mentions legales
-- faq
-- pages personnalisees
-
-### creer une page
-1. cliquer sur "nouvelle page"
-2. remplir le titre
-3. selectionner le type de page
-4. choisir le format (html ou markdown)
-5. ecrire le contenu
-6. configurer les metadonnees seo
-7. definir les options d'affichage
-8. publier la page
+#### Vérifier un paiement
+1. Consulter le justificatif
+2. Cliquer sur "Approuver" ou "Rejeter"
 
 ---
 
-## parametres
+## Gestion des utilisateurs
 
-### parametres generaux
-- nom du site
-- description
-- fuseau horaire
-- pays
-- langue par defaut
-- devise
+### Liste des utilisateurs
+- Nom et email
+- Établissement
+- Niveau académique
+- Nombre de demandes
+- Date d'inscription
 
-### branding
-- logo du site
-- favicon
-
-### seo et opengraph
-- titre seo
-- description seo
-- mots-cles
-- image og
-- twitter card
-
-### informations legales
-- raison sociale
-- adresse
-- email / telephone
-- siret, rcs, tva
-- hebergeur
-- dpo
-
-### parametres avances
-- google analytics
-- google tag manager
-- facebook pixel
-- scripts personnalises
-- mode maintenance
+### Profil utilisateur
+Vue détaillée avec :
+- Informations personnelles
+- Historique des demandes
 
 ---
 
-## historique des activites
+## Gestion des administrateurs (super admin)
 
-Le systeme enregistre automatiquement:
-- commentaires - messages ajoutes aux demandes
-- livraisons - fichiers uploades
-- changements de statut - modifications d'etat
-- paiements - verifications de paiement
-- telechargements - documents telecharges
+Accessible uniquement au super administrateur (premier compte créé).
 
-Chaque activite inclut:
-- titre de l'action
-- description
-- auteur
-- date et heure
-- lien vers la demande
+### Ajouter un admin
+1. Aller dans "Administrateurs"
+2. Cliquer sur "Nouvel administrateur"
+3. Remplir email, nom, prénom, mot de passe
+4. Valider
 
----
+### Modifier un admin
+- Changer le rôle (admin/super_admin)
+- Activer/désactiver le compte
+- Réinitialiser le mot de passe
 
-## interface
-
-### design
-- theme sombre moderne
-- responsive (mobile-friendly)
-- navigation intuitive
-- chargement rapide
-
-### codes couleurs des statuts
-- jaune - en attente
-- bleu - en cours
-- vert - complete/livree
-- rouge - rejetee/annulee
+### Désactiver un admin
+- Le compte reste en base mais ne peut plus se connecter
+- Les actions passées restent tracées
 
 ---
 
-## conseils
+## Gestion des pages
 
-1. consultez le tableau de bord regulierement pour voir les nouvelles demandes
-2. verifiez les paiements rapidement pour eviter les retards
-3. utilisez les commentaires pour communiquer avec les clients
-4. mettez a jour la progression pour que les clients suivent l'avancement
-5. consultez l'historique pour retracer les actions
+### Types de pages
+- CGU - Conditions générales d'utilisation
+- CGV - Conditions générales de vente
+- Politique de confidentialité
+- Mentions légales
+- FAQ
+- Pages personnalisées
+
+### Créer une page
+1. Cliquer sur "Nouvelle page"
+2. Remplir le titre
+3. Sélectionner le type de page
+4. Choisir le format (HTML ou Markdown)
+5. Écrire le contenu
+6. Configurer les métadonnées SEO
+7. Définir les options d'affichage
+8. Publier la page
+
+---
+
+## Paramètres
+
+### Paramètres généraux
+- Nom du site
+- Description
+- Fuseau horaire
+- Pays
+- Langue par défaut
+- Devise
+
+### Branding
+- Logo du site
+- Favicon
+
+### SEO et OpenGraph
+- Titre SEO
+- Description SEO
+- Mots-clés
+- Image OG
+- Twitter Card
+
+### Informations légales
+- Raison sociale
+- Adresse
+- Email / Téléphone
+- SIRET, RCS, TVA
+- Hébergeur
+- DPO
+
+### Paramètres avancés
+- Google Analytics
+- Google Tag Manager
+- Facebook Pixel
+- Scripts personnalisés
+- Mode maintenance
+
+---
+
+## Historique des activités
+
+Le système enregistre automatiquement :
+- Commentaires - Messages ajoutés aux demandes
+- Livraisons - Fichiers uploadés
+- Changements de statut - Modifications d'état
+- Paiements - Vérifications de paiement
+- Téléchargements - Documents téléchargés
+
+Chaque activité inclut :
+- Titre de l'action
+- Description
+- Auteur
+- Date et heure
+- Lien vers la demande
+
+---
+
+## Interface
+
+### Design
+- Thème sombre moderne
+- Responsive (mobile-friendly)
+- Navigation intuitive
+- Chargement rapide
+
+### Codes couleurs des statuts
+- Jaune - En attente
+- Bleu - En cours
+- Vert - Complète/livrée
+- Rouge - Rejetée/annulée
+
+---
+
+## Conseils
+
+1. Consultez le tableau de bord régulièrement pour voir les nouvelles demandes
+2. Vérifiez les paiements rapidement pour éviter les retards
+3. Utilisez les commentaires pour communiquer avec les clients
+4. Mettez à jour la progression pour que les clients suivent l'avancement
+5. Consultez l'historique pour retracer les actions
 
 ---
 
 <div align="center">
 
-**TheDraftClinic - panel administrateur**
+**TheDraftClinic - Panel administrateur**
 
-*interface redesignee pour une meilleure productivite*
+*Interface redesignée pour une meilleure productivité*
 
 </div>
