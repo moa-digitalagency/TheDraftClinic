@@ -22,6 +22,9 @@ Usage:
 
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ==============================================================================
 # INITIALISATION DE LA BASE DE DONNÉES AU DÉMARRAGE
