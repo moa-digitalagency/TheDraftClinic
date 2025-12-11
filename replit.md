@@ -42,7 +42,11 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 │   ├── rate_limiter.py  # Limitation de taux
 │   └── error_handlers.py # Gestionnaires d'erreurs
 ├── utils/               # Utilitaires
-│   └── forms.py         # Formulaires WTForms
+│   ├── forms.py         # Formulaires WTForms
+│   └── i18n.py          # Système de traduction (internationalisation)
+├── lang/                # Fichiers de traduction
+│   ├── fr.json          # Traductions françaises
+│   └── en.json          # Traductions anglaises
 ├── templates/           # Templates Jinja2
 │   ├── layouts/         # Template de base
 │   ├── auth/            # Pages authentification
