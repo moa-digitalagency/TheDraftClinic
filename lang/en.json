@@ -59,7 +59,12 @@
     "updated_at": "Updated on",
     "by": "by",
     "or": "or",
-    "and": "and"
+    "and": "and",
+    "description": "Description",
+    "documents": "Documents",
+    "information": "Information",
+    "notes": "Notes",
+    "other": "Other"
   },
   "auth": {
     "login": {
@@ -239,11 +244,18 @@
         "pending": "Pending"
       }
     },
+    "new_request": {
+      "title": "New request",
+      "word_count": "Word count",
+      "page_count": "Page count",
+      "urgency": "Urgency"
+    },
     "request": {
+      "title": "Request",
       "new_title": "New request",
       "details_title": "Request details",
       "service_type": "Service type",
-      "title": "Project title",
+      "project_title": "Project title",
       "title_placeholder": "Ex: Thesis on the impact of climate change",
       "description": "Detailed description",
       "description_placeholder": "Describe your project in detail...",
@@ -255,16 +267,34 @@
       "quote": {
         "title": "Quote",
         "amount": "Total amount",
-        "deposit": "Required deposit",
+        "total": "Total amount",
+        "deposit": "Deposit",
+        "deposit_required": "Required deposit",
         "accept": "Accept quote",
+        "accepted": "Accepted",
+        "received": "Quote received",
+        "status": "Quote status",
         "message": "Writer's message"
       },
       "payment": {
         "title": "Payment",
-        "proof": "Proof of payment",
+        "proof": "Payment proof/receipt",
         "submit": "Submit payment",
-        "waiting": "Awaiting verification"
+        "submit_proof": "Submit proof of payment",
+        "submit_deposit": "Submit your deposit",
+        "deposit_to_pay": "Deposit to pay",
+        "amount_paid": "Amount paid",
+        "method": "Payment method",
+        "reference": "Transaction reference",
+        "verification_pending": "Your payment proof is being verified...",
+        "waiting": "Awaiting verification",
+        "methods": {
+          "bank_transfer": "Bank transfer",
+          "card": "Credit/Debit card"
+        }
       },
+      "payments": "Payments",
+      "additional_info": "Additional information",
       "revision": {
         "title": "Request a revision",
         "description": "Describe the desired changes",
@@ -293,6 +323,12 @@
     }
   },
   "admin": {
+    "nav": {
+      "main": "Main",
+      "requests": "Requests",
+      "content": "Content",
+      "configuration": "Configuration"
+    },
     "dashboard": {
       "title": "Administrator Dashboard",
       "stats": {

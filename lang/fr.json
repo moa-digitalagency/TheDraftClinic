@@ -59,7 +59,12 @@
     "updated_at": "Modifié le",
     "by": "par",
     "or": "ou",
-    "and": "et"
+    "and": "et",
+    "description": "Description",
+    "documents": "Documents",
+    "information": "Informations",
+    "notes": "Notes",
+    "other": "Autre"
   },
   "auth": {
     "login": {
@@ -239,11 +244,18 @@
         "pending": "En attente"
       }
     },
+    "new_request": {
+      "title": "Nouvelle demande",
+      "word_count": "Nombre de mots",
+      "page_count": "Nombre de pages",
+      "urgency": "Urgence"
+    },
     "request": {
+      "title": "Demande",
       "new_title": "Nouvelle demande",
       "details_title": "Détails de la demande",
       "service_type": "Type de service",
-      "title": "Titre du projet",
+      "project_title": "Titre du projet",
       "title_placeholder": "Ex: Thèse sur l'impact du changement climatique",
       "description": "Description détaillée",
       "description_placeholder": "Décrivez votre projet en détail...",
@@ -255,16 +267,34 @@
       "quote": {
         "title": "Devis",
         "amount": "Montant total",
-        "deposit": "Acompte requis",
+        "total": "Montant total",
+        "deposit": "Acompte",
+        "deposit_required": "Acompte requis",
         "accept": "Accepter le devis",
+        "accepted": "Accepté",
+        "received": "Devis reçu",
+        "status": "Statut devis",
         "message": "Message du rédacteur"
       },
       "payment": {
         "title": "Paiement",
-        "proof": "Preuve de paiement",
+        "proof": "Capture/Justificatif de paiement",
         "submit": "Soumettre le paiement",
-        "waiting": "En attente de vérification"
+        "submit_proof": "Soumettre la preuve de paiement",
+        "submit_deposit": "Soumettre votre acompte",
+        "deposit_to_pay": "Acompte à verser",
+        "amount_paid": "Montant payé",
+        "method": "Méthode de paiement",
+        "reference": "Référence de transaction",
+        "verification_pending": "Votre preuve de paiement est en cours de vérification...",
+        "waiting": "En attente de vérification",
+        "methods": {
+          "bank_transfer": "Virement bancaire",
+          "card": "Carte bancaire"
+        }
       },
+      "payments": "Paiements",
+      "additional_info": "Informations supplémentaires",
       "revision": {
         "title": "Demander une révision",
         "description": "Décrivez les modifications souhaitées",
@@ -293,6 +323,12 @@
     }
   },
   "admin": {
+    "nav": {
+      "main": "Principal",
+      "requests": "Demandes",
+      "content": "Contenu",
+      "configuration": "Configuration"
+    },
     "dashboard": {
       "title": "Tableau de bord administrateur",
       "stats": {

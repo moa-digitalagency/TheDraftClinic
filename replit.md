@@ -116,6 +116,37 @@ TheDraftClinic est une plateforme web permettant aux doctorants et chercheurs de
 - PostgreSQL via Replit
 - Tables : users, service_requests, payments, documents, activity_logs, site_settings, pages, deadline_extensions, revision_requests, revision_attachments
 
+## Internationalisation (i18n)
+
+### Configuration
+- Fichiers de traduction JSON : `lang/fr.json` et `lang/en.json`
+- Système de clés imbriquées (ex: `auth.login.title`, `client.dashboard.welcome`)
+- Module de gestion : `utils/i18n.py`
+
+### Détection de langue
+1. Session utilisateur (priorité haute)
+2. Paramètre URL (`?lang=fr` ou `?lang=en`)
+3. Préférence navigateur (Accept-Language header)
+4. Langue par défaut : Français
+
+### Fonctionnalités
+- Fonction `t()` disponible dans tous les templates
+- Sélecteur de langue flottant sur le côté gauche de l'écran
+- Fallback vers l'anglais si la clé de traduction n'existe pas
+- Support des variables dans les traductions : `t('welcome', name='Jean')`
+
+### Structure des clés
+- `nav.*` : Navigation
+- `common.*` : Termes communs (boutons, labels)
+- `auth.*` : Authentification
+- `landing.*` : Page d'accueil
+- `client.*` : Espace client
+- `admin.*` : Espace admin
+- `services.*` : Types de services
+- `status.*` : Statuts des demandes
+- `errors.*` : Pages d'erreur
+- `language.*` : Sélection de langue
+
 ## Sécurité
 - Mots de passe hashés avec Werkzeug (bcrypt)
 - Protection CSRF sur tous les formulaires

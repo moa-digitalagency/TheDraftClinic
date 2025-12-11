@@ -119,6 +119,10 @@ Website: www.myoneart.com
 </head>
 
 <body class="font-sans bg-slate-50 min-h-screen">
+    <div id="lang-switcher" class="fixed left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col bg-white shadow-lg rounded-r-xl border border-l-0 border-gray-200 overflow-hidden" role="navigation" aria-label="{{ t('language.select') }}">
+        <a href="?lang=fr" class="px-3 py-2 text-sm font-medium transition-colors hover:bg-primary-50 {% if current_lang == 'fr' %}bg-primary-100 text-primary-700{% else %}text-gray-600{% endif %}" aria-current="{% if current_lang == 'fr' %}true{% else %}false{% endif %}">FR</a>
+        <a href="?lang=en" class="px-3 py-2 text-sm font-medium transition-colors hover:bg-primary-50 border-t border-gray-100 {% if current_lang == 'en' %}bg-primary-100 text-primary-700{% else %}text-gray-600{% endif %}" aria-current="{% if current_lang == 'en' %}true{% else %}false{% endif %}">EN</a>
+    </div>
     {% block body %}{% endblock %}
     
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

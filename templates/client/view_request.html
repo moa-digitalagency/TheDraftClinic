@@ -20,7 +20,7 @@ Fonctionnalités:
 
 {% extends 'layouts/base.html' %}
 
-{% block title %}Demande #{{ request.id }}{% endblock %}
+{% block title %}{{ t('client.request.title') }} #{{ request.id }}{% endblock %}
 
 {% block body %}
 <div class="min-h-screen bg-slate-50">
@@ -37,7 +37,7 @@ Fonctionnalités:
                         <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
                             <span class="text-white font-bold">T</span>
                         </div>
-                        <span class="text-xl font-serif font-bold text-slate-900">Demande #{{ request.id }}</span>
+                        <span class="text-xl font-serif font-bold text-slate-900">{{ t('client.request.title') }} #{{ request.id }}</span>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@ Fonctionnalités:
                     {% if request.progress_percentage > 0 %}
                     <div class="mt-6">
                         <div class="flex justify-between text-sm mb-2">
-                            <span class="text-gray-500">Progression</span>
+                            <span class="text-gray-500">{{ t('common.progress') }}</span>
                             <span class="font-medium text-slate-900">{{ request.progress_percentage }}%</span>
                         </div>
                         <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
@@ -85,14 +85,14 @@ Fonctionnalités:
                     
                     {% if request.description %}
                     <div class="mt-6">
-                        <h3 class="text-sm font-medium text-gray-700 mb-2">Description</h3>
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">{{ t('common.description') }}</h3>
                         <p class="text-gray-600 whitespace-pre-line">{{ request.description }}</p>
                     </div>
                     {% endif %}
                     
                     {% if request.additional_info %}
                     <div class="mt-6">
-                        <h3 class="text-sm font-medium text-gray-700 mb-2">Informations supplémentaires</h3>
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">{{ t('client.request.additional_info') }}</h3>
                         <p class="text-gray-600 whitespace-pre-line">{{ request.additional_info }}</p>
                     </div>
                     {% endif %}
@@ -100,15 +100,15 @@ Fonctionnalités:
 
                 {% if request.status == 'quote_sent' and not request.quote_accepted %}
                 <div class="bg-gradient-to-br from-primary-50 to-accent-50 rounded-2xl p-6 border border-primary-100">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Devis reçu</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">{{ t('client.request.quote.received') }}</h3>
                     <div class="bg-white rounded-xl p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-gray-600">Montant total:</span>
+                            <span class="text-gray-600">{{ t('client.request.quote.total') }}:</span>
                             <span class="text-3xl font-bold gradient-text">{{ "%.2f"|format(request.quote_amount) }} €</span>
                         </div>
                         {% if request.deposit_required %}
                         <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
-                            <span class="text-gray-600">Acompte requis:</span>
+                            <span class="text-gray-600">{{ t('client.request.quote.deposit_required') }}:</span>
                             <span class="text-xl font-semibold text-slate-900">{{ "%.2f"|format(request.deposit_required) }} €</span>
                         </div>
                         {% endif %}
@@ -118,7 +118,7 @@ Fonctionnalités:
                         <form method="POST" action="{{ url_for('client.accept_quote', request_id=request.id) }}">
                             {{ payment_form.hidden_tag() }}
                             <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
-                                Accepter le devis
+                                {{ t('client.request.quote.accept') }}
                             </button>
                         </form>
                     </div>
@@ -127,17 +127,17 @@ Fonctionnalités:
 
                 {% if request.status in ['awaiting_deposit', 'deposit_pending'] %}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Soumettre votre acompte</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">{{ t('client.request.payment.submit_deposit') }}</h3>
                     
                     {% if request.status == 'deposit_pending' %}
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-                        <p class="text-amber-700 text-sm">Votre preuve de paiement est en cours de vérification...</p>
+                        <p class="text-amber-700 text-sm">{{ t('client.request.payment.verification_pending') }}</p>
                     </div>
                     {% endif %}
                     
                     <div class="bg-gray-50 rounded-xl p-4 mb-6">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Acompte à verser:</span>
+                            <span class="text-gray-600">{{ t('client.request.payment.deposit_to_pay') }}:</span>
                             <span class="text-2xl font-bold text-slate-900">{{ "%.2f"|format(request.deposit_required) }} €</span>
                         </div>
                     </div>
@@ -146,44 +146,44 @@ Fonctionnalités:
                         {{ payment_form.hidden_tag() }}
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Montant payé *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('client.request.payment.amount_paid') }} *</label>
                             <input type="number" name="amount" step="0.01" required value="{{ request.deposit_required }}"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Méthode de paiement *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('client.request.payment.method') }} *</label>
                             <select name="payment_method" required
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                <option value="bank_transfer">Virement bancaire</option>
+                                <option value="bank_transfer">{{ t('client.request.payment.methods.bank_transfer') }}</option>
                                 <option value="paypal">PayPal</option>
-                                <option value="card">Carte bancaire</option>
+                                <option value="card">{{ t('client.request.payment.methods.card') }}</option>
                                 <option value="mobile_money">Mobile Money</option>
-                                <option value="other">Autre</option>
+                                <option value="other">{{ t('common.other') }}</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Capture/Justificatif de paiement</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('client.request.payment.proof') }}</label>
                             <input type="file" name="proof_document" accept=".pdf,.png,.jpg,.jpeg"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Référence de transaction</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('client.request.payment.reference') }}</label>
                             <input type="text" name="transaction_reference"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                 placeholder="Ex: VIR2024123456">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('common.notes') }}</label>
                             <textarea name="notes" rows="2"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
                         </div>
                         
                         <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
-                            Soumettre la preuve de paiement
+                            {{ t('client.request.payment.submit_proof') }}
                         </button>
                     </form>
                 </div>
@@ -191,7 +191,7 @@ Fonctionnalités:
 
                 {% if documents %}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Documents</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">{{ t('common.documents') }}</h3>
                     <div class="space-y-3">
                         {% for doc in documents %}
                         <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
@@ -220,10 +220,10 @@ Fonctionnalités:
 
             <div class="space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Informations</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">{{ t('common.information') }}</h3>
                     <div class="space-y-4">
                         <div>
-                            <span class="text-sm text-gray-500">Créée le</span>
+                            <span class="text-sm text-gray-500">{{ t('common.created_at') }}</span>
                             <p class="font-medium text-slate-900">{{ request.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
                         </div>
                         {% if request.deadline %}
@@ -234,18 +234,18 @@ Fonctionnalités:
                         {% endif %}
                         {% if request.word_count %}
                         <div>
-                            <span class="text-sm text-gray-500">Nombre de mots</span>
+                            <span class="text-sm text-gray-500">{{ t('client.new_request.word_count') }}</span>
                             <p class="font-medium text-slate-900">{{ request.word_count }}</p>
                         </div>
                         {% endif %}
                         {% if request.pages_count %}
                         <div>
-                            <span class="text-sm text-gray-500">Nombre de pages</span>
+                            <span class="text-sm text-gray-500">{{ t('client.new_request.page_count') }}</span>
                             <p class="font-medium text-slate-900">{{ request.pages_count }}</p>
                         </div>
                         {% endif %}
                         <div>
-                            <span class="text-sm text-gray-500">Urgence</span>
+                            <span class="text-sm text-gray-500">{{ t('client.new_request.urgency') }}</span>
                             <p class="font-medium text-slate-900">{{ request.urgency_level }}</p>
                         </div>
                     </div>
@@ -253,22 +253,22 @@ Fonctionnalités:
 
                 {% if request.quote_amount %}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Devis</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">{{ t('client.request.quote.title') }}</h3>
                     <div class="space-y-4">
                         <div>
-                            <span class="text-sm text-gray-500">Montant total</span>
+                            <span class="text-sm text-gray-500">{{ t('client.request.quote.total') }}</span>
                             <p class="text-2xl font-bold gradient-text">{{ "%.2f"|format(request.quote_amount) }} €</p>
                         </div>
                         {% if request.deposit_required %}
                         <div>
-                            <span class="text-sm text-gray-500">Acompte</span>
+                            <span class="text-sm text-gray-500">{{ t('client.request.quote.deposit') }}</span>
                             <p class="font-medium text-slate-900">{{ "%.2f"|format(request.deposit_required) }} €</p>
                         </div>
                         {% endif %}
                         <div>
-                            <span class="text-sm text-gray-500">Statut devis</span>
+                            <span class="text-sm text-gray-500">{{ t('client.request.quote.status') }}</span>
                             <p class="font-medium {% if request.quote_accepted %}text-green-600{% else %}text-amber-600{% endif %}">
-                                {% if request.quote_accepted %}Accepté{% else %}En attente{% endif %}
+                                {% if request.quote_accepted %}{{ t('client.request.quote.accepted') }}{% else %}{{ t('status.pending') }}{% endif %}
                             </p>
                         </div>
                     </div>
@@ -277,7 +277,7 @@ Fonctionnalités:
 
                 {% if payments %}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Paiements</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">{{ t('client.request.payments') }}</h3>
                     <div class="space-y-3">
                         {% for payment in payments %}
                         <div class="p-3 bg-gray-50 rounded-xl">
