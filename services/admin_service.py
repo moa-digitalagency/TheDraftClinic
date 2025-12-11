@@ -68,31 +68,31 @@ def create_default_admin():
         - Changez le mot de passe par défaut après la première connexion
     """
     try:
-        # Récupération de l'email admin depuis les variables d'environnement
-        # Utilise une valeur par défaut si non spécifié
-        admin_email = os.environ.get('ADMIN_EMAIL', 'admin@thedraftclinic.com')
-        
-        # Récupération du mot de passe admin
-        # Aucune valeur par défaut pour des raisons de sécurité
+        # Récupération de l'email admin depuis les secrets (OBLIGATOIRE)
+        admin_email = os.environ.get('ADMIN_EMAIL')
         admin_password = os.environ.get('ADMIN_PASSWORD')
         
-        # Log de l'information (sans le mot de passe!)
+        # Vérification que les credentials sont configurés
+        if not admin_email or not admin_password:
+            logger.warning(
+                "ADMIN_EMAIL et ADMIN_PASSWORD doivent être configurés dans les secrets. "
+                "Le compte admin ne sera pas créé automatiquement."
+            )
+            return
+        
         logger.info(f"Vérification du compte admin: {admin_email}")
         
         # Recherche d'un admin existant avec cet email
         admin = User.query.filter_by(email=admin_email).first()
         
-        # Si l'admin existe déjà, ne rien faire
         if admin:
-            logger.info(f"Compte admin existant trouvé: {admin_email}")
-            return
-        
-        # Si aucun mot de passe n'est configuré, ne pas créer le compte
-        if not admin_password:
-            logger.warning(
-                "Variable ADMIN_PASSWORD non définie. "
-                "Le compte admin ne sera pas créé automatiquement."
-            )
+            # Met à jour le mot de passe si différent
+            if not admin.check_password(admin_password):
+                admin.set_password(admin_password)
+                db.session.commit()
+                logger.info(f"Mot de passe admin mis à jour: {admin_email}")
+            else:
+                logger.info(f"Compte admin existant trouvé: {admin_email}")
             return
         
         # Création du nouveau compte admin
@@ -106,10 +106,7 @@ def create_default_admin():
             account_active=True
         )
         
-        # Définition du mot de passe (hashé automatiquement)
         admin.set_password(admin_password)
-        
-        # Sauvegarde en base de données
         db.session.add(admin)
         db.session.commit()
         

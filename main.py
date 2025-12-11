@@ -44,29 +44,31 @@ def ensure_database_initialized():
         admin_password = os.environ.get('ADMIN_PASSWORD')
         
         if not admin_email or not admin_password:
-            print("ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be configured in secrets!")
-            print("Please set these environment variables before starting the application.")
-            sys.exit(1)
-        
-        existing_admin = User.query.filter_by(email=admin_email).first()
-        
-        if existing_admin:
-            if not existing_admin.check_password(admin_password):
-                existing_admin.set_password(admin_password)
-                db.session.commit()
-                print(f"Admin password updated for: {admin_email}")
+            print("WARNING: ADMIN_EMAIL and/or ADMIN_PASSWORD not configured in secrets.")
+            print("Admin account will not be created. Configure them to enable admin access.")
         else:
-            admin = User(
-                email=admin_email,
-                first_name='Admin',
-                last_name='TheDraftClinic',
-                is_admin=True,
-                account_active=True
-            )
-            admin.set_password(admin_password)
-            db.session.add(admin)
-            db.session.commit()
-            print(f"Admin user created: {admin_email}")
+            try:
+                existing_admin = User.query.filter_by(email=admin_email).first()
+                
+                if existing_admin:
+                    if not existing_admin.check_password(admin_password):
+                        existing_admin.set_password(admin_password)
+                        db.session.commit()
+                        print(f"Admin password updated for: {admin_email}")
+                else:
+                    admin = User(
+                        email=admin_email,
+                        first_name='Admin',
+                        last_name='TheDraftClinic',
+                        is_admin=True,
+                        account_active=True
+                    )
+                    admin.set_password(admin_password)
+                    db.session.add(admin)
+                    db.session.commit()
+                    print(f"Admin user created: {admin_email}")
+            except Exception as e:
+                print(f"Warning: Could not create/update admin: {e}")
     
     return app
 

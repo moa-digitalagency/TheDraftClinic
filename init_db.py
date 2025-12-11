@@ -163,30 +163,29 @@ def init_database():
             admin_password = os.environ.get('ADMIN_PASSWORD')
             
             if not admin_email or not admin_password:
-                print("      ✗ ERROR: ADMIN_EMAIL and ADMIN_PASSWORD are required!")
-                print("      → Please configure them in your secrets/environment variables")
-                return False
-            
-            existing_admin = User.query.filter_by(email=admin_email).first()
-            
-            if existing_admin:
-                print(f"      ✓ Admin user already exists: {admin_email}")
-                if not existing_admin.check_password(admin_password):
-                    existing_admin.set_password(admin_password)
-                    db.session.commit()
-                    print(f"      ✓ Admin password updated to match environment variable")
+                print("      ⚠ ADMIN_EMAIL and/or ADMIN_PASSWORD not configured")
+                print("      → Configure them in secrets to create admin account")
             else:
-                admin = User(
-                    email=admin_email,
-                    first_name='Admin',
-                    last_name='TheDraftClinic',
-                    is_admin=True,
-                    account_active=True
-                )
-                admin.set_password(admin_password)
-                db.session.add(admin)
-                db.session.commit()
-                print(f"      ✓ Created admin user: {admin_email}")
+                existing_admin = User.query.filter_by(email=admin_email).first()
+                
+                if existing_admin:
+                    print(f"      ✓ Admin user already exists: {admin_email}")
+                    if not existing_admin.check_password(admin_password):
+                        existing_admin.set_password(admin_password)
+                        db.session.commit()
+                        print(f"      ✓ Admin password updated to match environment variable")
+                else:
+                    admin = User(
+                        email=admin_email,
+                        first_name='Admin',
+                        last_name='TheDraftClinic',
+                        is_admin=True,
+                        account_active=True
+                    )
+                    admin.set_password(admin_password)
+                    db.session.add(admin)
+                    db.session.commit()
+                    print(f"      ✓ Created admin user: {admin_email}")
             
             print()
             print("[6/6] Verifying database tables...")
