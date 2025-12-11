@@ -1,156 +1,214 @@
-<!-- 
-================================================================================
-TheDraftClinic - Template Dashboard Administrateur
-================================================================================
-By MOA Digital Agency LLC
-Developed by: Aisance KALONJI
-Contact: moa@myoneart.com
-Website: www.myoneart.com
-================================================================================
-Ce template affiche le tableau de bord principal de l'administrateur.
-Fonctionnalités:
-- Statistiques globales (demandes, utilisateurs, paiements)
-- Liste des demandes récentes
-- Paiements en attente de vérification
-- Navigation vers les autres sections admin
-================================================================================
--->
-
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/admin_base.html' %}
 
 {% block title %}Admin - Dashboard{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
 
-{% block body %}
-<div class="min-h-screen bg-slate-900">
-    <nav class="bg-slate-800 border-b border-slate-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
-                        <span class="text-white font-bold">T</span>
-                    </div>
-                    <span class="text-xl font-bold text-white">TheDraftClinic Admin</span>
-                </div>
-                
-                <div class="flex items-center space-x-6">
-                    <a href="{{ url_for('admin.dashboard') }}" class="text-white font-medium">Dashboard</a>
-                    <a href="{{ url_for('admin.requests_list') }}" class="text-gray-400 hover:text-white">Demandes</a>
-                    <a href="{{ url_for('admin.users_list') }}" class="text-gray-400 hover:text-white">Utilisateurs</a>
-                    <a href="{{ url_for('auth.logout') }}" class="text-gray-400 hover:text-red-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                        </svg>
-                    </a>
-                </div>
+{% block admin_content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-white">Tableau de bord</h1>
+    <p class="text-gray-400 mt-1">Vue d'ensemble de la plateforme</p>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-slate-600 transition-colors">
+        <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
             </div>
         </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="mb-6 p-4 rounded-xl alert-dismissible transition-all duration-300 
-                        {% if category == 'error' %}bg-red-900/50 text-red-300 border border-red-700
-                        {% elif category == 'success' %}bg-green-900/50 text-green-300 border border-green-700
-                        {% else %}bg-blue-900/50 text-blue-300 border border-blue-700{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <div class="mb-8">
-            <h1 class="text-2xl font-bold text-white">Tableau de bord</h1>
-            <p class="text-gray-400 mt-1">Vue d'ensemble de la plateforme</p>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-                <div class="text-3xl font-bold text-white">{{ stats.total_requests }}</div>
-                <div class="text-gray-400 text-sm mt-1">Total demandes</div>
-            </div>
-            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-                <div class="text-3xl font-bold text-amber-400">{{ stats.pending_requests }}</div>
-                <div class="text-gray-400 text-sm mt-1">En attente</div>
-            </div>
-            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-                <div class="text-3xl font-bold text-blue-400">{{ stats.in_progress }}</div>
-                <div class="text-gray-400 text-sm mt-1">En cours</div>
-            </div>
-            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-                <div class="text-3xl font-bold text-red-400">{{ stats.pending_payments }}</div>
-                <div class="text-gray-400 text-sm mt-1">Paiements en attente</div>
-            </div>
-            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-                <div class="text-3xl font-bold text-green-400">{{ stats.total_users }}</div>
-                <div class="text-gray-400 text-sm mt-1">Utilisateurs</div>
-            </div>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-6">
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-700 flex items-center justify-between">
-                    <h2 class="text-lg font-semibold text-white">Demandes récentes</h2>
-                    <a href="{{ url_for('admin.requests_list') }}" class="text-primary-400 text-sm hover:text-primary-300">Voir tout</a>
-                </div>
-                
-                {% if recent_requests %}
-                <div class="divide-y divide-slate-700">
-                    {% for request in recent_requests %}
-                    <a href="{{ url_for('admin.view_request', request_id=request.id) }}" class="block p-4 hover:bg-slate-700/50 transition">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="px-2 py-0.5 rounded text-xs font-medium status-{{ request.status }}">
-                                        {{ request.get_status_display() }}
-                                    </span>
-                                    <span class="text-gray-500 text-xs">#{{ request.id }}</span>
-                                </div>
-                                <p class="text-white font-medium truncate">{{ request.title }}</p>
-                                <p class="text-gray-400 text-sm">{{ request.user.full_name }}</p>
-                            </div>
-                            <div class="text-gray-500 text-sm">{{ request.created_at.strftime('%d/%m') }}</div>
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="p-8 text-center text-gray-500">
-                    Aucune demande récente
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-700">
-                    <h2 class="text-lg font-semibold text-white">Paiements à vérifier</h2>
-                </div>
-                
-                {% if pending_payments %}
-                <div class="divide-y divide-slate-700">
-                    {% for payment in pending_payments %}
-                    <a href="{{ url_for('admin.view_request', request_id=payment.request_id) }}" class="block p-4 hover:bg-slate-700/50 transition">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-white font-medium">{{ "%.2f"|format(payment.amount) }} €</p>
-                                <p class="text-gray-400 text-sm">{{ payment.request.user.full_name }}</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="px-2 py-1 bg-amber-900/50 text-amber-300 rounded text-xs">En attente</span>
-                                <p class="text-gray-500 text-xs mt-1">{{ payment.created_at.strftime('%d/%m/%Y') }}</p>
-                            </div>
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="p-8 text-center text-gray-500">
-                    Aucun paiement en attente
-                </div>
-                {% endif %}
-            </div>
-        </div>
+        <div class="text-3xl font-bold text-white">{{ stats.total_requests }}</div>
+        <div class="text-gray-400 text-sm mt-1">Total demandes</div>
     </div>
+    
+    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-amber-700 transition-colors">
+        <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-amber-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="text-3xl font-bold text-amber-400">{{ stats.pending_requests }}</div>
+        <div class="text-gray-400 text-sm mt-1">En attente</div>
+    </div>
+    
+    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-blue-700 transition-colors">
+        <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="text-3xl font-bold text-blue-400">{{ stats.in_progress }}</div>
+        <div class="text-gray-400 text-sm mt-1">En cours</div>
+    </div>
+    
+    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-red-700 transition-colors">
+        <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-red-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="text-3xl font-bold text-red-400">{{ stats.pending_payments }}</div>
+        <div class="text-gray-400 text-sm mt-1">Paiements</div>
+    </div>
+    
+    <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 hover:border-green-700 transition-colors">
+        <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-green-900/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="text-3xl font-bold text-green-400">{{ stats.total_users }}</div>
+        <div class="text-gray-400 text-sm mt-1">Utilisateurs</div>
+    </div>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-700 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-white flex items-center">
+                <svg class="w-5 h-5 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Demandes recentes
+            </h2>
+            <a href="{{ url_for('admin.requests_list') }}" class="text-primary-400 text-sm hover:text-primary-300 flex items-center">
+                Voir tout
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        
+        {% if recent_requests %}
+        <div class="divide-y divide-slate-700">
+            {% for req in recent_requests[:6] %}
+            <a href="{{ url_for('admin.view_request', request_id=req.id) }}" class="block p-4 hover:bg-slate-700/50 transition">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded text-xs font-medium status-{{ req.status }}">
+                                {{ req.get_status_display() }}
+                            </span>
+                            <span class="text-gray-500 text-xs">#{{ req.id }}</span>
+                        </div>
+                        <p class="text-white font-medium truncate">{{ req.title }}</p>
+                        <p class="text-gray-400 text-sm">{{ req.user.full_name }}</p>
+                    </div>
+                    <div class="text-right ml-4">
+                        <div class="text-gray-500 text-sm">{{ req.created_at.strftime('%d/%m') }}</div>
+                        <div class="mt-1">
+                            <div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" style="width: {{ req.progress_percentage }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="p-8 text-center text-gray-500">
+            <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Aucune demande recente
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-700">
+            <h2 class="text-lg font-semibold text-white flex items-center">
+                <svg class="w-5 h-5 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+                Paiements a verifier
+            </h2>
+        </div>
+        
+        {% if pending_payments %}
+        <div class="divide-y divide-slate-700">
+            {% for payment in pending_payments[:6] %}
+            <a href="{{ url_for('admin.view_request', request_id=payment.request_id) }}" class="block p-4 hover:bg-slate-700/50 transition">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white font-medium">{{ "%.2f"|format(payment.amount) }} EUR</p>
+                        <p class="text-gray-400 text-sm">{{ payment.request.user.full_name }}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-2 py-1 bg-amber-900/50 text-amber-300 rounded text-xs font-medium">En attente</span>
+                        <p class="text-gray-500 text-xs mt-1">{{ payment.created_at.strftime('%d/%m/%Y') }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="p-8 text-center text-gray-500">
+            <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Aucun paiement en attente
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-6 bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-700">
+        <h2 class="text-lg font-semibold text-white flex items-center">
+            <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Activite recente
+        </h2>
+    </div>
+    
+    {% if recent_activities %}
+    <div class="divide-y divide-slate-700 max-h-80 overflow-y-auto">
+        {% for activity in recent_activities[:10] %}
+        <div class="p-4 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-{{ activity.get_color() }}-900/30 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-{{ activity.get_color() }}-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {% if activity.action_type == 'comment' %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    {% elif activity.action_type == 'delivery' %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    {% elif activity.action_type == 'status_change' %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    {% else %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    {% endif %}
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm text-white font-medium">{{ activity.title or activity.get_action_display() }}</p>
+                {% if activity.description %}
+                <p class="text-sm text-gray-400 truncate">{{ activity.description }}</p>
+                {% endif %}
+                <p class="text-xs text-gray-500 mt-1">
+                    {{ activity.user.full_name if activity.user else 'Systeme' }} - {{ activity.created_at.strftime('%d/%m/%Y %H:%M') }}
+                </p>
+            </div>
+            <a href="{{ url_for('admin.view_request', request_id=activity.request_id) }}" class="text-primary-400 hover:text-primary-300 text-sm">
+                #{{ activity.request_id }}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="p-8 text-center text-gray-500">
+        Aucune activite recente
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -1,115 +1,126 @@
-{% extends "layouts/base.html" %}
+{% extends 'layouts/admin_base.html' %}
 
 {% block title %}{{ 'Modifier' if page else 'Nouvelle' }} page{% endblock %}
+{% block page_title %}{{ 'Modifier' if page else 'Nouvelle' }} page{% endblock %}
 
-{% block body %}
-<div class="min-h-screen bg-gray-100">
-    <nav class="bg-gray-800 text-white py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center">
-                <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold">Administration</a>
-                <a href="{{ url_for('admin_settings.pages_list') }}" class="hover:text-gray-300">Retour à la liste</a>
+{% block admin_content %}
+<div class="mb-6 flex items-center gap-4">
+    <a href="{{ url_for('admin_settings.pages_list') }}" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-slate-700 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+    </a>
+    <div>
+        <h1 class="text-2xl font-bold text-white">{{ 'Modifier la page' if page else 'Nouvelle page' }}</h1>
+        <p class="text-gray-400">{{ 'Mise a jour de la page existante' if page else 'Creer une nouvelle page pour votre site' }}</p>
+    </div>
+</div>
+
+<div class="max-w-4xl">
+    <form method="POST" class="bg-slate-800 rounded-2xl border border-slate-700 p-6 space-y-6">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Titre *</label>
+                <input type="text" name="title" value="{{ page.title if page else '' }}" required
+                       class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Slug (URL)</label>
+                <input type="text" name="slug" value="{{ page.slug if page else '' }}" placeholder="auto-genere si vide"
+                       class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
             </div>
         </div>
-    </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ 'Modifier la page' if page else 'Nouvelle page' }}</h1>
-
-        <form method="POST" class="bg-white rounded-xl shadow p-6 space-y-6">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Titre *</label>
-                    <input type="text" name="title" value="{{ page.title if page else '' }}" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Slug (URL)</label>
-                    <input type="text" name="slug" value="{{ page.slug if page else '' }}" placeholder="auto-généré si vide"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Type de page</label>
-                    <select name="page_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                        <option value="custom" {{ 'selected' if not page or page.page_type == 'custom' }}>Page personnalisée</option>
-                        <option value="cgu" {{ 'selected' if page and page.page_type == 'cgu' }}>CGU</option>
-                        <option value="cgv" {{ 'selected' if page and page.page_type == 'cgv' }}>CGV</option>
-                        <option value="privacy" {{ 'selected' if page and page.page_type == 'privacy' }}>Politique de confidentialité</option>
-                        <option value="legal" {{ 'selected' if page and page.page_type == 'legal' }}>Mentions légales</option>
-                        <option value="faq" {{ 'selected' if page and page.page_type == 'faq' }}>FAQ</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Format du contenu</label>
-                    <select name="content_format" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                        <option value="html" {{ 'selected' if not page or page.content_format == 'html' }}>HTML</option>
-                        <option value="markdown" {{ 'selected' if page and page.content_format == 'markdown' }}>Markdown</option>
-                    </select>
-                </div>
-            </div>
-
+        <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Contenu</label>
-                <textarea name="content" rows="15" 
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 font-mono text-sm">{{ page.content if page else '' }}</textarea>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Type de page</label>
+                <select name="page_type" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                    <option value="custom" {{ 'selected' if not page or page.page_type == 'custom' }}>Page personnalisee</option>
+                    <option value="cgu" {{ 'selected' if page and page.page_type == 'cgu' }}>CGU</option>
+                    <option value="cgv" {{ 'selected' if page and page.page_type == 'cgv' }}>CGV</option>
+                    <option value="privacy" {{ 'selected' if page and page.page_type == 'privacy' }}>Politique de confidentialite</option>
+                    <option value="legal" {{ 'selected' if page and page.page_type == 'legal' }}>Mentions legales</option>
+                    <option value="faq" {{ 'selected' if page and page.page_type == 'faq' }}>FAQ</option>
+                </select>
             </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Format du contenu</label>
+                <select name="content_format" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                    <option value="html" {{ 'selected' if not page or page.content_format == 'html' }}>HTML</option>
+                    <option value="markdown" {{ 'selected' if page and page.content_format == 'markdown' }}>Markdown</option>
+                </select>
+            </div>
+        </div>
 
-            <div class="border-t pt-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Métadonnées SEO</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Titre SEO (optionnel)</label>
-                        <input type="text" name="meta_title" value="{{ page.meta_title if page else '' }}" maxlength="70"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Description SEO (optionnel)</label>
-                        <textarea name="meta_description" rows="2" maxlength="160"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">{{ page.meta_description if page else '' }}</textarea>
-                    </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Contenu</label>
+            <textarea name="content" rows="15" 
+                      class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500 font-mono text-sm">{{ page.content if page else '' }}</textarea>
+        </div>
+
+        <div class="border-t border-slate-700 pt-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                Metadonnees SEO
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Titre SEO (optionnel)</label>
+                    <input type="text" name="meta_title" value="{{ page.meta_title if page else '' }}" maxlength="70"
+                           class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Description SEO (optionnel)</label>
+                    <textarea name="meta_description" rows="2" maxlength="160"
+                              class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">{{ page.meta_description if page else '' }}</textarea>
                 </div>
             </div>
+        </div>
 
-            <div class="border-t pt-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Options d'affichage</h3>
-                <div class="space-y-3">
-                    <div class="flex items-center">
-                        <input type="checkbox" name="is_published" id="is_published" {{ 'checked' if page and page.is_published }}
-                               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                        <label for="is_published" class="ml-2 block text-sm text-gray-700">Publier la page</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="show_in_footer" id="show_in_footer" {{ 'checked' if not page or page.show_in_footer }}
-                               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                        <label for="show_in_footer" class="ml-2 block text-sm text-gray-700">Afficher dans le footer</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="show_in_navigation" id="show_in_navigation" {{ 'checked' if page and page.show_in_navigation }}
-                               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                        <label for="show_in_navigation" class="ml-2 block text-sm text-gray-700">Afficher dans la navigation</label>
-                    </div>
+        <div class="border-t border-slate-700 pt-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Options d'affichage
+            </h3>
+            <div class="space-y-3">
+                <div class="flex items-center">
+                    <input type="checkbox" name="is_published" id="is_published" {{ 'checked' if page and page.is_published }}
+                           class="h-5 w-5 text-primary-600 focus:ring-primary-500 border-slate-600 rounded bg-slate-700">
+                    <label for="is_published" class="ml-3 block text-sm text-gray-300">Publier la page</label>
                 </div>
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Ordre d'affichage</label>
-                    <input type="number" name="order_index" value="{{ page.order_index if page else 0 }}" min="0"
-                           class="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                <div class="flex items-center">
+                    <input type="checkbox" name="show_in_footer" id="show_in_footer" {{ 'checked' if not page or page.show_in_footer }}
+                           class="h-5 w-5 text-primary-600 focus:ring-primary-500 border-slate-600 rounded bg-slate-700">
+                    <label for="show_in_footer" class="ml-3 block text-sm text-gray-300">Afficher dans le footer</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="show_in_navigation" id="show_in_navigation" {{ 'checked' if page and page.show_in_navigation }}
+                           class="h-5 w-5 text-primary-600 focus:ring-primary-500 border-slate-600 rounded bg-slate-700">
+                    <label for="show_in_navigation" class="ml-3 block text-sm text-gray-300">Afficher dans la navigation</label>
                 </div>
             </div>
-
-            <div class="pt-4 flex space-x-4">
-                <button type="submit" class="flex-1 bg-primary-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-700 transition">
-                    {{ 'Mettre à jour' if page else 'Créer la page' }}
-                </button>
-                <a href="{{ url_for('admin_settings.pages_list') }}" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                    Annuler
-                </a>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Ordre d'affichage</label>
+                <input type="number" name="order_index" value="{{ page.order_index if page else 0 }}" min="0"
+                       class="w-24 px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
             </div>
-        </form>
-    </main>
+        </div>
+
+        <div class="pt-4 flex gap-4">
+            <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                {{ 'Mettre a jour' if page else 'Creer la page' }}
+            </button>
+            <a href="{{ url_for('admin_settings.pages_list') }}" class="px-6 py-3 border border-slate-600 rounded-xl text-gray-300 hover:bg-slate-700 transition-colors text-center">
+                Annuler
+            </a>
+        </div>
+    </form>
 </div>
 {% endblock %}

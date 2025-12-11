@@ -1,105 +1,78 @@
-<!-- 
-================================================================================
-TheDraftClinic - Template Liste des Utilisateurs Admin
-================================================================================
-By MOA Digital Agency LLC
-Developed by: Aisance KALONJI
-Contact: moa@myoneart.com
-Website: www.myoneart.com
-================================================================================
-Ce template affiche la liste de tous les utilisateurs (clients) inscrits.
-Fonctionnalités:
-- Liste de tous les clients
-- Nombre de demandes par client
-- Lien vers le profil détaillé
-- Date d'inscription
-================================================================================
--->
-
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/admin_base.html' %}
 
 {% block title %}Admin - Utilisateurs{% endblock %}
+{% block page_title %}Utilisateurs{% endblock %}
 
-{% block body %}
-<div class="min-h-screen bg-slate-900">
-    <nav class="bg-slate-800 border-b border-slate-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
-                        <span class="text-white font-bold">T</span>
-                    </div>
-                    <span class="text-xl font-sans font-bold text-white">Admin Panel</span>
-                </div>
-                
-                <div class="flex items-center space-x-6">
-                    <a href="{{ url_for('admin.dashboard') }}" class="text-gray-400 hover:text-white">Dashboard</a>
-                    <a href="{{ url_for('admin.requests_list') }}" class="text-gray-400 hover:text-white">Demandes</a>
-                    <a href="{{ url_for('admin.users_list') }}" class="text-white font-medium">Utilisateurs</a>
-                    <a href="{{ url_for('auth.logout') }}" class="text-gray-400 hover:text-red-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+{% block admin_content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-white">Gestion des utilisateurs</h1>
+    <p class="text-gray-400 mt-1">{{ users|length }} utilisateur(s) inscrit(s)</p>
+</div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="mb-8">
-            <h1 class="text-2xl font-sans font-bold text-white">Utilisateurs</h1>
-            <p class="text-gray-400 mt-1">{{ users|length }} utilisateur(s) inscrit(s)</p>
-        </div>
-
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
-            {% if users %}
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-slate-700/50">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Utilisateur</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Établissement</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Niveau</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Inscription</th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-700">
-                        {% for user in users %}
-                        <tr class="hover:bg-slate-700/30 transition">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
-                                        <span class="text-white font-bold text-sm">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
-                                    </div>
-                                    <div>
-                                        <p class="text-white font-medium">{{ user.full_name }}</p>
-                                        <p class="text-gray-400 text-sm">{{ user.email }}</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-gray-300">{{ user.institution or '-' }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ user.academic_level or '-' }}</td>
-                            <td class="px-6 py-4 text-gray-400">{{ user.created_at.strftime('%d/%m/%Y') }}</td>
-                            <td class="px-6 py-4">
-                                <a href="{{ url_for('admin.view_user', user_id=user.id) }}" class="text-primary-400 hover:text-primary-300">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                    </svg>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="p-12 text-center">
-                <p class="text-gray-500">Aucun utilisateur inscrit</p>
-            </div>
-            {% endif %}
-        </div>
+{% if users %}
+<div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-slate-700">
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Utilisateur</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Etablissement</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Niveau</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Demandes</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Inscription</th>
+                    <th class="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700">
+                {% for user in users %}
+                <tr class="hover:bg-slate-700/30 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-medium">{{ user.full_name }}</p>
+                                <p class="text-gray-400 text-sm">{{ user.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-gray-300">{{ user.institution or '-' }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-gray-300">{{ user.academic_level or '-' }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2.5 py-1 bg-slate-700 text-gray-300 rounded-lg text-sm font-medium">
+                            {{ user.service_requests|length if user.service_requests else 0 }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-gray-400 text-sm">{{ user.created_at.strftime('%d/%m/%Y') }}</p>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="{{ url_for('admin.view_user', user_id=user.id) }}" 
+                           class="inline-flex items-center px-3 py-1.5 bg-primary-600/20 text-primary-400 rounded-lg text-sm font-medium hover:bg-primary-600/30 transition-colors">
+                            Voir profil
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+{% else %}
+<div class="bg-slate-800 rounded-2xl border border-slate-700 p-12 text-center">
+    <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+    </svg>
+    <h3 class="text-xl font-semibold text-white mb-2">Aucun utilisateur</h3>
+    <p class="text-gray-400">Les utilisateurs inscrits apparaitront ici.</p>
+</div>
+{% endif %}
 {% endblock %}

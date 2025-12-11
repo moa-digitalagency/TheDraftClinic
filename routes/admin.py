@@ -135,11 +135,16 @@ def dashboard():
             'total_users': total_users
         }
         
+        recent_activities = ActivityLog.query.order_by(
+            ActivityLog.created_at.desc()
+        ).limit(10).all()
+        
         return render_template(
             'admin/dashboard.html', 
             stats=stats, 
             recent_requests=recent_requests,
-            pending_payments=pending_payment_verifications
+            pending_payments=pending_payment_verifications,
+            recent_activities=recent_activities
         )
         
     except Exception as e:

@@ -1,357 +1,403 @@
-<!-- 
-================================================================================
-TheDraftClinic - Template Détail Demande Admin
-================================================================================
-By MOA Digital Agency LLC
-Developed by: Aisance KALONJI
-Contact: moa@myoneart.com
-Website: www.myoneart.com
-================================================================================
-Ce template affiche les détails d'une demande pour l'administrateur.
-Fonctionnalités:
-- Informations complètes du client et du projet
-- Formulaire d'envoi de devis
-- Formulaire de mise à jour de statut et progression
-- Upload de livrables avec commentaire
-- Vérification des paiements
-- Historique des activités
-- Gestion des extensions de délai
-- Gestion des demandes de révision
-================================================================================
--->
-
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/admin_base.html' %}
 
 {% block title %}Admin - Demande #{{ request.id }}{% endblock %}
+{% block page_title %}Demande #{{ request.id }}{% endblock %}
 
-{% block body %}
-<div class="min-h-screen bg-slate-900">
-    <nav class="bg-slate-800 border-b border-slate-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center space-x-4">
-                    <a href="{{ url_for('admin.requests_list') }}" class="text-gray-400 hover:text-white">
+{% block admin_content %}
+<div class="mb-6 flex items-center gap-4">
+    <a href="{{ url_for('admin.requests_list') }}" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-slate-700 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+    </a>
+    <div class="flex-1">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full text-sm font-medium status-{{ request.status }}">
+                {{ request.get_status_display() }}
+            </span>
+            <span class="text-gray-500 text-sm">#{{ request.id }}</span>
+        </div>
+        <h1 class="text-xl font-bold text-white mt-1">{{ request.title }}</h1>
+    </div>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <p class="text-gray-400">{{ request.get_service_display() }}</p>
+                </div>
+                <div class="text-right">
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-400 text-sm">Progression:</span>
+                        <div class="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" style="width: {{ request.progress_percentage }}%"></div>
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ request.progress_percentage }}%</span>
+                    </div>
+                </div>
+            </div>
+            
+            {% if request.description %}
+            <div class="mt-6">
+                <h3 class="text-sm font-medium text-gray-400 mb-2">Description</h3>
+                <p class="text-gray-300 whitespace-pre-line">{{ request.description }}</p>
+            </div>
+            {% endif %}
+            
+            {% if request.additional_info %}
+            <div class="mt-6">
+                <h3 class="text-sm font-medium text-gray-400 mb-2">Informations supplementaires</h3>
+                <p class="text-gray-300 whitespace-pre-line">{{ request.additional_info }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if request.status in ['submitted', 'under_review'] %}
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Envoyer un devis
+            </h3>
+            <form method="POST" action="{{ url_for('admin.send_quote', request_id=request.id) }}" class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Montant total (EUR) *</label>
+                        <input type="number" name="quote_amount" step="0.01" required
+                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Acompte requis (EUR) *</label>
+                        <input type="number" name="deposit_required" step="0.01" required
+                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Message au client</label>
+                    <textarea name="quote_message" rows="3"
+                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
+                    Envoyer le devis
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if request.status in ['in_progress', 'revision'] %}
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Mettre a jour le statut
+            </h3>
+            <form method="POST" action="{{ url_for('admin.update_status', request_id=request.id) }}" class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Nouveau statut</label>
+                        <select name="status" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                            <option value="">Ne pas changer</option>
+                            <option value="in_progress">En cours de traitement</option>
+                            <option value="revision">En revision</option>
+                            <option value="completed">Terminee</option>
+                            <option value="delivered">Livree</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Progression (%)</label>
+                        <input type="number" name="progress" min="0" max="100" value="{{ request.progress_percentage }}"
+                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Notes admin</label>
+                    <textarea name="admin_notes" rows="2"
+                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">{{ request.admin_notes or '' }}</textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all">
+                    Mettre a jour
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+                Uploader un livrable
+            </h3>
+            <form method="POST" action="{{ url_for('admin.upload_deliverable', request_id=request.id) }}" enctype="multipart/form-data" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Fichier</label>
+                    <input type="file" name="deliverable" required
+                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-600 file:text-white file:cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Commentaire de livraison</label>
+                    <input type="text" name="delivery_comment"
+                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500"
+                        placeholder="Ex: Version finale du chapitre 1">
+                </div>
+                <button type="submit" class="w-full py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all">
+                    Uploader le livrable
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                Ajouter un commentaire
+            </h3>
+            <form method="POST" action="{{ url_for('admin.add_comment', request_id=request.id) }}" class="space-y-4">
+                <div>
+                    <textarea name="comment" rows="3" required
+                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500"
+                        placeholder="Votre commentaire sera visible par le client..."></textarea>
+                </div>
+                <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all">
+                    Envoyer le commentaire
+                </button>
+            </form>
+        </div>
+
+        {% if payments %}
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+                Paiements
+            </h3>
+            <div class="space-y-4">
+                {% for payment in payments %}
+                <div class="bg-slate-700/50 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <span class="text-2xl font-bold text-white">{{ "%.2f"|format(payment.amount) }} EUR</span>
+                            <span class="text-gray-400 ml-2">{{ payment.payment_method }}</span>
+                        </div>
+                        <span class="px-3 py-1 rounded text-sm font-medium 
+                            {% if payment.status == 'verified' %}bg-green-900/50 text-green-300
+                            {% elif payment.status == 'rejected' %}bg-red-900/50 text-red-300
+                            {% else %}bg-amber-900/50 text-amber-300{% endif %}">
+                            {{ payment.get_status_display() }}
+                        </span>
+                    </div>
+                    
+                    {% if payment.transaction_reference %}
+                    <p class="text-gray-400 text-sm">Ref: {{ payment.transaction_reference }}</p>
+                    {% endif %}
+                    
+                    {% if payment.proof_document %}
+                    <a href="{{ url_for('static', filename='uploads/' + payment.proof_document) }}" target="_blank" class="inline-flex items-center gap-2 text-primary-400 text-sm mt-2 hover:text-primary-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        Voir le justificatif
+                    </a>
+                    {% endif %}
+                    
+                    {% if payment.status == 'pending' %}
+                    <div class="flex gap-2 mt-4">
+                        <form method="POST" action="{{ url_for('admin.verify_payment', payment_id=payment.id) }}" class="flex-1">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="w-full py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition">
+                                Approuver
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.verify_payment', payment_id=payment.id) }}" class="flex-1">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="w-full py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition">
+                                Rejeter
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if documents %}
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Documents
+            </h3>
+            <div class="space-y-3">
+                {% for doc in documents %}
+                <div class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg {% if doc.document_type == 'deliverable' %}bg-green-900/50{% else %}bg-slate-600{% endif %} flex items-center justify-center">
+                            <svg class="w-5 h-5 {% if doc.document_type == 'deliverable' %}text-green-400{% else %}text-gray-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium text-white">{{ doc.original_filename }}</p>
+                            <p class="text-sm text-gray-400">{{ doc.get_type_display() }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('static', filename='uploads/' + doc.filename) }}" download class="text-primary-400 hover:text-primary-300 p-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
                     </a>
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
-                            <span class="text-white font-bold">T</span>
-                        </div>
-                        <span class="text-xl font-sans font-bold text-white">Demande #{{ request.id }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="space-y-6">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Client
+            </h3>
+            <a href="{{ url_for('admin.view_user', user_id=request.user.id) }}" class="block hover:bg-slate-700/50 -mx-6 -my-4 p-4 rounded-xl transition">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center">
+                        <span class="text-white font-bold">{{ request.user.first_name[0] }}{{ request.user.last_name[0] }}</span>
                     </div>
+                    <div>
+                        <p class="font-medium text-white">{{ request.user.full_name }}</p>
+                        <p class="text-gray-400 text-sm">{{ request.user.email }}</p>
+                    </div>
+                </div>
+            </a>
+            {% if request.user.institution %}
+            <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-gray-400 text-sm">Etablissement</p>
+                <p class="text-white">{{ request.user.institution }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Details</h3>
+            <div class="space-y-4">
+                <div>
+                    <span class="text-sm text-gray-400">Creee le</span>
+                    <p class="text-white">{{ request.created_at.strftime('%d/%m/%Y a %H:%M') }}</p>
+                </div>
+                {% if request.deadline %}
+                <div>
+                    <span class="text-sm text-gray-400">Deadline</span>
+                    <p class="text-white">{{ request.deadline.strftime('%d/%m/%Y a %H:%M') }}</p>
+                </div>
+                {% endif %}
+                {% if request.word_count %}
+                <div>
+                    <span class="text-sm text-gray-400">Mots</span>
+                    <p class="text-white">{{ request.word_count }}</p>
+                </div>
+                {% endif %}
+                {% if request.pages_count %}
+                <div>
+                    <span class="text-sm text-gray-400">Pages</span>
+                    <p class="text-white">{{ request.pages_count }}</p>
+                </div>
+                {% endif %}
+                <div>
+                    <span class="text-sm text-gray-400">Urgence</span>
+                    <p class="text-white">{{ request.urgency_level }}</p>
                 </div>
             </div>
         </div>
-    </nav>
 
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="mb-6 p-4 rounded-xl alert-dismissible transition-all duration-300 
-                        {% if category == 'error' %}bg-red-900/50 text-red-300 border border-red-700
-                        {% elif category == 'success' %}bg-green-900/50 text-green-300 border border-green-700
-                        {% else %}bg-blue-900/50 text-blue-300 border border-blue-700{% endif %}">
-                        {{ message }}
+        {% if request.quote_amount %}
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Devis</h3>
+            <div class="space-y-4">
+                <div>
+                    <span class="text-sm text-gray-400">Montant total</span>
+                    <p class="text-2xl font-bold gradient-text">{{ "%.2f"|format(request.quote_amount) }} EUR</p>
+                </div>
+                {% if request.deposit_required %}
+                <div>
+                    <span class="text-sm text-gray-400">Acompte</span>
+                    <p class="text-white">{{ "%.2f"|format(request.deposit_required) }} EUR</p>
+                </div>
+                {% endif %}
+                <div>
+                    <span class="text-sm text-gray-400">Statut devis</span>
+                    <p class="{% if request.quote_accepted %}text-green-400{% else %}text-amber-400{% endif %}">
+                        {% if request.quote_accepted %}Accepte{% else %}En attente{% endif %}
+                    </p>
+                </div>
+                <div>
+                    <span class="text-sm text-gray-400">Acompte paye</span>
+                    <p class="{% if request.deposit_paid %}text-green-400{% else %}text-red-400{% endif %}">
+                        {% if request.deposit_paid %}Oui{% else %}Non{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-700">
+                <h3 class="text-lg font-semibold text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Historique
+                </h3>
+            </div>
+            
+            {% if request.activity_logs %}
+            <div class="divide-y divide-slate-700 max-h-80 overflow-y-auto">
+                {% for activity in request.activity_logs|sort(attribute='created_at', reverse=True) %}
+                <div class="p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-{{ activity.get_color() }}-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-{{ activity.get_color() }}-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                {% if activity.action_type == 'comment' %}
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                {% elif activity.action_type == 'delivery' %}
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                                {% elif activity.action_type == 'status_change' %}
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                {% else %}
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                {% endif %}
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-white">{{ activity.title or activity.get_action_display() }}</p>
+                            {% if activity.description %}
+                            <p class="text-sm text-gray-400 mt-1">{{ activity.description }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-500 mt-1">
+                                {{ activity.user.full_name if activity.user else 'Systeme' }} - {{ activity.created_at.strftime('%d/%m %H:%M') }}
+                            </p>
+                        </div>
                     </div>
+                </div>
                 {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-6 text-center text-gray-500">
+                Aucune activite enregistree
+            </div>
             {% endif %}
-        {% endwith %}
-
-        <div class="grid lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 space-y-6">
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div>
-                            <span class="px-3 py-1 rounded-full text-sm font-medium status-{{ request.status }}">
-                                {{ request.get_status_display() }}
-                            </span>
-                            <h1 class="text-2xl font-sans font-bold text-white mt-3">{{ request.title }}</h1>
-                            <p class="text-gray-400 mt-1">{{ request.get_service_display() }}</p>
-                        </div>
-                    </div>
-                    
-                    {% if request.description %}
-                    <div class="mt-6">
-                        <h3 class="text-sm font-medium text-gray-400 mb-2">Description</h3>
-                        <p class="text-gray-300 whitespace-pre-line">{{ request.description }}</p>
-                    </div>
-                    {% endif %}
-                    
-                    {% if request.additional_info %}
-                    <div class="mt-6">
-                        <h3 class="text-sm font-medium text-gray-400 mb-2">Informations supplémentaires</h3>
-                        <p class="text-gray-300 whitespace-pre-line">{{ request.additional_info }}</p>
-                    </div>
-                    {% endif %}
-                </div>
-
-                {% if request.status in ['submitted', 'under_review'] %}
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Envoyer un devis</h3>
-                    <form method="POST" action="{{ url_for('admin.send_quote', request_id=request.id) }}" class="space-y-4">
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-2">Montant total (€) *</label>
-                                <input type="number" name="quote_amount" step="0.01" required
-                                    class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-2">Acompte requis (€) *</label>
-                                <input type="number" name="deposit_required" step="0.01" required
-                                    class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-2">Message au client</label>
-                            <textarea name="quote_message" rows="3"
-                                class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500"></textarea>
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
-                            Envoyer le devis
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-
-                {% if request.status in ['in_progress', 'revision'] %}
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Mettre à jour le statut</h3>
-                    <form method="POST" action="{{ url_for('admin.update_status', request_id=request.id) }}" class="space-y-4">
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-2">Nouveau statut</label>
-                                <select name="status" class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
-                                    <option value="">Ne pas changer</option>
-                                    <option value="in_progress">En cours de traitement</option>
-                                    <option value="revision">En révision</option>
-                                    <option value="completed">Terminée</option>
-                                    <option value="delivered">Livrée</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-400 mb-2">Progression (%)</label>
-                                <input type="number" name="progress" min="0" max="100" value="{{ request.progress_percentage }}"
-                                    class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-2">Notes admin</label>
-                            <textarea name="admin_notes" rows="2"
-                                class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">{{ request.admin_notes or '' }}</textarea>
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all">
-                            Mettre à jour
-                        </button>
-                    </form>
-                </div>
-
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Uploader un livrable</h3>
-                    <form method="POST" action="{{ url_for('admin.upload_deliverable', request_id=request.id) }}" enctype="multipart/form-data" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-2">Fichier</label>
-                            <input type="file" name="deliverable" required
-                                class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-2">Description</label>
-                            <input type="text" name="description"
-                                class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-primary-500"
-                                placeholder="Ex: Version finale du chapitre 1">
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all">
-                            Uploader le livrable
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-
-                {% if payments %}
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Paiements</h3>
-                    <div class="space-y-4">
-                        {% for payment in payments %}
-                        <div class="bg-slate-700/50 rounded-xl p-4">
-                            <div class="flex items-center justify-between mb-3">
-                                <div>
-                                    <span class="text-2xl font-bold text-white">{{ "%.2f"|format(payment.amount) }} €</span>
-                                    <span class="text-gray-400 ml-2">{{ payment.payment_method }}</span>
-                                </div>
-                                <span class="px-3 py-1 rounded text-sm font-medium 
-                                    {% if payment.status == 'verified' %}bg-green-900/50 text-green-300
-                                    {% elif payment.status == 'rejected' %}bg-red-900/50 text-red-300
-                                    {% else %}bg-amber-900/50 text-amber-300{% endif %}">
-                                    {{ payment.get_status_display() }}
-                                </span>
-                            </div>
-                            
-                            {% if payment.transaction_reference %}
-                            <p class="text-gray-400 text-sm">Réf: {{ payment.transaction_reference }}</p>
-                            {% endif %}
-                            
-                            {% if payment.proof_document %}
-                            <a href="{{ url_for('static', filename='uploads/' + payment.proof_document) }}" target="_blank" class="inline-flex items-center gap-2 text-primary-400 text-sm mt-2 hover:text-primary-300">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                Voir le justificatif
-                            </a>
-                            {% endif %}
-                            
-                            {% if payment.status == 'pending' %}
-                            <div class="flex gap-2 mt-4">
-                                <form method="POST" action="{{ url_for('admin.verify_payment', payment_id=payment.id) }}" class="flex-1">
-                                    <input type="hidden" name="action" value="approve">
-                                    <button type="submit" class="w-full py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition">
-                                        Approuver
-                                    </button>
-                                </form>
-                                <form method="POST" action="{{ url_for('admin.verify_payment', payment_id=payment.id) }}" class="flex-1">
-                                    <input type="hidden" name="action" value="reject">
-                                    <button type="submit" class="w-full py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition">
-                                        Rejeter
-                                    </button>
-                                </form>
-                            </div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-                {% if documents %}
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Documents</h3>
-                    <div class="space-y-3">
-                        {% for doc in documents %}
-                        <div class="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg {% if doc.document_type == 'deliverable' %}bg-green-900/50{% else %}bg-slate-600{% endif %} flex items-center justify-center">
-                                    <svg class="w-5 h-5 {% if doc.document_type == 'deliverable' %}text-green-400{% else %}text-gray-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-white">{{ doc.original_filename }}</p>
-                                    <p class="text-sm text-gray-400">{{ doc.get_type_display() }}</p>
-                                </div>
-                            </div>
-                            <a href="{{ url_for('static', filename='uploads/' + doc.filename) }}" download class="text-primary-400 hover:text-primary-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                </svg>
-                            </a>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="space-y-6">
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Client</h3>
-                    <a href="{{ url_for('admin.view_user', user_id=request.user.id) }}" class="block hover:bg-slate-700/50 -mx-6 -my-4 p-4 rounded-xl transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center">
-                                <span class="text-white font-bold">{{ request.user.first_name[0] }}{{ request.user.last_name[0] }}</span>
-                            </div>
-                            <div>
-                                <p class="font-medium text-white">{{ request.user.full_name }}</p>
-                                <p class="text-gray-400 text-sm">{{ request.user.email }}</p>
-                            </div>
-                        </div>
-                    </a>
-                    {% if request.user.institution %}
-                    <div class="mt-4 pt-4 border-t border-slate-700">
-                        <p class="text-gray-400 text-sm">Établissement</p>
-                        <p class="text-white">{{ request.user.institution }}</p>
-                    </div>
-                    {% endif %}
-                    {% if request.user.academic_level %}
-                    <div class="mt-3">
-                        <p class="text-gray-400 text-sm">Niveau</p>
-                        <p class="text-white">{{ request.user.academic_level }}</p>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Détails</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <span class="text-sm text-gray-400">Créée le</span>
-                            <p class="text-white">{{ request.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
-                        </div>
-                        {% if request.deadline %}
-                        <div>
-                            <span class="text-sm text-gray-400">Deadline</span>
-                            <p class="text-white">{{ request.deadline.strftime('%d/%m/%Y à %H:%M') }}</p>
-                        </div>
-                        {% endif %}
-                        {% if request.word_count %}
-                        <div>
-                            <span class="text-sm text-gray-400">Mots</span>
-                            <p class="text-white">{{ request.word_count }}</p>
-                        </div>
-                        {% endif %}
-                        {% if request.pages_count %}
-                        <div>
-                            <span class="text-sm text-gray-400">Pages</span>
-                            <p class="text-white">{{ request.pages_count }}</p>
-                        </div>
-                        {% endif %}
-                        <div>
-                            <span class="text-sm text-gray-400">Urgence</span>
-                            <p class="text-white">{{ request.urgency_level }}</p>
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-400">Progression</span>
-                            <div class="mt-1">
-                                <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" style="width: {{ request.progress_percentage }}%"></div>
-                                </div>
-                                <p class="text-white text-sm mt-1">{{ request.progress_percentage }}%</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {% if request.quote_amount %}
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Devis</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <span class="text-sm text-gray-400">Montant total</span>
-                            <p class="text-2xl font-bold gradient-text">{{ "%.2f"|format(request.quote_amount) }} €</p>
-                        </div>
-                        {% if request.deposit_required %}
-                        <div>
-                            <span class="text-sm text-gray-400">Acompte</span>
-                            <p class="text-white">{{ "%.2f"|format(request.deposit_required) }} €</p>
-                        </div>
-                        {% endif %}
-                        <div>
-                            <span class="text-sm text-gray-400">Statut devis</span>
-                            <p class="{% if request.quote_accepted %}text-green-400{% else %}text-amber-400{% endif %}">
-                                {% if request.quote_accepted %}Accepté{% else %}En attente{% endif %}
-                            </p>
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-400">Acompte payé</span>
-                            <p class="{% if request.deposit_paid %}text-green-400{% else %}text-red-400{% endif %}">
-                                {% if request.deposit_paid %}Oui{% else %}Non{% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>
