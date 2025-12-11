@@ -28,20 +28,6 @@ Website: www.myoneart.com
                     <a href="#process" class="text-gray-300 hover:text-white transition">{{ t('nav.process') }}</a>
                     <a href="#about" class="text-gray-300 hover:text-white transition">{{ t('nav.about') }}</a>
                     
-                    <!-- Language Selector -->
-                    <div class="relative group">
-                        <button class="flex items-center text-gray-300 hover:text-white transition">
-                            <span class="uppercase">{{ current_lang }}</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                            <a href="?lang=fr" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg">{{ t('language.fr') }}</a>
-                            <a href="?lang=en" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-b-lg">{{ t('language.en') }}</a>
-                        </div>
-                    </div>
-                    
                     <a href="{{ url_for('auth.login') }}" class="px-6 py-2.5 border-2 border-primary-400 text-primary-300 rounded-full font-medium hover:bg-primary-500/20 hover:border-primary-300 hover:text-white transition-all">{{ t('nav.login') }}</a>
                     <a href="{{ url_for('auth.register') }}" class="px-6 py-2.5 bg-primary-500 text-white rounded-full font-medium hover:bg-primary-400 hover:shadow-lg hover:shadow-primary-500/25 transition-all">
                         {{ t('nav.register') }}
@@ -61,10 +47,6 @@ Website: www.myoneart.com
                 <a href="#services" class="block text-gray-300 hover:text-white py-2">{{ t('nav.services') }}</a>
                 <a href="#process" class="block text-gray-300 hover:text-white py-2">{{ t('nav.process') }}</a>
                 <a href="#about" class="block text-gray-300 hover:text-white py-2">{{ t('nav.about') }}</a>
-                <div class="flex space-x-2 py-2">
-                    <a href="?lang=fr" class="px-3 py-1 text-gray-300 hover:text-white {% if current_lang == 'fr' %}bg-primary-500/20 rounded{% endif %}">FR</a>
-                    <a href="?lang=en" class="px-3 py-1 text-gray-300 hover:text-white {% if current_lang == 'en' %}bg-primary-500/20 rounded{% endif %}">EN</a>
-                </div>
                 <a href="{{ url_for('auth.login') }}" class="block px-6 py-2.5 border-2 border-primary-400 text-primary-300 rounded-full font-medium text-center hover:bg-primary-500/20">{{ t('nav.login') }}</a>
                 <a href="{{ url_for('auth.register') }}" class="block px-6 py-2.5 bg-primary-500 text-white rounded-full font-medium text-center hover:bg-primary-400">
                     {{ t('nav.register') }}
