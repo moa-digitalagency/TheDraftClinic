@@ -37,8 +37,6 @@ externalPort = 80
 [userenv]
 
 [userenv.development]
-ADMIN_EMAIL = "admin@theraftclinic.com"
-ADMIN_PASSWORD = "Admin@2024!"
 
 [deployment]
 deploymentTarget = "autoscale"
