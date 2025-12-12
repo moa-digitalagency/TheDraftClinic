@@ -128,6 +128,11 @@ def init_database():
         from models.request import ServiceRequest
         from models.document import Document
         from models.payment import Payment
+        from models.activity_log import ActivityLog
+        from models.site_settings import SiteSettings
+        from models.page import Page
+        from models.deadline_extension import DeadlineExtension
+        from models.revision_request import RevisionRequest, RevisionAttachment
         
         app = create_app()
         
@@ -138,24 +143,12 @@ def init_database():
             print("      ✓ Table 'service_requests' created")
             print("      ✓ Table 'documents' created")
             print("      ✓ Table 'payments' created")
-            
-            try:
-                from models.activity_log import ActivityLog
-                print("      ✓ Table 'activity_logs' created")
-            except ImportError:
-                pass
-            
-            try:
-                from models.site_settings import SiteSettings
-                print("      ✓ Table 'site_settings' created")
-            except ImportError:
-                pass
-            
-            try:
-                from models.page import Page
-                print("      ✓ Table 'pages' created")
-            except ImportError:
-                pass
+            print("      ✓ Table 'activity_logs' created")
+            print("      ✓ Table 'site_settings' created")
+            print("      ✓ Table 'pages' created")
+            print("      ✓ Table 'deadline_extensions' created")
+            print("      ✓ Table 'revision_requests' created")
+            print("      ✓ Table 'revision_attachments' created")
             
             print()
             print("[5/6] Creating admin user from environment variables...")
