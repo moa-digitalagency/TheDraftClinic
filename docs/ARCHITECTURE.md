@@ -1,308 +1,415 @@
 # Architecture TheDraftClinic
 
-> Documentation technique de l'architecture
+Documentation technique de l'architecture de la plateforme.
 
 ---
 
-## Vue d'ensemble
+## Presentation generale
 
-TheDraftClinic est une application web Flask suivant une architecture MVC (Modèle-Vue-Contrôleur) avec une séparation claire des responsabilités.
+TheDraftClinic est une plateforme de services de redaction academique developpee avec Flask. Elle suit une architecture MVC (Modele-Vue-Controleur) avec une separation claire des responsabilites.
+
+L'application permet aux chercheurs et doctorants de soumettre des demandes de redaction academique (theses, memoires, articles), de recevoir des devis, de payer et de suivre l'avancement de leurs projets.
 
 ---
 
-## Couches de l'application
+## Schema des couches
 
 ```
-┌─────────────────────────────────────────────────┐
-│                   Templates                      │
-│            (Jinja2 + TailwindCSS)               │
-├─────────────────────────────────────────────────┤
-│                    Routes                        │
-│             (Blueprints Flask)                   │
-├─────────────────────────────────────────────────┤
-│                   Services                       │
-│            (Logique métier)                     │
-├─────────────────────────────────────────────────┤
-│                   Modèles                        │
-│              (SQLAlchemy ORM)                   │
-├─────────────────────────────────────────────────┤
-│                 Base de données                  │
-│                 (PostgreSQL)                    │
-└─────────────────────────────────────────────────┘
++---------------------------------------------------+
+|                   PRESENTATION                     |
+|    Templates Jinja2 + TailwindCSS + JavaScript    |
++---------------------------------------------------+
+                        |
++---------------------------------------------------+
+|                   CONTROLEURS                      |
+|           Blueprints Flask (Routes)               |
++---------------------------------------------------+
+                        |
++---------------------------------------------------+
+|                    SERVICES                        |
+|            Logique metier regroupe                |
++---------------------------------------------------+
+                        |
++---------------------------------------------------+
+|                    MODELES                         |
+|              SQLAlchemy ORM                       |
++---------------------------------------------------+
+                        |
++---------------------------------------------------+
+|                BASE DE DONNEES                     |
+|                 PostgreSQL                        |
++---------------------------------------------------+
 ```
 
 ---
 
-## Structure des dossiers
+## Organisation des dossiers
 
-### `/models` - Modèles de données
+### Racine du projet
 
-| Fichier | Description |
-|---------|-------------|
-| `user.py` | Modèle utilisateur avec authentification et rôles admin |
-| `request.py` | Modèle demande de service |
-| `document.py` | Modèle document/fichier |
-| `payment.py` | Modèle paiement |
-| `activity_log.py` | Modèle historique d'activités |
-| `site_settings.py` | Modèle paramètres du site |
-| `page.py` | Modèle pages dynamiques |
+| Fichier | Role |
+|---------|------|
+| `app.py` | Point d'entree, configuration Flask, initialisation des extensions |
+| `main.py` | Demarrage de l'application (import de app) |
+| `pyproject.toml` | Configuration du projet Python et dependances |
+| `requirements.txt` | Liste des packages Python |
 
-### `/routes` - Contrôleurs
+### /models - Couche de donnees
 
-| Fichier | Préfixe | Description |
-|---------|--------|-------------|
-| `main.py` | `/` | Pages publiques |
-| `auth.py` | `/auth` | Authentification |
-| `client.py` | `/client` | Espace client |
-| `admin.py` | `/admin` | Administration |
-| `admin_settings.py` | `/admin/settings` | Paramètres admin |
-
-### `/templates` - Vues
-
-| Dossier | Description |
-|---------|-------------|
-| `layouts/` | Templates de base |
-| `admin/` | Templates admin |
-| `client/` | Templates client |
-| `auth/` | Templates authentification |
-| `errors/` | Pages d'erreur |
-
-### `/services` - Services métier
+Les modeles SQLAlchemy definissent la structure de la base de donnees.
 
 | Fichier | Description |
 |---------|-------------|
-| `admin_service.py` | Logique admin et création super admin |
-| `file_service.py` | Gestion des fichiers |
+| `user.py` | Utilisateurs (clients et admins), authentification, hash mot de passe |
+| `request.py` | Demandes de service avec cycle de vie complet |
+| `document.py` | Documents uploades (client, admin, livrables) |
+| `payment.py` | Paiements et preuves, verification par admin |
+| `activity_log.py` | Historique des actions sur les projets |
+| `site_settings.py` | Configuration globale du site |
+| `page.py` | Pages dynamiques (CGU, CGV, mentions legales) |
+| `deadline_extension.py` | Demandes d'extension de delai |
+| `revision_request.py` | Demandes de revision sur livrables |
 
-### `/security` - Sécurité
+### /routes - Controleurs
 
-| Fichier | Description |
-|---------|-------------|
-| `decorators.py` | Décorateurs d'autorisation |
-| `validators.py` | Validation des entrées |
-| `rate_limiter.py` | Limitation de taux |
-| `error_handlers.py` | Gestionnaires d'erreurs |
+Les blueprints Flask regroupent les routes par domaine fonctionnel.
+
+| Fichier | Prefixe URL | Role |
+|---------|-------------|------|
+| `main.py` | `/` | Pages publiques (accueil, services, contact) |
+| `auth.py` | `/auth` | Authentification (login, register, logout) |
+| `client.py` | `/client` | Espace client (dashboard, demandes, profil) |
+| `admin.py` | `/admin` | Administration (demandes, utilisateurs, paiements) |
+| `admin_settings.py` | `/admin` | Parametres du site, pages, langues, stats |
+
+### /templates - Vues
+
+Templates Jinja2 organises par section.
+
+| Dossier | Contenu |
+|---------|---------|
+| `layouts/` | Templates de base (base.html, admin_base.html) |
+| `admin/` | Interface d'administration |
+| `client/` | Espace client |
+| `auth/` | Formulaires de connexion et inscription |
+| `errors/` | Pages d'erreur (404, 500) |
+| `landing.html` | Page d'accueil |
+| `services.html` | Presentation des services |
+
+### /services - Logique metier
+
+| Fichier | Role |
+|---------|------|
+| `admin_service.py` | Creation automatique du compte admin au demarrage |
+| `file_service.py` | Gestion des fichiers (upload, validation, suppression) |
+
+### /security - Securite
+
+| Fichier | Role |
+|---------|------|
+| `decorators.py` | Decorateurs de controle d'acces (admin_required, client_required) |
+| `validators.py` | Validation des entrees utilisateur |
+| `rate_limiter.py` | Limitation du nombre de requetes |
+| `error_handlers.py` | Gestion centralisee des erreurs HTTP |
+
+### /utils - Utilitaires
+
+| Fichier | Role |
+|---------|------|
+| `forms.py` | Formulaires WTForms (login, register, demande, paiement) |
+| `i18n.py` | Internationalisation, gestion des langues (FR/EN) |
+
+### /lang - Traductions
+
+| Fichier | Langue |
+|---------|--------|
+| `fr.json` | Francais |
+| `en.json` | Anglais |
+
+### /static - Ressources statiques
+
+| Dossier | Contenu |
+|---------|---------|
+| `css/` | Feuilles de style personnalisees |
+| `js/` | Scripts JavaScript |
+| `uploads/` | Fichiers uploades par les utilisateurs |
+| `uploads/branding/` | Logo, favicon, images OG |
 
 ---
 
-## Authentification
+## Schema relationnel de la base de donnees
+
+```
+                    +-------------+
+                    |    User     |
+                    +-------------+
+                    | id          |
+                    | email       |
+                    | password_hash|
+                    | is_admin    |
+                    | admin_role  |
+                    +------+------+
+                           |
+                           | 1:N
+                           v
+                 +-----------------+
+                 | ServiceRequest  |
+                 +-----------------+
+                 | id              |
+                 | user_id (FK)    |
+                 | service_type    |
+                 | status          |
+                 | quote_amount    |
+                 | progress_%      |
+                 +--------+--------+
+                          |
+          +---------------+---------------+
+          |               |               |
+          v               v               v
+    +-----------+   +-----------+   +-------------+
+    | Document  |   |  Payment  |   | ActivityLog |
+    +-----------+   +-----------+   +-------------+
+    | request_id|   | request_id|   | request_id  |
+    | filename  |   | amount    |   | action_type |
+    | doc_type  |   | status    |   | description |
+    +-----------+   +-----------+   +-------------+
+          |
+          |               +-------------------+
+          |               | DeadlineExtension |
+          |               +-------------------+
+          |               | request_id (FK)   |
+          |               | new_deadline      |
+          |               | status            |
+          |               +-------------------+
+          |
+          |               +-------------------+
+          |               | RevisionRequest   |
+          |               +-------------------+
+          |               | request_id (FK)   |
+          |               | revision_details  |
+          |               | status            |
+          +-------------->+-------------------+
+
+    +---------------+         +--------+
+    | SiteSettings  |         |  Page  |
+    +---------------+         +--------+
+    | site_name     |         | title  |
+    | logo          |         | slug   |
+    | seo_*         |         | content|
+    +---------------+         +--------+
+```
+
+---
+
+## Systeme d'authentification
 
 ### Flask-Login
-L'authentification utilise Flask-Login avec :
-- Sessions sécurisées
-- Remember me (se souvenir de moi)
-- Protection des routes
 
-### Décorateurs
-```python
-@login_required          # Connexion requise
-@admin_required          # Admin uniquement
-@super_admin_required    # Super admin uniquement
-@client_required         # Client uniquement
-```
+L'application utilise Flask-Login pour gerer les sessions utilisateur.
+
+- `login_manager.user_loader` : charge l'utilisateur depuis la session
+- `login_user()` : connecte un utilisateur
+- `logout_user()` : deconnecte l'utilisateur
+- `current_user` : acces a l'utilisateur connecte dans les templates et routes
+
+### Hash des mots de passe
+
+Les mots de passe sont hashes avec Werkzeug (pbkdf2:sha256) :
+- `User.set_password(password)` : hash et stocke
+- `User.check_password(password)` : verifie
+
+### Decorateurs de controle d'acces
+
+| Decorateur | Utilisation |
+|------------|-------------|
+| `@login_required` | Route accessible uniquement aux utilisateurs connectes |
+| `@admin_required` | Route reservee aux administrateurs |
+| `@super_admin_required` | Route reservee au super administrateur |
+| `@client_required` | Route reservee aux clients (redirige les admins) |
 
 ---
 
-## Système de rôles admin
+## Systeme de roles
 
-### Rôles disponibles
-- `super_admin` - Premier compte admin, tous les droits
-- `admin` - Administrateur standard
+### Types de roles
+
+| Role | Description |
+|------|-------------|
+| `None` | Utilisateur standard (client) |
+| `admin` | Administrateur avec acces au panel admin |
+| `super_admin` | Premier admin cree, peut gerer les autres admins |
 
 ### Permissions
-| Action | Admin | Super admin |
-|--------|-------|-------------|
-| Gérer demandes | Oui | Oui |
-| Gérer utilisateurs | Oui | Oui |
-| Paramètres site | Oui | Oui |
-| Ajouter admin | Non | Oui |
-| Modifier rôle admin | Non | Oui |
-| Désactiver admin | Non | Oui |
+
+| Action | Client | Admin | Super Admin |
+|--------|--------|-------|-------------|
+| Soumettre une demande | Oui | Non | Non |
+| Voir ses demandes | Oui | Non | Non |
+| Voir toutes les demandes | Non | Oui | Oui |
+| Envoyer un devis | Non | Oui | Oui |
+| Verifier un paiement | Non | Oui | Oui |
+| Gerer les pages | Non | Oui | Oui |
+| Creer un admin | Non | Non | Oui |
+| Desactiver un admin | Non | Non | Oui |
 
 ---
 
-## Base de données
+## Cycle de vie des demandes
 
-### Schéma relationnel
+### Statuts possibles
 
-```
-┌─────────────┐     ┌──────────────────┐
-│    User     │────<│  ServiceRequest  │
-└─────────────┘     └──────────────────┘
-                           │
-                           ├────<┌─────────────┐
-                           │     │  Document   │
-                           │     └─────────────┘
-                           │
-                           ├────<┌─────────────┐
-                           │     │  Payment    │
-                           │     └─────────────┘
-                           │
-                           └────<┌─────────────┐
-                                 │ ActivityLog │
-                                 └─────────────┘
-```
-
-### Modèles principaux
-
-#### User
-- id, email, password_hash
-- first_name, last_name
-- phone, institution
-- academic_level, field_of_study
-- is_admin, admin_role
-- account_active
-- created_at, updated_at
-
-#### ServiceRequest
-- id, user_id, title
-- service_type, description
-- status, progress_percentage
-- quote_amount, deposit_required
-- deadline, created_at
-
-#### Payment
-- id, request_id, amount
-- payment_method, status
-- proof_document, transaction_reference
-- created_at
-
-#### ActivityLog
-- id, request_id, user_id
-- action_type, title
-- description, metadata
-- created_at
-
----
-
-## Templates
-
-### Layouts
-L'application utilise des templates de base :
-
-| Layout | Description |
-|--------|-------------|
-| `base.html` | Layout de base commun |
-| `admin_base.html` | Layout admin avec sidebar |
-
-### Héritage
-```
-base.html
-├── layouts/auth_base.html
-├── layouts/client_base.html
-└── layouts/admin_base.html
-    └── admin/*.html
-```
-
----
-
-## Workflow des demandes
-
-### Statuts
-1. `submitted` - Soumise
-2. `under_review` - En examen
-3. `quote_sent` - Devis envoyé
-4. `quote_accepted` - Devis accepté
-5. `awaiting_deposit` - Attente acompte
-6. `in_progress` - En cours
-7. `revision` - En révision
-8. `completed` - Terminée
-9. `delivered` - Livrée
-10. `cancelled` - Annulée
+| Code | Libelle | Description |
+|------|---------|-------------|
+| `submitted` | Soumise | Demande nouvellement creee |
+| `under_review` | En examen | L'admin evalue la demande |
+| `quote_sent` | Devis envoye | Un devis a ete propose au client |
+| `quote_accepted` | Devis accepte | Le client a accepte le devis |
+| `awaiting_deposit` | Attente acompte | En attente du paiement |
+| `deposit_pending` | Acompte en verification | Paiement soumis, en cours de verification |
+| `in_progress` | En cours | Travail en cours de realisation |
+| `revision` | En revision | Modifications demandees par le client |
+| `completed` | Terminee | Travail termine |
+| `delivered` | Livree | Livrable transmis au client |
+| `cancelled` | Annulee | Demande annulee |
+| `rejected` | Refusee | Demande refusee par l'admin |
 
 ### Transitions
+
 ```
-submitted -> under_review -> quote_sent -> quote_accepted
-    |                                        |
-cancelled                             awaiting_deposit
-                                            |
-                                       in_progress
-                                            |
-                                      revision <-> completed
-                                                    |
-                                                delivered
+submitted --> under_review --> quote_sent --> quote_accepted
+    |                                              |
+    v                                              v
+cancelled                                  awaiting_deposit
+                                                   |
+                                                   v
+                                           deposit_pending
+                                                   |
+                                                   v
+                                            in_progress
+                                                   |
+                                        +----------+----------+
+                                        |                     |
+                                        v                     v
+                                    revision              completed
+                                        |                     |
+                                        +----------+----------+
+                                                   |
+                                                   v
+                                               delivered
 ```
 
 ---
 
-## Historique d'activités
+## Gestion des fichiers
 
-### Types d'actions
-| Type | Description |
-|------|-------------|
-| `comment` | Commentaire ajouté |
-| `delivery` | Livrable uploadé |
-| `status_change` | Changement de statut |
-| `payment` | Paiement vérifié |
-| `download` | Document téléchargé |
-| `revision` | Demande de révision |
+### Types de documents
 
-### Couleurs
-| Type | Couleur |
-|------|---------|
-| comment | Bleu |
-| delivery | Vert |
-| status_change | Violet |
-| payment | Ambre |
-| download | Gris |
+| Type | Description | Qui uploade |
+|------|-------------|-------------|
+| `client_upload` | Documents de reference | Client |
+| `admin_upload` | Documents ajoutes par l'admin | Admin |
+| `deliverable` | Travail final | Admin |
+| `revision` | Version revisee | Admin |
+
+### Extensions autorisees
+
+- Documents : pdf, doc, docx, txt, rtf, odt
+- Images : png, jpg, jpeg, gif
+
+### Nommage des fichiers
+
+Les fichiers sont renommes avec un prefixe UUID unique pour eviter les conflits :
+`a1b2c3d4_document_original.pdf`
 
 ---
 
-## Sécurité
+## Internationalisation (i18n)
 
-### Protection CSRF
-Tous les formulaires utilisent Flask-WTF pour la protection CSRF.
+### Langues supportees
 
-### Validation
-- Validation des entrées avec WTForms
-- Validation des types de fichiers
-- Limitation de taille des uploads
+- Francais (fr) - langue principale
+- Anglais (en)
 
-### Sessions
-- Secret key obligatoire
-- Sessions sécurisées
-- Expiration configurable
+### Fonctionnement
+
+1. Les traductions sont stockees dans `/lang/fr.json` et `/lang/en.json`
+2. La fonction `t('cle.imbriquee')` recupere la traduction
+3. La langue est determinee par : session > parametre URL > navigateur > defaut
+
+### Utilisation dans les templates
+
+```jinja
+{{ t('auth.login.title') }}
+{{ 'cle'|translate }}
+```
 
 ---
 
 ## Logging
 
 ### Configuration
-```python
-logging.basicConfig(level=logging.DEBUG)
+
+Le systeme de logging utilise des handlers rotatifs :
+- Console : niveau DEBUG en developpement
+- Fichier : `logs/thedraftclinic.log` (10 MB, 10 backups)
+- Erreurs : `logs/errors.log` (10 MB, 10 backups)
+
+### Format
+
 ```
-
-### Fichiers
-- `logs/thedraftclinic.log` - Log général
-- `logs/errors.log` - Erreurs uniquement
-
-### Rotation
-- Taille max : 10MB
-- Backup count : 5
+2024-01-15 10:30:45 - INFO - routes.client - Nouvelle demande creee: 42
+```
 
 ---
 
-## Déploiement
+## Variables d'environnement requises
 
-### Variables d'environnement
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | URL PostgreSQL |
-| `SESSION_SECRET` | Clé secrète sessions |
-| `ADMIN_EMAIL` | Email admin |
-| `ADMIN_PASSWORD` | Mot de passe admin |
+| Variable | Description | Obligatoire |
+|----------|-------------|-------------|
+| `DATABASE_URL` | URL de connexion PostgreSQL | Oui |
+| `SESSION_SECRET` | Cle secrete pour les sessions | Oui |
+| `ADMIN_EMAIL` | Email du compte admin par defaut | Pour creation auto |
+| `ADMIN_PASSWORD` | Mot de passe du compte admin | Pour creation auto |
 
-### Production
+---
+
+## Configuration de production
+
+### Gunicorn
+
 ```bash
 gunicorn --bind 0.0.0.0:5000 --reuse-port main:app
 ```
 
+### Pool de connexions
+
+Le pool SQLAlchemy est configure pour la stabilite :
+- `pool_recycle`: 300 secondes (recyclage des connexions)
+- `pool_pre_ping`: True (verification avant utilisation)
+
 ---
 
-<div align="center">
+## Securite
 
-**TheDraftClinic - Architecture**
+### Protection CSRF
 
-*Une base solide pour une application robuste*
+Flask-WTF ajoute automatiquement des tokens CSRF aux formulaires.
 
-</div>
+### Proxy Fix
+
+Le middleware `ProxyFix` est configure pour fonctionner derriere un reverse proxy (Nginx, Replit) et generer les bonnes URLs HTTPS.
+
+### Taille des uploads
+
+Limite a 50 MB par fichier (`MAX_CONTENT_LENGTH`).
+
+### Cache control
+
+Les en-tetes HTTP desactivent le cache pour eviter les problemes de mise a jour :
+```
+Cache-Control: no-cache, no-store, must-revalidate
+```
+
+---
+
+*TheDraftClinic - Documentation technique v1.0*
